@@ -260,7 +260,7 @@
     <DirectoryRef Id="ROOT_DIR">
       <!-- PTF License -->
       <Component Id="PTF_LICENSE" Guid="9AB77E77-A595-4CF0-935F-2F967886FC9B" Feature="PTF_All">
-        <File Id="LICENSE.txt" Source="$(var.PTF_SRC_ROOT)\LICENSE.txt" />
+        <File Id="LICENSE.txt" Source="$(var.PTF_SRC_ROOT)..\LICENSE.txt" />
       </Component>
     </DirectoryRef>
 	
