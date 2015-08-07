@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tc="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig"
+           elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <!-- Adapter Base Type -->
+  <!-- Interactive adapter, script adapter, managed adapter, RPC adapter
+       and user defined adapter must derive from this type. -->
+  <xs:complexType name="adapterBase">
+    <!-- Attribute "name" is the name of the adapter that coincides with the name of the adapter interface. -->
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!--Properties Group-->
+  <xs:complexType name="grouptype">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="Group" type="tc:grouptype"/>
+      <xs:element name="Property">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="Description" minOccurs="0"/>
+            <xs:element name="Type" minOccurs="0"/>
+            <xs:element name="Choice" minOccurs="0"/>
+          </xs:all>
+            <!-- Property name -->
+          <xs:attribute name="name" type="xs:string" use="required"/>
+          <!-- Property value -->
+          <xs:attribute name="value" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string" use="optional"/>
+  </xs:complexType>
+  
+  <!-- Interactive Adapter -->
+  <xs:complexType name="interactive">
+    <xs:complexContent>
+      <xs:extension base="tc:adapterBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- RPC Adapter -->
+  <!-- This is not officially supported in Sprint 3. -->
+  <xs:complexType name="rpc">
+    <xs:complexContent>
+      <xs:extension base="tc:adapterBase" >
+        <xs:attribute name ="autovalidate" type="xs:boolean" use="optional"/>
+        <xs:attribute name ="callingconvention" type="tc:callingconvention_simple" use="optional"/>
+        <xs:attribute name ="charset" type="tc:charset_simple" use="optional"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="callingconvention_simple">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\b(winapi|stdcall|cdecl)\b"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="charset_simple">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\b(auto|ansi|unicode)\b"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!-- TransportBinding Adapter -->
+  <!-- This is a custom adapter type provided by PTF. -->
+  <xs:complexType name="transportbinding">
+    <xs:complexContent>
+      <xs:extension base="tc:adapterBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Script Adapter -->
+  <xs:complexType name="script">
+    <xs:complexContent>
+      <xs:extension base="tc:adapterBase">
+        <!-- Attribute "scriptdir" is the scripts' location. -->
+        <xs:attribute name="scriptdir" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- PowerShell Script Adapter -->
+  <xs:complexType name="powershell">
+    <xs:complexContent>
+      <xs:extension base="tc:adapterBase">
+        <!-- Attribute "scriptdir" is the scripts' location. -->
+        <xs:attribute name="scriptdir" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Managed Adapter -->
+  <xs:complexType name="managed">
+    <xs:complexContent>
+      <xs:extension base="tc:adapterBase">
+        <!-- Attribute "adaptertype" is the type which implements the interface of the adapter. 
+             It MUST be complied with .Net convention. -->
+        <xs:attribute name="adaptertype" type="xs:string" use="required"/>
+        <!-- Attribute "assembly" is deprecated, please DO NOT use this attribute. -->
+        <xs:attribute name="assembly" type="xs:string" use="optional"/>
+        <xs:attribute name="disablevalidation" type="xs:boolean" use="optional"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- PowerShell Wrapper Adapter -->
+  <xs:complexType name="pswrapper">
+    <xs:complexContent>
+      <xs:extension base="tc:adapterBase">
+        <!-- Attribute "scriptdir" is the scripts' location. -->
+        <xs:attribute name="scriptfile" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="scope_type">
+    <xs:restriction base="xs:string">
+      <!-- Client, Server or Both -->
+      <xs:pattern value ="^[a-zA-Z0-9]+$"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Root Element -->
+  <!-- The attributes of this element SHOULD NOT be changed. -->
+  <xs:element name="TestSite">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name ="Include" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name ="File" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use ="required"></xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name ="TestRun" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name ="AssertFailuresBeforeThrowException" type="xs:int" use ="optional"/>
+            <xs:attribute name ="MaxFailuresToDisplayPerTestCase" type ="xs:int" use ="optional" />
+          </xs:complexType>
+        </xs:element>
+        
+        <!-- Properties Section -->
+        <!-- Any Property element listed below maps to ITestSite.Properties["xxxx"]. "xxxx" is the property name. -->
+        <!-- General properties of ITestSite, including TestName, FeatureName, Version, Server, Port, etc. -->
+        <!-- "TestName" is required. It represents the name of the test suite. 
+                   Normally, it is the name of the executing test which maps to ITestSite.TestName. -->
+        <!-- "FeatureName" is required. It represents the name of the test suite. 
+                   Normally, it is the name of a being tested protocol which maps to ITestSite.FeatureName. -->
+        <!-- "Version" is required. It represents the version of the protocol TD. -->
+        <xs:element name="Properties">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="Group" type="tc:grouptype"/>
+              <xs:element name="Property">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="Description" minOccurs="0"/>
+                    <xs:element name="Type" minOccurs="0"/>
+                    <xs:element name="Choice" minOccurs="0"/>
+                  </xs:all>
+                  <!-- Property name -->
+                  <xs:attribute name="name" type="xs:string" use="required"/>
+                  <!-- Property value -->
+                  <xs:attribute name="value" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+        
+        <!-- Adapters Section -->
+        <!-- Each adapter's description SHOULD be listed under this element. 
+             Only four adapter types are supported by default. 
+             These four are interactive, script, managed and rpc types which MUST be specified in 
+             the xsi:type attribute of "Adapter" element in configuration file. -->
+        <!-- Adapter types can be extended by user. -->
+        <xs:element name="Adapters" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Adapter type MUST derive from tc:adapterBase type. -->
+              <xs:element name="Adapter" type="tc:adapterBase" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+          <!-- Attribute "name" MUST be unique. -->
+          <xs:unique name="AdapterNameUnique">
+            <xs:selector xpath="tc:Adapter"/>
+            <xs:field xpath="@name"/>
+          </xs:unique>
+        </xs:element>
+
+        <!-- TestLog Section -->
+        <!-- It contains log sinks and log rules information that are used in test logging. -->
+        <xs:element name="TestLog" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Log sinks SHOULD be described under this element. -->
+              <!-- Every sink SHOULD begin with an element name being Console, 
+                   Sink or File indicating the sink type. -->
+              <xs:element name="Sinks" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <!-- Console, Sink and File sink types DO NOT have to be configured in sequence. -->
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <!-- User defined sink -->
+                    <xs:element name="Sink" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <!-- Sink name -->
+                        <xs:attribute name="id" type="xs:ID" use="required"/>
+                        <!-- Name of the sink type -->
+                        <xs:attribute name="type" type="xs:string" use="required"/>
+                        <!-- Attribute "assembly" is deprecated, please DO NOT use this attribute. -->
+                        <xs:attribute name="assembly" type="xs:string" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <!--Console sink is defined in the site.ptfconfig file, 
+                        so user configuration file SHOULD NOT have Console sink item. -->
+                    <xs:element name="Console" minOccurs="0">
+                      <xs:complexType>
+                        <!--Sink name, default is "Console". -->
+                        <xs:attribute name="id" type="xs:ID"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <!-- File sink -->
+                    <xs:element name="File" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <!-- Sink name -->
+                        <xs:attribute name="id" type="xs:ID" use="required"/>
+                        <!-- The directory that log file will be stored in. -->
+                        <xs:attribute name="directory" type="xs:string" use="required"/>
+                        <!-- Name of log file -->
+                        <xs:attribute name="file" type="xs:string" use="optional"/>
+                        <!-- The format of the log file. It MUST be "text" or "xml". -->
+                        <xs:attribute name="format" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+              <!-- The "Profiles" element describes the mapping relations between log kind and sink. -->
+              <xs:element name="Profiles">
+                <xs:complexType>
+                  <xs:sequence>
+                    <!-- "Profile" element contains log rules that specifies what log kind message logs to what sink. -->
+                    <xs:element name="Profile" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <!-- Log rules. Each kind of log messages can be logged to multiple sinks. -->
+                          <xs:element name="Rule" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <!-- The log kind that will be logged as. -->
+                              <xs:attribute name="kind" type="xs:string" use="required"/>
+                              <!-- The log sink that will be logged to. -->
+                              <xs:attribute name="sink" type="xs:IDREF" use="required"/>
+                              <!-- Attribute "delete". Being false indicates adding a rule, 
+                                   and being true indicates deleting one. -->
+                              <xs:attribute name="delete" type="xs:boolean" use="optional"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <!-- Name of the profile -->
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <!-- Attribute "extends" specifies which profile will be included. -->
+                        <xs:attribute name="extends" type="xs:string" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+                <!-- Attribute "name" MUST be unique. -->
+                <xs:unique name="ProfileNameUnique">
+                  <xs:selector xpath="tc:Profile"/>
+                  <xs:field xpath="@name"/>
+                </xs:unique>
+              </xs:element>
+            </xs:sequence>
+            <!-- Attribute "defaultprofile" is the default profile name 
+                 which MUST be defined by Profile element. -->
+            <xs:attribute name="defaultprofile" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <!--Test Report Do NOT have to be configured in sequence-->
+        <xs:choice minOccurs="0" maxOccurs="1">
+          <!--TestReport Section-->
+          <!--It contains requirement file, source and report information-->
+          <xs:element name ="TestReport" minOccurs ="0" maxOccurs ="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name ="RequirementFile" minOccurs ="1" maxOccurs ="unbounded">
+                  <xs:complexType>
+                    <!--The location of the requirement xml file as the input of reporting tool-->
+                    <xs:attribute name ="location" type ="xs:string" use ="required"/>
+                  </xs:complexType>
+                </xs:element>
+                <!--Log file sink-->
+                <xs:element name ="LogFile" minOccurs ="1" maxOccurs ="unbounded">
+                  <xs:complexType>
+                    <!--The sink name which configured in the sinks tag-->
+                    <xs:attribute name ="sink" type ="xs:string" use ="required"/>
+                  </xs:complexType>
+                </xs:element>
+                <!--Reporting file information, contain file name, output direction and format-->
+                <xs:element name ="Report" minOccurs ="0" maxOccurs ="1">
+                  <xs:complexType>
+                    <!--Reporting file name-->
+                    <xs:attribute name ="name" type ="xs:string" use ="optional"/>
+                    <!--The output direction of report file, the default value is the direction of log files-->
+                    <xs:attribute name ="directory" type ="xs:string" use ="optional"/>
+                    <!--Auto display the test report-->
+                    <xs:attribute name ="autoDisplay" type ="xs:boolean" use ="optional"/>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="Prefix" minOccurs ="0" maxOccurs="1">
+                  <xs:complexType>
+                    <xs:attribute name="value" type="xs:string" use="required"/>
+                  </xs:complexType>
+                </xs:element>
+                <xs:sequence minOccurs ="0" maxOccurs ="1">
+                  <!--InScope parameters, to specify the scope of the in-scope requirements-->
+                  <xs:element name ="InScope" minOccurs ="1" maxOccurs ="1">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name ="Scope" minOccurs ="1" maxOccurs ="unbounded">
+                          <xs:complexType>
+                            <xs:attribute name ="value" type ="tc:scope_type" use ="required"/>
+                          </xs:complexType>
+                          <xs:unique name="InScopeValueUnique">
+                            <xs:selector xpath="tc:Scope"/>
+                            <xs:field xpath="@value"/>
+                          </xs:unique>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <!--OutOfScope parameters, to specify the scope of the in-scope requirements-->
+                  <xs:element name ="OutOfScope" minOccurs ="1" maxOccurs ="1">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name ="Scope" minOccurs ="1" maxOccurs ="unbounded">
+                          <xs:complexType>
+                            <xs:attribute name ="value" type ="tc:scope_type" use ="required"/>
+                          </xs:complexType>
+                          <xs:unique name="OutOfScopeValueUnique">
+                            <xs:selector xpath="tc:Scope"/>
+                            <xs:field xpath="@value"/>
+                          </xs:unique>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:sequence>
+              <xs:attribute name ="autoGenerate" type ="xs:boolean" use ="required"/>
+              <xs:attribute name ="verbose" type ="xs:boolean" use="optional"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

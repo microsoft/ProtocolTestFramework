@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1CA2B935-3224-40F1-84BC-47FA1A9B242E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Protocols.TestTools</RootNamespace>
+    <AssemblyName>Microsoft.Protocols.TestTools</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+	<DefineConstants Condition="$(FORMODEL)==1">FORMODEL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>Microsoft.Protocols.TestTools.XML</DocumentationFile>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+	<DefineConstants Condition="$(FORMODEL)==1">FORMODEL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>Microsoft.Protocols.TestTools.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup Condition="$(FORMODEL)==1">
+    <Reference Include="Microsoft.SpecExplorer.Runtime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>  
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Adapters\DefaultValueAttribute.cs" />
+    <Compile Include="Adapters\Interactive\InteractiveAdapterDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Adapters\Interactive\InteractiveAdapterDialog.Designer.cs">
+      <DependentUpon>InteractiveAdapterDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Adapters\Script\PsWrapperAdapterProxy.cs" />
+    <Compile Include="IProtocolTestContext.cs" />
+    <Compile Include="IProtocolTestNotify.cs" />
+    <Compile Include="IProtocolTestsManager.cs" />
+    <Compile Include="Attributes\ProtocolTestCleanupAttribute.cs" />
+    <Compile Include="Attributes\ProtocolTestInitializeAttribute.cs" />
+    <Compile Include="Checking\ICheckerConfig.cs" />
+    <Compile Include="Adapters\AdapterProxyBase.cs" />
+    <Compile Include="Adapters\AdapterProxyHelpers.cs" />
+    <Compile Include="Adapters\ParameterDataBuilder.cs" />
+    <Compile Include="Adapters\MethodHelpAttribute.cs" />
+    <Compile Include="Adapters\Script\PowerShellAdapterProxy.cs" />
+    <Compile Include="ConfigurationDataProvider.cs" />
+    <Compile Include="ConfigurationPropertyName.cs" />
+    <Compile Include="ConfigurationReader.cs" />
+    <Compile Include="Config\PTFConfig.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PTFConfig.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Adapters\Interactive\InteractiveAdapterProxy.cs" />
+    <Compile Include="IConfigurationData.cs" />
+    <Compile Include="Logging\ApplicationLog.cs" />
+    <Compile Include="Logging\DerivedTypes\BeaconLogSink.cs" />
+    <Compile Include="Logging\DerivedTypes\EtwLogSink.cs" />
+    <Compile Include="Logging\DerivedTypes\LogProviders.cs" />
+    <Compile Include="Logging\DerivedTypes\LogSinkTypes.cs" />
+    <Compile Include="Logging\DerivedTypes\PipeSink.cs" />
+    <Compile Include="Logging\LoggingHelper.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\DerivedTypes\LogProfile.cs" />
+    <Compile Include="Logging\LogInformationName.cs" />
+    <Compile Include="Logging\LogProfileParser.cs" />
+    <Compile Include="Logging\LogProvider.cs" />
+    <Compile Include="Logging\LogSink.cs" />
+    <Compile Include="Logging\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ITestSite.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="IAdapter.cs" />
+    <Compile Include="IChecker.cs" />
+    <Compile Include="Logging\PTFLogging.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PTFLogging.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Adapters\ManagedAdapterBase.cs" />
+    <Compile Include="DefaultTestSite.cs" />
+    <Compile Include="Adapters\Script\ScriptAdapterProxy.cs" />
+    <Compile Include="NetworkEventSimulator.cs" />
+    <Compile Include="PTFOptionParser.cs" />
+    <Compile Include="ProtocolTestsManager.cs" />
+    <Compile Include="RequirementId.cs" />
+    <Compile Include="TestSiteProvider.cs" />
+    <Compile Include="TestToolHelpers.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\site.ptfconfig" />
+    <Content Include="Config\TestConfig.xsd">
+      <SubType>
+      </SubType>
+    </Content>
+    <Content Include="Logging\TestLog.xsd">
+      <SubType>
+      </SubType>
+    </Content>
+    <None Include="Logging\TestLog.xsx">
+      <DependentUpon>TestLog.xsd</DependentUpon>
+    </None>
+    <None Include="TestTools.cd" />
+    <None Include="Config\user.ptfconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Adapters\Interactive\InteractiveAdapterDialog.resx">
+      <DependentUpon>InteractiveAdapterDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Logging\Messages.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\PTFConfig.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PTFConfig.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Logging\PTFLogging.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PTFLogging.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TestTools.ExtendedLogging\TestTools.ExtendedLogging.csproj">
+      <Project>{EEB7AC20-C23F-447A-A2E7-E92519592DB0}</Project>
+      <Name>TestTools.ExtendedLogging</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="..\Bin\ptf\vs10\" />
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\Bin\ptf\vs10\xmldocs\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="..\Bin\ptf\vs10\" />
+  </Target>
+</Project>
