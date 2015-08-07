@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?define BLDVER=1.0.0.0?>
+<?define EXTERNAL_DIR=..\..\external\?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+
+  <Product Id="*"
+           Name="Microsoft Protocol Test Framework"
+           Language="1033"
+           Version="$(var.BLDVER)"
+           Manufacturer="Microsoft Corporation"
+           UpgradeCode="3ED15020-EFB8-40D8-BCC0-818A0628D54D">
+
+
+    <!-- Set InstallerVersion to 300 or greater to merge VC90Redist -->
+    <Package Id="*"
+             InstallScope="perMachine"
+             InstallPrivileges="elevated"
+             Description="Microsoft Protocol Test Framework"
+             Comments="Microsoft Protocol Test Framework v$(var.BLDVER)"
+             Manufacturer="Microsoft Corporation"
+             InstallerVersion="300"
+             Compressed="yes" />
+
+    <Media Id="1" Cabinet="ProtocolTestFramework.cab" EmbedCab="yes" />
+
+    <!-- Upgrade info -->
+    <Upgrade Id="3ED15020-EFB8-40D8-BCC0-818A0628D54D">
+      <UpgradeVersion Property="OLDER_VERSION_BEING_UPGRADED"
+                      IncludeMaximum="no"
+                      Maximum="$(var.BLDVER)"
+                      OnlyDetect="no"
+                      RemoveFeatures="ALL" />
+      <UpgradeVersion Property="NEWER_VERSION_DETECTED"
+                      IncludeMinimum="no"
+                      Minimum="$(var.BLDVER)"
+                      OnlyDetect="yes" />
+    </Upgrade>
+
+    <!-- Conditions for product installation -->
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
+      Installed OR NETFRAMEWORK40FULL
+    </Condition>
+    <Condition Message="A later version of [ProductName] is already installed. Setup will now exit.">
+      NOT NEWER_VERSION_DETECTED OR Installed
+    </Condition>
+
+    <Property Id="VS2012_ROOTPATH">
+      <RegistrySearch Id='VS2012_ROOTPATH' Type='raw'
+        Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\SxS\VS7' Name='11.0' />
+    </Property>
+    
+    <Property Id="VS2013_ROOTPATH">
+      <RegistrySearch Id='VS2013_ROOTPATH' Type='raw'
+        Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\SxS\VS7' Name='12.0' />
+    </Property>
+
+    <!-- Directory Structure -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="VS2012_ROOTPATH">
+        <Directory Id="VS2012_Common7" Name="Common7">
+          <Directory Id="VS2012_IDE" Name="IDE">
+            <Directory Id="VS2012_CommonExtensions" Name="CommonExtensions">
+              <Directory Id="VS2012_Microsoft" Name="Microsoft">
+                <Directory Id="VS2012_TestWindow" Name="TestWindow">
+                  <Directory Id="VS2012_HtmlTestLogger_InstallLocation" Name="Extensions"/>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="VS2013_ROOTPATH">
+        <Directory Id="VS2013_Common7" Name="Common7">
+          <Directory Id="VS2013_IDE" Name="IDE">
+            <Directory Id="VS2013_CommonExtensions" Name="CommonExtensions">
+              <Directory Id="VS2013_Microsoft" Name="Microsoft">
+                <Directory Id="VS2013_TestWindow" Name="TestWindow">
+                  <Directory Id="VS2013_HtmlTestLogger_InstallLocation" Name="Extensions"/>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder" >
+        <Directory Id="ApplicationProgramsMenuFolder" Name="Protocol Test Framework" />
+      </Directory> 
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="ROOT_DIR" Name="Protocol Test Framework">
+          <Directory Id="DOCS_DIR" Name="docs" />
+          <Directory Id="Bin_DIR" Name="bin">
+          </Directory>
+          <Directory Id="PTF_GAC_VS10" Name="GAC_VS10" />
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <!-- Application Shortcut -->
+    <DirectoryRef Id="ApplicationProgramsMenuFolder">
+      <Component Id="ApplicationShortcut" Guid="{FCDDAE66-9D7A-47F2-8D97-427A3C90A18F}">
+
+        <!-- Step installer Uninstall Microsoft Protocol Test Framework -->
+        <Shortcut Id="UninstallProduct"
+                  Name="Uninstall Microsoft Protocol Test Framework"
+                  Description="Uninstall Microsoft Protocol Test Framework"
+                  Target="[System64Folder]msiexec.exe"
+                  Arguments="/x [ProductCode]"/>
+
+        <RemoveFolder Id="ROOT_DIR" On="uninstall"/>
+
+        <RegistryValue Root="HKCU"
+                       Key="Software\Microsoft\ProtocolTestFramework"
+                       Name="installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes"/>
+
+      </Component>
+    </DirectoryRef>
+
+    <!-- Microsoft Protocol Test Framework End User License Agreement -->
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+    <!-- Candidate Features -->
+    <Feature Id="Feature_All"
+                 Title="Microsoft Protocol Test Framework"
+                 Description="Microsoft Protocol Test Framework"
+                 Level="1"
+                 Display="expand"
+                 ConfigurableDirectory="ROOT_DIR">
+
+      <ComponentRef Id="ApplicationShortcut"/>
+	  <!-- Protocol Test Framework -->
+      <Feature Id="Feature_ProtocolTestFramework"
+               Title="Protocol Test Framework"
+               Description="Protocol Test Framework"
+               Level="1" >
+      <FeatureRef Id="PTF_All" />
+	  </Feature>
+    </Feature>
+
+    <!-- Default sequence -->
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize"/>
+    </InstallExecuteSequence>
+
+    <!-- Custom sequence -->
+    <InstallExecuteSequence>
+      <!-- 
+      Wix grammar reference:
+      "!" means "Installed state of the feature".
+      "&" means "Action state of the feature".
+      INSTALLSTATE_UNKNOWN(-1) - No action to be taken on the feature or component.
+      INSTALLSTATE_ABSENT(2) - Feature or component is not present.
+      INSTALLSTATE_LOCAL(3) - Feature or component on the local computer.
+      MSDN: http://msdn.microsoft.com/en-us/library/aa368012(VS.85).aspx 
+     -->
+    </InstallExecuteSequence>
+
+    <!-- Progress Texts for UI -->
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <UI Id="WixUI_FeatureTree">
+        <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+        <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+        <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+        <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+        <Property Id="WixUI_Mode" Value="FeatureTree" />
+
+        <DialogRef Id="ErrorDlg" />
+        <DialogRef Id="FatalError" />
+        <DialogRef Id="FilesInUse" />
+        <DialogRef Id="MsiRMFilesInUse" />
+        <DialogRef Id="PrepareDlg" />
+        <DialogRef Id="ProgressDlg" />
+        <DialogRef Id="ResumeDlg" />
+        <DialogRef Id="UserExit" />
+
+        <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+        <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+
+        <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+        <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="PrivacyDlg">LicenseAccepted = "1"</Publish>
+
+        <Publish Dialog="PrivacyDlg" Control="Cancel" Event="EndDialog" Value="Return">1</Publish>
+        <Publish Dialog="PrivacyDlg" Control="Next" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+        <Publish Dialog="PrivacyDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+
+        <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
+        <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="PrivacyDlg" Order="2">NOT Installed</Publish>
+        <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+
+        <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="1">NOT Installed </Publish>
+        <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="2">WixUI_InstallMode = "Change"</Publish>
+        <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="3"><![CDATA[Installed AND (WixUI_InstallMode <> "Change")]]></Publish>
+
+        <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+
+        <Publish Dialog="MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+        <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+        <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+        <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+    
+    </UI>
+
+    <!-- Properties for "Add or Reomve Program Entries" -->
+    <Property Id="ARPCOMMENTS">Microsoft Protocol Test Framework</Property>
+    <Property Id="ARPCONTACT">Microsoft Winterop Engineering Team</Property>
+  </Product>
+</Wix>

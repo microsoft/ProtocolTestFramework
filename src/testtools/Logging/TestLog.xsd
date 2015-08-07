@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestLog"
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:tl="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestLog"
+elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <!-- log entry base -->
+  <xs:complexType name="logEntryType">
+    <xs:sequence>
+      <xs:element name="Message" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="kind" type="xs:string" use="required" />
+    <xs:attribute name="timeStamp" type="xs:dateTime" use="required" />
+    <xs:attribute name ="testCase" type="xs:string" use ="optional" />
+  </xs:complexType>
+  
+  <!-- Root element, attributes of this element should not be changed. -->
+  <xs:element name="TestLog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="LogEntries">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="LogEntry" type="tl:logEntryType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
