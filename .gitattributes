@@ -29,6 +29,8 @@
 *.dll  binary
 *.obj  binary
 *.pdb  binary
+*.res  binary
+*.man  binary
 
 #Images (Binary)
 *.png binary
