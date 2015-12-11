@@ -48,6 +48,10 @@
       NOT NEWER_VERSION_DETECTED OR Installed
     </Condition>
 
+	<PropertyRef Id="VS2012_ROOT_FOLDER"/>
+	<PropertyRef Id="VS2013_ROOT_FOLDER"/>
+	<PropertyRef Id="VS2015_ROOT_FOLDER"/>
+
     <Property Id="VS2012_ROOTPATH">
       <RegistrySearch Id='VS2012_ROOTPATH' Type='raw'
         Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\SxS\VS7' Name='11.0' />
@@ -194,8 +198,12 @@
 
         <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
         <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="PrivacyDlg" Order="2">NOT Installed</Publish>
-        <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
-
+		<Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1">1</Publish>
+        <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="DependencyCheckWarningDlg" Order="2">
+			<![CDATA[NOT VS2012_ROOT_FOLDER AND NOT VS2013_ROOT_FOLDER AND NOT VS2015_ROOT_FOLDER]]>
+		</Publish>
+		<Publish Dialog="DependencyCheckWarningDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+		<Publish Dialog="DependencyCheckWarningDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
         <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="1">NOT Installed </Publish>
         <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="2">WixUI_InstallMode = "Change"</Publish>
         <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="3"><![CDATA[Installed AND (WixUI_InstallMode <> "Change")]]></Publish>
