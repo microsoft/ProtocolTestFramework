@@ -52,7 +52,7 @@ namespace Microsoft.Protocols.TestTools
                 filename = System.IO.Path.Combine(CaptureFileFolder, filename);
             }
             if (File.Exists(filename)) File.Delete(filename);
-            SyncExecute("logman.exe", string.Format("create trace -n ptftrace -o \"{0}\" --v -bs 256 -nb 16 512", filename));
+            SyncExecute("logman.exe", string.Format("create trace -n ptftrace -o \"{0}\" --v -bs 64 -nb 16 512", filename));
             SyncExecute("logman.exe", "update trace -n ptftrace -p Microsoft-Windows-NDIS-PacketCapture 0 4");
             SyncExecute("logman.exe", "update trace -n ptftrace -p Protocol-Test-Suite");
             SyncExecute("logman.exe", "start -n ptftrace");
