@@ -52,19 +52,9 @@
 	<PropertyRef Id="VS2013_ROOT_FOLDER"/>
 	<PropertyRef Id="VS2015_ROOT_FOLDER"/>
 
-    <Property Id="VS2012_ROOTPATH">
-      <RegistrySearch Id='VS2012_ROOTPATH' Type='raw'
-        Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\SxS\VS7' Name='11.0' />
-    </Property>
-    
-    <Property Id="VS2013_ROOTPATH">
-      <RegistrySearch Id='VS2013_ROOTPATH' Type='raw'
-        Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\SxS\VS7' Name='12.0' />
-    </Property>
-
     <!-- Directory Structure -->
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="VS2012_ROOTPATH">
+      <Directory Id="VS2012_ROOT_FOLDER">
         <Directory Id="VS2012_Common7" Name="Common7">
           <Directory Id="VS2012_IDE" Name="IDE">
             <Directory Id="VS2012_CommonExtensions" Name="CommonExtensions">
@@ -77,7 +67,7 @@
           </Directory>
         </Directory>
       </Directory>
-      <Directory Id="VS2013_ROOTPATH">
+      <Directory Id="VS2013_ROOT_FOLDER">
         <Directory Id="VS2013_Common7" Name="Common7">
           <Directory Id="VS2013_IDE" Name="IDE">
             <Directory Id="VS2013_CommonExtensions" Name="CommonExtensions">
@@ -90,6 +80,19 @@
           </Directory>
         </Directory>
       </Directory>
+      <Directory Id="VS2015_ROOT_FOLDER">
+        <Directory Id="VS2015_Common7" Name="Common7">
+          <Directory Id="VS2015_IDE" Name="IDE">
+            <Directory Id="VS2015_CommonExtensions" Name="CommonExtensions">
+              <Directory Id="VS2015_Microsoft" Name="Microsoft">
+                <Directory Id="VS2015_TestWindow" Name="TestWindow">
+                  <Directory Id="VS2015_HtmlTestLogger_InstallLocation" Name="Extensions"/>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>	  
       <Directory Id="ProgramMenuFolder" >
         <Directory Id="ApplicationProgramsMenuFolder" Name="Protocol Test Framework" />
       </Directory> 
