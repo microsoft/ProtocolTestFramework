@@ -34,10 +34,4 @@ if not defined ptfsnk (
 	set ptfsnk=..\TestKey.snk
 )
 
-%buildtool% ptf.sln /t:clean
-
-if /i "%~1"=="formodel" (
-	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /p:FORMODEL="1" /t:Clean;Rebuild
-) else (
-	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /t:Clean;Rebuild
-)
+%buildtool% pt
