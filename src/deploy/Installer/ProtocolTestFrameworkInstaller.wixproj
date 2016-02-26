@@ -37,6 +37,7 @@
     <Compile Include="PTFProduct.wxs" />
     <Compile Include="PrivacyDlg.wxs" />
     <Compile Include="ProtocolTestFramework.wxs" />
+	<Compile Include="DependencyCheckWarningDlg.wxs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -22,10 +22,12 @@
   <Fragment Id="PTF">
 
     <!-- WixVSExtension properties for visual studio directories -->
-    <PropertyRef Id="VS2010_ROOT_FOLDER" />
-    <PropertyRef Id="VS2010_SCHEMAS_DIR" />
     <PropertyRef Id="VS2012_ROOT_FOLDER" />
+	<PropertyRef Id="VS2013_ROOT_FOLDER" />
+	<PropertyRef Id="VS2015_ROOT_FOLDER" />
     <PropertyRef Id="VS2012_SCHEMAS_DIR" />
+	<PropertyRef Id="VS2013_SCHEMAS_DIR" />
+	<PropertyRef Id="VS2015_SCHEMAS_DIR" />
   
     <!-- Program Menu -->
     <DirectoryRef Id="ProgramMenuFolder">
@@ -34,33 +36,20 @@
 
     <DirectoryRef Id="TARGETDIR">
       <!-- visual studio schemas -->
-      <Directory Id="VS2010_SCHEMAS_DIR" />
-    </DirectoryRef>
-
-    <DirectoryRef Id="TARGETDIR">
-      <!-- visual studio schemas -->
       <Directory Id="VS2012_SCHEMAS_DIR" />
+	  <Directory Id="VS2013_SCHEMAS_DIR" />
+	  <Directory Id="VS2015_SCHEMAS_DIR" />
     </DirectoryRef>
-
-    <Property Id="VS2012">
-      <RegistrySearch Id='VS2012' Type='raw'
-        Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\SxS\VS7' Name='11.0' />
-    </Property>
-    
-    <Property Id="VS2013">
-      <RegistrySearch Id='VS2013' Type='raw'
-        Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\SxS\VS7' Name='12.0' />
-    </Property>
 
     <!-- If Visual Studio is not installed, then do not install HtmlLogger. -->
     <DirectoryRef Id ="VS2012_HtmlTestLogger_InstallLocation">
       <Component Id="VS2012_HtmlTestLogger.dll" Guid="817DF6E7-6169-4A10-AF67-A064CDBB38E5" Feature="PTF_All">
-        <Condition>VS2012</Condition>
+        <Condition>VS2012_ROOT_FOLDER</Condition>
         <File Id="VS2012_HtmlTestLogger.dll"
               Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.HtmlTestLogger.dll" />
       </Component>
       <Component Id="VS2012_HtmlTestLogger.pdb" Guid="D2869602-1C51-48D5-A81C-91B0332F00C7" Feature="PTF_All">
-        <Condition>VS2012</Condition>
+        <Condition>VS2012_ROOT_FOLDER</Condition>
         <File Id="VS2012_HtmlTestLogger.pdb"
               Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.HtmlTestLogger.pdb" />
       </Component>
@@ -68,16 +57,29 @@
 
     <DirectoryRef Id ="VS2013_HtmlTestLogger_InstallLocation">
       <Component Id="VS2013_HtmlTestLogger.dll" Guid="710273DA-D320-4D95-A7E2-849EDD9A9C4C" Feature="PTF_All">
-        <Condition>VS2013</Condition>
+        <Condition>VS2013_ROOT_FOLDER</Condition>
         <File Id="VS2013_HtmlTestLogger.dll"
               Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.HtmlTestLogger.dll" />
       </Component>
       <Component Id="VS2013_HtmlTestLogger.pdb" Guid="A2A350D9-F1CA-4033-9801-31E2A0120364" Feature="PTF_All">
-        <Condition>VS2013</Condition>
+        <Condition>VS2013_ROOT_FOLDER</Condition>
         <File Id="VS2013_HtmlTestLogger.pdb"
               Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.HtmlTestLogger.pdb" />
       </Component>
     </DirectoryRef>
+	
+    <DirectoryRef Id ="VS2015_HtmlTestLogger_InstallLocation">
+      <Component Id="VS2015_HtmlTestLogger.dll" Guid="734F03A8-FA4D-4539-A7DB-31058B572804" Feature="PTF_All">
+        <Condition>VS2015_ROOT_FOLDER</Condition>
+        <File Id="VS2015_HtmlTestLogger.dll"
+              Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.HtmlTestLogger.dll" />
+      </Component>
+      <Component Id="VS2015_HtmlTestLogger.pdb" Guid="89018774-A370-4BFC-8B8E-A16218112CA8" Feature="PTF_All">
+        <Condition>VS2015_ROOT_FOLDER</Condition>
+        <File Id="VS2015_HtmlTestLogger.pdb"
+              Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.HtmlTestLogger.pdb" />
+      </Component>
+    </DirectoryRef>	
     
     <!-- PTF Bin -->
     <DirectoryRef Id="Bin_DIR">
@@ -282,15 +284,6 @@
                        KeyPath="yes"/>
       </Component>
     </DirectoryRef>
-
-    <!-- ptf testconfig schema for VS 2010 -->
-    <DirectoryRef Id="VS2010_SCHEMAS_DIR">
-      <Component Id="VS2010_TestConfig.xsd" Guid="F372BD7E-2D83-49A6-9473-9421FCB8ABEF" Feature="PTF_All">
-        <File Id="VS2010_TestConfig.xsd" Vital="yes"
-              Source="$(var.PTF_SRC_ROOT)\testtools\config\TestConfig.xsd" />
-        <Condition>VS2010_ROOT_FOLDER</Condition>
-      </Component>
-    </DirectoryRef>
   
     <!-- ptf testconfig schema for VS 2012 -->
     <DirectoryRef Id="VS2012_SCHEMAS_DIR">
@@ -301,6 +294,22 @@
       </Component>
     </DirectoryRef>
   
+    <DirectoryRef Id="VS2013_SCHEMAS_DIR">
+      <Component Id="VS2013_TestConfig.xsd" Guid="{B5ED2B8E-9BBA-42D0-A590-9ABA8E928B98}" Feature="PTF_All">
+        <File Id="VS2013_TestConfig.xsd" Vital="yes"
+              Source="$(var.PTF_SRC_ROOT)\testtools\config\TestConfig.xsd" />
+        <Condition>VS2013_ROOT_FOLDER</Condition>
+      </Component>
+    </DirectoryRef>
+	
+    <DirectoryRef Id="VS2015_SCHEMAS_DIR">
+      <Component Id="VS2015_TestConfig.xsd" Guid="{623E6855-5569-428D-9AC4-FCDFEFC5CA86}" Feature="PTF_All">
+        <File Id="VS2015_TestConfig.xsd" Vital="yes"
+              Source="$(var.PTF_SRC_ROOT)\testtools\config\TestConfig.xsd" />
+        <Condition>VS2015_ROOT_FOLDER</Condition>
+      </Component>
+    </DirectoryRef>	
+	
     <Feature Id="PTF_All"
          Title="Protocol Test Framework"
          Description="Protocol Test Framework"
