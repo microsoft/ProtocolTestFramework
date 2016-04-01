@@ -33,7 +33,7 @@ you should install **Spec Explorer** first and then build PTF with the option **
 build.cmd formodel
 ```
 
-## Examples
+## Samples
 You can find samples of how to develop a protocol test suite using PTF [here](https://github.com/Microsoft/ProtocolTestFramework/tree/master/samples).
 
 ## Documentation
