@@ -30,7 +30,6 @@ After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated
 If you need to develop a protocol test suite using Model Based Testing tool [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/), 
 you should install **Spec Explorer** first and then build PTF with the option **formodel**.
 ```
-cd src
 build.cmd formodel
 ```
 
