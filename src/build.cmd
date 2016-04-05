@@ -1,7 +1,26 @@
 :: Copyright (c) Microsoft. All rights reserved.
 :: Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+:: build PTF -- call build.cmd
+:: build PTF with specific build number -- call build.cmd x.x.x.x
+:: build PTF for model based testing -- call build.cmd formodel
+:: build PTF for model based testing with specific build number -- call build.cmd x.x.x.x formodel
+
 @echo off
+
+set BLDVersion=%~1
+set Model=%~2
+
+if not defined BLDVersion (
+	set BLDVersion=1.0.0.0
+	set Model=nonmodel
+) else if /i "%BLDVersion%"=="formodel" (
+	set BLDVersion=1.0.0.0
+	set Model=formodel
+) else if not defined Model (
+	set Model=nonmodel
+)
+
 if not defined buildtool (
 	for /f %%i in ('dir /b /ad /on "%windir%\Microsoft.NET\Framework\v4*"') do (@if exist "%windir%\Microsoft.NET\Framework\%%i\msbuild".exe set buildtool=%windir%\Microsoft.NET\Framework\%%i\msbuild.exe)
 )
@@ -36,8 +55,8 @@ if not defined ptfsnk (
 
 %buildtool% ptf.sln /t:clean
 
-if /i "%~1"=="formodel" (
-	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /p:FORMODEL="1" /t:Clean;Rebuild
+if /i "Model"=="formodel" (
+	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /p:FORMODEL="1" /t:Clean;Rebuild /p:BLDVersion=%BLDVersion%
 ) else (
-	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /t:Clean;Rebuild
+	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /t:Clean;Rebuild /p:BLDVersion=%BLDVersion%
 )

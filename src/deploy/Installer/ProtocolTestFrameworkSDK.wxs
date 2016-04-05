@@ -2,7 +2,6 @@
 
 <?define SRCDIR=..\..\Bin\ptf?>
 <?define PTF_SRC_ROOT=..\..\?>
-<?define BLDVER=1.0.0.0?>
 <?define SRCDIR_VS10=$(var.SRCDIR)\vs10?>
 
 <?if $(var.Platform) = "x86"?>
