@@ -11,7 +11,6 @@
 	<DefineSolutionProperties>False</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-	<BLDVersion Condition=" '$(BLDVersion)' == '' ">1.0.0.0</BLDVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -20,7 +19,6 @@
     <SuppressSpecificWarnings>1055</SuppressSpecificWarnings>
     <SuppressIces>ICE03;ICE80;ICE82;ICE83;ICE30</SuppressIces>
     <!--Ignore error LGHT0204: ICE30: The same target file by two different components on an LFN system which breaks component reference counting-->
-    <DefineConstants>Debug;BLDVER=$(BLDVersion)</DefineConstants>
 	<WixVariables>
     </WixVariables>
   </PropertyGroup>
@@ -29,7 +27,6 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <SuppressSpecificWarnings>1055</SuppressSpecificWarnings>
     <SuppressIces>ICE03;ICE80;ICE82;ICE83;ICE30</SuppressIces>
-    <DefineConstants>BLDVER=$(BLDVersion)</DefineConstants>
 	<!--Ignore error LGHT0204: ICE30: The same target file by two different components on an LFN system which breaks component reference counting-->
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

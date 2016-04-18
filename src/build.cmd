@@ -8,19 +8,6 @@
 
 @echo off
 
-set BLDVersion=%~1
-set Model=%~2
-
-if not defined BLDVersion (
-	set BLDVersion=1.0.0.0
-	set Model=nonmodel
-) else if /i "%BLDVersion%"=="formodel" (
-	set BLDVersion=1.0.0.0
-	set Model=formodel
-) else if not defined Model (
-	set Model=nonmodel
-)
-
 if not defined buildtool (
 	for /f %%i in ('dir /b /ad /on "%windir%\Microsoft.NET\Framework\v4*"') do (@if exist "%windir%\Microsoft.NET\Framework\%%i\msbuild".exe set buildtool=%windir%\Microsoft.NET\Framework\%%i\msbuild.exe)
 )
@@ -53,10 +40,17 @@ if not defined ptfsnk (
 	set ptfsnk=..\TestKey.snk
 )
 
+::Get build version from AssemblyInfo
+set path=SharedAssemblyInfo.cs
+set FindExe="%SystemRoot%\system32\findstr.exe"
+set versionStr="[assembly: AssemblyVersion("1.0.0.0")]"
+for /f "delims=" %%i in ('""%FindExe%" "AssemblyVersion" "%path%""') do set versionStr=%%i
+set PTF_VERSION=%versionStr:~28,-3%
+
 %buildtool% ptf.sln /t:clean
 
-if /i "Model"=="formodel" (
-	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /p:FORMODEL="1" /t:Clean;Rebuild /p:BLDVersion=%BLDVersion%
+if /i "%~1"=="formodel" (
+	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /p:FORMODEL="1" /t:Clean;Rebuild
 ) else (
-	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /t:Clean;Rebuild /p:BLDVersion=%BLDVersion%
+	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /t:Clean;Rebuild
 )

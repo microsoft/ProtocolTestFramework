@@ -90,7 +90,7 @@
                      Root="HKLM"
                      Key="SOFTWARE\Microsoft\ProtocolTestFramework">
           <RegistryValue Value="[Bin_DIR]" Type="string" Name="InstallDir"/>
-          <RegistryValue Value="$(var.BLDVER)" Type="string" Name="PTFVersion"/>
+          <RegistryValue Value="$(env.PTF_VERSION)" Type="string" Name="PTFVersion"/>
         </RegistryKey>
 
 

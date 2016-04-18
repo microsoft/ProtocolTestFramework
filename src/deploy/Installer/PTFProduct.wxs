@@ -8,7 +8,7 @@
   <Product Id="*"
            Name="Microsoft Protocol Test Framework"
            Language="1033"
-           Version="$(var.BLDVER)"
+           Version="$(env.PTF_VERSION)"
            Manufacturer="Microsoft Corporation"
            UpgradeCode="3ED15020-EFB8-40D8-BCC0-818A0628D54D">
 
@@ -18,7 +18,7 @@
              InstallScope="perMachine"
              InstallPrivileges="elevated"
              Description="Microsoft Protocol Test Framework"
-             Comments="Microsoft Protocol Test Framework v$(var.BLDVER)"
+             Comments="Microsoft Protocol Test Framework v$(env.PTF_VERSION)"
              Manufacturer="Microsoft Corporation"
              InstallerVersion="300"
              Compressed="yes" />
@@ -29,12 +29,12 @@
     <Upgrade Id="3ED15020-EFB8-40D8-BCC0-818A0628D54D">
       <UpgradeVersion Property="OLDER_VERSION_BEING_UPGRADED"
                       IncludeMaximum="no"
-                      Maximum="$(var.BLDVER)"
+                      Maximum="$(env.PTF_VERSION)"
                       OnlyDetect="no"
                       RemoveFeatures="ALL" />
       <UpgradeVersion Property="NEWER_VERSION_DETECTED"
                       IncludeMinimum="no"
-                      Minimum="$(var.BLDVER)"
+                      Minimum="$(env.PTF_VERSION)"
                       OnlyDetect="yes" />
     </Upgrade>
 
