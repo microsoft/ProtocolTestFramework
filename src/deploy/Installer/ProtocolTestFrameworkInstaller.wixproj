@@ -121,6 +121,6 @@
     </ProjectReference>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFolder="..\..\Bin\deploy\Installer\" />
+    <Copy SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFolder="$(PTF_Root)drop\ProtocolTestFramework\installer\" />
   </Target>
 </Project>

@@ -1,11 +1,6 @@
 :: Copyright (c) Microsoft. All rights reserved.
 :: Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-:: build PTF -- call build.cmd
-:: build PTF with specific build number -- call build.cmd x.x.x.x
-:: build PTF for model based testing -- call build.cmd formodel
-:: build PTF for model based testing with specific build number -- call build.cmd x.x.x.x formodel
-
 @echo off
 
 if not defined buildtool (
@@ -36,21 +31,23 @@ if not defined vspath (
 	)
 )
 
+set currentPath=%~dp0
+set PTF_Root=%currentPath%..\
+
 if not defined ptfsnk (
-	set ptfsnk=..\TestKey.snk
+	set ptfsnk=%currentPath%\TestKey.snk
 )
 
 ::Get build version from AssemblyInfo
-set path=SharedAssemblyInfo.cs
+set path="%currentPath%\SharedAssemblyInfo.cs"
 set FindExe="%SystemRoot%\system32\findstr.exe"
 set versionStr="[assembly: AssemblyVersion("1.0.0.0")]"
 for /f "delims=" %%i in ('""%FindExe%" "AssemblyVersion" "%path%""') do set versionStr=%%i
 set PTF_VERSION=%versionStr:~28,-3%
 
-%buildtool% ptf.sln /t:clean
-
 if /i "%~1"=="formodel" (
-	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /p:FORMODEL="1" /t:Clean;Rebuild
+	%buildtool% %currentPath%\deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:FORMODEL="1" /t:Clean;Rebuild /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk%
 ) else (
-	%buildtool% deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk% /t:Clean;Rebuild
+	%buildtool% %currentPath%\deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /t:Clean;Rebuild /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk%
 )
+

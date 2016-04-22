@@ -71,7 +71,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="..\Bin\ptf\HtmlTestLogger\" />
-    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="..\Bin\ptf\HtmlTestLogger\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\HtmlTestLogger\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\HtmlTestLogger\" />
   </Target>
 </Project>
