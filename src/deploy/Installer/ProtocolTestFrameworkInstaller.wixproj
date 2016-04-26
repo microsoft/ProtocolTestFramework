@@ -19,7 +19,7 @@
     <SuppressSpecificWarnings>1055</SuppressSpecificWarnings>
     <SuppressIces>ICE03;ICE80;ICE82;ICE83;ICE30</SuppressIces>
     <!--Ignore error LGHT0204: ICE30: The same target file by two different components on an LFN system which breaks component reference counting-->
-    <WixVariables>
+	<WixVariables>
     </WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -27,7 +27,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <SuppressSpecificWarnings>1055</SuppressSpecificWarnings>
     <SuppressIces>ICE03;ICE80;ICE82;ICE83;ICE30</SuppressIces>
-    <!--Ignore error LGHT0204: ICE30: The same target file by two different components on an LFN system which breaks component reference counting-->
+	<!--Ignore error LGHT0204: ICE30: The same target file by two different components on an LFN system which breaks component reference counting-->
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 
@@ -121,6 +121,6 @@
     </ProjectReference>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFolder="..\..\Bin\deploy\Installer\" />
+    <Copy SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFolder="$(PTF_Root)drop\ProtocolTestFramework\installer\" />
   </Target>
 </Project>

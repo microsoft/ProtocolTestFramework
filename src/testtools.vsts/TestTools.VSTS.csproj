@@ -90,8 +90,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="..\Bin\ptf\vs10\" />
-    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\Bin\ptf\vs10\xmldocs\" />
-    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="..\Bin\ptf\vs10\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs10\" />
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs10\xmldocs\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs10\" />
   </Target>
 </Project>
