@@ -8,7 +8,7 @@ PTF is based on Windows platform.
 You should install the following list of software in order to build PTF from source code.
 
 * .Net framework 4.0 or higher
-* Wix toolset v3.7 or higher
+* Wix toolset [v3.10](https://wix.codeplex.com/releases/view/619491)
 * Visual Studio or Visual Studio test agent, version 2012 or higher
 
 ## Build
