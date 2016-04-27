@@ -13,7 +13,12 @@ if not defined buildtool (
 )
 
 if not defined WIX (
-	echo WiX Toolset version 3.7 or higher should be installed
+	echo WiX Toolset version 3.10 should be installed
+	goto :eof
+)
+
+if "%WIX:3.10=%"=="%WIX%" (
+	echo WiX Toolset version 3.10 should be installed
 	goto :eof
 )
 
