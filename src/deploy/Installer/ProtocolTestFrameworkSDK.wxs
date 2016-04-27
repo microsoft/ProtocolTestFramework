@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?define SRCDIR=..\..\Bin\ptf?>
 <?define PTF_SRC_ROOT=..\..\?>
-<?define BLDVER=1.0.0.0?>
+<?define SRCDIR=$(var.PTF_SRC_ROOT)..\drop\ProtocolTestFramework\Bin?>
 <?define SRCDIR_VS10=$(var.SRCDIR)\vs10?>
 
 <?if $(var.Platform) = "x86"?>
@@ -91,7 +89,7 @@
                      Root="HKLM"
                      Key="SOFTWARE\Microsoft\ProtocolTestFramework">
           <RegistryValue Value="[Bin_DIR]" Type="string" Name="InstallDir"/>
-          <RegistryValue Value="$(var.BLDVER)" Type="string" Name="PTFVersion"/>
+          <RegistryValue Value="$(env.PTF_VERSION)" Type="string" Name="PTFVersion"/>
         </RegistryKey>
 
 

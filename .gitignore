@@ -2,3 +2,10 @@ bin
 obj
 drop
 *.suo
+
+# Generated files
+src/testtools.extendedlogging/Microsoft.Protocols.TestTools.ExtendedLogging.XML
+src/testtools.extension/Microsoft.Protocols.TestTools.Extension.XML
+src/testtools.messages.runtime/Microsoft.Protocols.TestTools.Messages.Runtime.XML
+src/testtools.vsts/Microsoft.Protocols.TestTools.VSTS.XML
+src/testtools/Microsoft.Protocols.TestTools.XML

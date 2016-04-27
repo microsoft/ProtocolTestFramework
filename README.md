@@ -25,7 +25,7 @@ Change to src directory and run build.cmd
 cd src
 build.cmd
 ```
-After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated in the folder ProtocolTestFramework\src\Bin\deploy\installer\.
+After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
 If you need to develop a protocol test suite using Model Based Testing tool [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/), 
 you should install **Spec Explorer** first and then build PTF with the option **formodel**.
