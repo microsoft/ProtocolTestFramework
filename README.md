@@ -10,6 +10,7 @@ You should install the following list of software in order to build PTF from sou
 * .Net framework 4.0 or higher
 * Wix toolset [v3.10](https://wix.codeplex.com/releases/view/619491)
 * Visual Studio or Visual Studio test agent, version 2012 or higher
+* [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/). It is only required if you want to build a PTF version that supports the test suites which contain [Model-Based Test](https://msdn.microsoft.com/en-us/library/ee620469.aspx) cases.
 
 ## Build
 
@@ -27,8 +28,7 @@ build.cmd
 ```
 After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
-If you need to develop a protocol test suite using Model Based Testing tool [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/), 
-you should install **Spec Explorer** first and then build PTF with the option **formodel**.
+If you need to support the protocol test suites that contain Model-Based Test cases, you should install [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/) first and then build PTF with the option **formodel**.
 ```
 build.cmd formodel
 ```
