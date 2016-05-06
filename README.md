@@ -20,18 +20,21 @@ After you clone a copy of this repo, change to the ProtocolTestFramework directo
 cd ProtocolTestFramework
 ```
 
-Change to src directory and run build.cmd
+PTF can be built in two different ways:
 
+* If the protocol test suite you need to support does not contain Model-Based Test cases, change to src directory and run build.cmd
 ```
 cd src
 build.cmd
 ```
-After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
-If you need to support the protocol test suites that contain Model-Based Test cases, you should install [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/) first and then build PTF with the option **formodel**.
+* If the protocol test suite you need to support contains Model-Based Test cases, you should install [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/) first and then build PTF with the option **formodel**.
 ```
+cd src
 build.cmd formodel
 ```
+
+After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
 ## Samples
 You can find samples of how to develop a protocol test suite using PTF [here](https://github.com/Microsoft/ProtocolTestFramework/tree/master/samples).
