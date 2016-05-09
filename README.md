@@ -19,15 +19,14 @@ After you clone a copy of this repo, change to the ProtocolTestFramework directo
 cd ProtocolTestFramework
 ```
 
-PTF can be built in two different ways:
 
-* If the protocol test suite you need to support does not contain Model-Based Test cases, change to src directory and run build.cmd
+* The **nomodel** version is used to support the protocol test suite that does not contain Model-Based Test cases, change to src directory and run build.cmd
   ```
   cd src
   build.cmd
   ```
 
-* If the protocol test suite you need to support contains Model-Based Test cases, you should install [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/) first and then build PTF with the option **formodel**.
+* The **formodel** version is used to support the protocol test suite that contains Model-Based Test cases, you should install [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/) first and then build PTF with the option **formodel**.
   ```
   cd src
   build.cmd formodel
