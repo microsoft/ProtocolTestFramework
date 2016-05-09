@@ -19,6 +19,7 @@ After you clone a copy of this repo, change to the ProtocolTestFramework directo
 cd ProtocolTestFramework
 ```
 
+PTF can be built into two versions:
 
 * The **nomodel** version is used to support the protocol test suite that does not contain Model-Based Test cases, change to src directory and run build.cmd
   ```
