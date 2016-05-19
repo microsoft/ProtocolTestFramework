@@ -26,6 +26,7 @@ PTF can be built into two versions:
   cd src
   build.cmd
   ```
+After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
 * The **formodel** version is used to support the protocol test suite that contains Model-Based Test cases, you should install [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/) first and then build PTF with the option **formodel**.
   ```
@@ -33,7 +34,7 @@ PTF can be built into two versions:
   build.cmd formodel
   ```
 
-After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
+After the build succeeds, ProtocolTestFrameworkInstallerForModel.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
 ## Samples
 You can find samples of how to develop a protocol test suite using PTF [here](https://github.com/Microsoft/ProtocolTestFramework/tree/master/samples).

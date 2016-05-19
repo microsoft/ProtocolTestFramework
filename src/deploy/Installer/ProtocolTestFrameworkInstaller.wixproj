@@ -121,6 +121,7 @@
     </ProjectReference>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFolder="$(PTF_Root)drop\ProtocolTestFramework\installer\" />
+    <Copy Condition="$(FORMODEL)==1" SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFiles="$(PTF_Root)drop\ProtocolTestFramework\installer\$(TargetFileName)ForModel.msi" />
+	<Copy Condition="$(FORMODEL)!=1" SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFolder="$(PTF_Root)drop\ProtocolTestFramework\installer\" />
   </Target>
 </Project>
