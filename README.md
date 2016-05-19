@@ -33,7 +33,6 @@ After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated
   cd src
   build.cmd formodel
   ```
-
 After the build succeeds, ProtocolTestFrameworkInstallerForModel.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
 ## Samples
