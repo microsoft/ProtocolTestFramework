@@ -460,7 +460,7 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
                 }
                 else if (currentToken.Type == TokenType.String)
                 {
-                    int x;
+                    long x;
 
                     if (!context.TryResolveSymbol(currentToken.Text, out x))
                     {

@@ -18,7 +18,7 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
         /// <param name="symbol">The symbol to be resolved</param>
         /// <param name="value">The value</param>
         /// <returns>Returns true if it resolves the symbol successfully.</returns>
-        bool TryResolveSymbol(string symbol, out int value);
+        bool TryResolveSymbol(string symbol, out long value);
 
         /// <summary>
         /// Tries to resolve a custom type.
