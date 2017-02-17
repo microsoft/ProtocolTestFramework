@@ -560,7 +560,7 @@ namespace Microsoft.Protocols.TestTools.Messages.Runtime.Marshaling
         /// <param name="symbol">The symbol to be resolved</param>
         /// <param name="value">The value corresponding to the symbol</param>
         /// <returns>Returns true if the symbol is defined and has a value</returns>
-        public bool TryResolveSymbol(string symbol, out int value)
+        public bool TryResolveSymbol(string symbol, out long value)
         {
             if (symbolStore != null)
             {
@@ -574,15 +574,14 @@ namespace Microsoft.Protocols.TestTools.Messages.Runtime.Marshaling
                     }
                     else if (valueObj is IntPtr)
                     {
-                        value = ((IntPtr)valueObj).ToInt32();
+                        value = ((IntPtr)valueObj).ToInt64();
                         return true;
                     }
                     else
                     {
                         try
                         {
-                            long temp = Convert.ToInt64(valueObj);
-                            value = (int)temp;
+                            value = Convert.ToInt64(valueObj);
 
                             return true;
                         }
@@ -1004,7 +1003,16 @@ namespace Microsoft.Protocols.TestTools.Messages.Runtime.Marshaling
         public void WriteIntPtr(IntPtr value)
         {
             if (tracing)
-                Trace("writing @0x{0:x4}", value);
+            {
+                if (IntPtr.Size == sizeof(Int32))
+                {
+                    Trace("writing @0x{0:x8}", value);
+                }
+                else if (IntPtr.Size == sizeof(Int64))
+                {
+                    Trace("writing @0x{0:x16}", value);
+                }
+            }
             region.WriteIntPtr(value);
         }
 
@@ -1104,7 +1112,16 @@ namespace Microsoft.Protocols.TestTools.Messages.Runtime.Marshaling
         {
             IntPtr r = region.ReadIntPtr();
             if (tracing)
-                Trace("reading @0x{0:x4}", r);
+            {
+                if (IntPtr.Size == sizeof(Int32))
+                {
+                    Trace("reading @0x{0:x8}", r);
+                }
+                else if (IntPtr.Size == sizeof(Int64))
+                {
+                    Trace("reading @0x{0:x16}", r);
+                }
+            }
             return r;
         }
 
@@ -1591,7 +1608,7 @@ namespace Microsoft.Protocols.TestTools.Messages.Runtime.Marshaling
             IList<object> result = evaluator.Evaluate();
             if (result.Count != 1 || result[0] == null)
                 TestAssertFail("expected exactly one expression in attribute '{0}'", expression);
-            return (int)result[0];
+            return Convert.ToInt32(result[0]);
         }
 
         /// <summary>
@@ -1609,7 +1626,7 @@ namespace Microsoft.Protocols.TestTools.Messages.Runtime.Marshaling
             IList<int?> intResult = new List<int?>();
             foreach (object s in result)
             {
-                intResult.Add(s as int?);
+                intResult.Add((int?)(s as long?));
             }
             return intResult;
         }
@@ -1637,7 +1654,7 @@ namespace Microsoft.Protocols.TestTools.Messages.Runtime.Marshaling
             IList<int?> intResult = new List<int?>();
             foreach (object s in result)
             {
-                intResult.Add(s as int?);
+                intResult.Add((int?)(s as long?));
             }
             return intResult;
         }

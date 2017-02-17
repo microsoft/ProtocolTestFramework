@@ -116,65 +116,65 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
             expression.RightExpression.Accept(this);
             object right = result;
 
-            if (left is int && right is int)
+            if (left is long && right is long)
             {
                 switch (expression.Type)
                 {
                     case BinaryExpressionType.Plus:
-                        result = Convert.ToInt32(left) + Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) + Convert.ToInt64(right);
                         break;
                     case BinaryExpressionType.Minus:
-                        result = Convert.ToInt32(left) - Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) - Convert.ToInt64(right);
                         break;
                     case BinaryExpressionType.Multiply:
-                        result = Convert.ToInt32(left) * Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) * Convert.ToInt64(right);
                         break;
                     case BinaryExpressionType.Div:
-                        result = Convert.ToInt32(left) / Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) / Convert.ToInt64(right);
                         break;
                     case BinaryExpressionType.Mod:
-                        result = Convert.ToInt32(left) % Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) % Convert.ToInt64(right);
                         break;
                     case BinaryExpressionType.ShiftLeft:
-                        result = Convert.ToInt32(left) << Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) << Convert.ToInt32(right);
                         break;
                     case BinaryExpressionType.ShiftRight:
-                        result = Convert.ToInt32(left) >> Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) >> Convert.ToInt32(right);
                         break;
                     case BinaryExpressionType.GreaterOrEqual:
-                        result = (Convert.ToInt32(left) >= Convert.ToInt32(right)) ? 1 : 0;
+                        result = (Convert.ToInt64(left) >= Convert.ToInt64(right)) ? 1 : 0;
                         break;
                     case BinaryExpressionType.LesserOrEqual:
-                        result = (Convert.ToInt32(left) <= Convert.ToInt32(right)) ? 1 : 0;
+                        result = (Convert.ToInt64(left) <= Convert.ToInt64(right)) ? 1 : 0;
                         break;
                     case BinaryExpressionType.Greater:
-                        result = (Convert.ToInt32(left) > Convert.ToInt32(right)) ? 1 : 0;
+                        result = (Convert.ToInt64(left) > Convert.ToInt64(right)) ? 1 : 0;
                         break;
                     case BinaryExpressionType.Lesser:
-                        result = (Convert.ToInt32(left) < Convert.ToInt32(right)) ? 1 : 0;
+                        result = (Convert.ToInt64(left) < Convert.ToInt64(right)) ? 1 : 0;
                         break;
                     case BinaryExpressionType.Equal:
-                        result = (Convert.ToInt32(left) == Convert.ToInt32(right)) ? 1 : 0;
+                        result = (Convert.ToInt64(left) == Convert.ToInt64(right)) ? 1 : 0;
                         break;
                     case BinaryExpressionType.NotEqual:
-                        result = (Convert.ToInt32(left) != Convert.ToInt32(right)) ? 1 : 0;
+                        result = (Convert.ToInt64(left) != Convert.ToInt64(right)) ? 1 : 0;
                         break;
                     case BinaryExpressionType.BitXor:
-                        result = Convert.ToInt32(left) ^ Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) ^ Convert.ToInt64(right);
                         break;
                     case BinaryExpressionType.BitAnd:
-                        result = Convert.ToInt32(left) & Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) & Convert.ToInt64(right);
                         break;
                     case BinaryExpressionType.BitOr:
-                        result = Convert.ToInt32(left) | Convert.ToInt32(right);
+                        result = Convert.ToInt64(left) | Convert.ToInt64(right);
                         break;
                     case BinaryExpressionType.And:
                         bool andResult = Convert.ToBoolean(left) && Convert.ToBoolean(right);
-                        result = Convert.ToInt32(andResult);
+                        result = Convert.ToInt64(andResult);
                         break;
                     case BinaryExpressionType.Or:
                         bool orResult =  Convert.ToBoolean(left) || Convert.ToBoolean(right);
-                        result = Convert.ToInt32(orResult);
+                        result = Convert.ToInt64(orResult);
                         break;
                     default:
                         throw new ExpressionEvaluatorException(
@@ -205,10 +205,10 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
             switch (expression.Type)
             {
                 case ValueExpressionType.Integer:
-                    result = int.Parse(expression.Text);
+                    result = long.Parse(expression.Text);
                     break;
                 case ValueExpressionType.Variable:
-                    int value;
+                    long value;
                     int dereferencedValue;
                     int pointerValue;
                     if (context.TryResolveSymbol(expression.Text, out value))
@@ -258,7 +258,7 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
             if (expression.FunctionName == "sizeof")
             {
                 string customTypeName;
-                int symbolValue;
+                long symbolValue;
                 if (param is string)
                 {
                     if ((context.TryResolveCustomType((string)param, out customTypeName)
@@ -301,8 +301,8 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
 
                     result = DatatypeInfoProvider.GetRpcDatatypeLength(typeName);                    
                 }
-                if (result is int
-                    && (int)result <= 0)
+                if (result is long
+                    && (long)result <= 0)
                 {
                     throw new ExpressionEvaluatorException(
                         String.Format("cannot get the datatype length for the datatype '{0}'", param));
@@ -323,9 +323,9 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
             }
 
             expression.Expression.Accept(this);
-            if (result is int)
+            if (result is long)
             {
-                int param = (int)result;
+                long param = (long)result;
                 switch (expression.Type)
                 {
                     case UnaryExpressionType.Not:
@@ -356,7 +356,6 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
                         else
                         {
                             IntPtr p = new IntPtr(param);
-                            // only supports 32bit pointer here. To support 64bit, too much work to do
                             result = System.Runtime.InteropServices.Marshal.ReadInt32(p);
                         }
                         break;
@@ -385,9 +384,9 @@ namespace Microsoft.Protocols.TestTools.Messages.Marshaling
             expression.FirstExpression.Accept(this);
             object first = result;
 
-            if (first is int)
+            if (first is long)
             {
-                if (Convert.ToBoolean((int)first))
+                if (Convert.ToBoolean((long)first))
                 {
                     expression.SecondExpression.Accept(this);
                 }
