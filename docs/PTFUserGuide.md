@@ -11,7 +11,7 @@ Refer to Creating a Test Suite Manually included as a simple test suite example.
 
 
 
-# <a name="1"/>Table of Contents
+# Table of Contents
 
 * [Protocol Test Environment Requirement](#2)
 * [Key Features of Protocol Test Framework](#4)
@@ -32,7 +32,7 @@ Refer to Creating a Test Suite Manually included as a simple test suite example.
 
 
 
-# <a name="2"/>Protocol Test Environment Requirements 
+# Protocol Test Environment Requirements 
 
 ## Computer Systems
 
@@ -54,46 +54,46 @@ Refer to Creating a Test Suite Manually included as a simple test suite example.
 Refer to the Privacy Statement and EULA for futher information
 
 
-# <a name="4"/>Key Features of Protocol Test Framework 
+# Key Features of Protocol Test Framework 
 
-## <a name="4.1"/>Default test environment 
+## Default test environment 
 
-PTF provides an interface, ITestSite, to represent the environment for test cases execution. The interface allows access to basic context information(like OS information), configuration, functions for error checking, and adapter instance generation. PTF also contains a default implementation of this interface.
+PTF provides an interface, `ITestSite`, to represent the environment for test cases execution. The interface allows access to basic context information (like OS information), configuration, functions for error checking, and adapter instance generation. PTF also contains a default implementation of this interface.
 
-ITestSite provides three validation types: Assume, Assert and Debug
+`ITestSite` provides three validation types: `Assume`, `Assert` and `Debug`
 
 * __Assume__ is for designating conditions not necessarily related to the tested protocol
 
 ```
-Assume.IsTrue(setupSuccess,“Create initial environment”) 
+Assume.IsTrue(setupSuccess, "Create initial environment") 
 ```
     
 * __Assert__ is for identifying properties that, if false, would be violations of the tested protocol
 
 ```
-Assert.AreEqual<int>(0x40, bitFlag, “The G bit for NEGOTIATE was not set”)
+Assert.AreEqual<int>(0x40, bitFlag, "The G bit for NEGOTIATE was not set")
 ```
     
 * __Debug__ is for identify internal code problems
 
 ```
-Debug.IsNotNull(myObj,“Could not allocate new myObj”)
+Debug.IsNotNull(myObj, "Could not allocate new myObj")
 ```
 
-## <a name="4.2"/>PTF Configuration -- ptfconfig 
+## PTF Configuration -- ptfconfig 
 
 PTF configuration files provide the user an interface to change the behavior of the test suites without changing the code. You can see the configuration file in the example. 
 Here is a partial list of some of the changes you can make by editing the PTF configuration file:
 
 * PTF users can define the basic test suites information, for example, protocol version and operating system version.
-* Generally, test suites utilize the adapter interface and get an instance by calling BaseTestSite.GetAdapter method. PTF configuration allows users to dynamically define the type of adapter implementation used for the specified interface.
+* Generally, test suites utilize the adapter interface and get an instance by calling `BaseTestSite.GetAdapter()` method. PTF configuration allows users to dynamically define the type of adapter implementation used for the specified interface.
 * PTF configurations also allow users to define different sinks for logs.
-* Users can have multiple PTF configuration files. Users can use the <Include> tag, see below, to include extra PTF configuration files.
+* Users can have multiple PTF configuration files. Users can use the `<Include>` tag, see below, to include extra PTF configuration files.
 * PTF configurations can instruct the framework to run custom scripts at the start and end of each test run. It allows the scripts to set up the test environment exactly as required.
 
-### <Include\>tag
+### &lt;Include> tag
 
-The Include tag allows you to include additional PTF configuration files. If you have some common properties for your test suites, you can put the properties in a common configuration file. You can then add an <Include\> tag in the <TestSuiteName\>.ptfconfig and <TestSuiteName\>.deployment.ptfconfig files to include the common PTF configuration file.
+The Include tag allows you to include additional PTF configuration files. If you have some common properties for your test suites, you can put the properties in a common configuration file. You can then add an `<Include>` tag in the `<TestSuiteName>.ptfconfig` and `<TestSuiteName>.deployment.ptfconfig` files to include the common PTF configuration file.
 
 ```
 <Include>
@@ -104,15 +104,15 @@ The Include tag allows you to include additional PTF configuration files. If you
 If the same property is defined in multiple PTF configuration files, the rule of the property value is as follow:
 
 * The property value in a ptfconfig file overwrites the value in the included file.
-* The value in <TestSuiteName\>.deployment.ptfconfig overwrites the value in <TestSuiteName\>.ptfconfig file.
+* The value in `<TestSuiteName>.deployment.ptfconfig` overwrites the value in `<TestSuiteName>.ptfconfig` file.
 
 See the example below:
 
-![](https://github.com/Microsoft/ProtocolTestFramework/blob/master/docs/images/IncludeTag.png "include tag")
+![](images/IncludeTag.png "include tag")
 
-### <Group\>tag
+### &lt;Group> tag
 
-If the number of properties in you test suite is very large, you can group these properties using the <Group\> tag to make the PTFConfig file clearer.
+If the number of properties in you test suite is very large, you can group these properties using the `<Group>` tag to make the PTFConfig file clearer.
 
 You can use the following name to access the properties in test suites:
 
@@ -131,7 +131,7 @@ Example:
 </Group>
 ```
 
-## <a name="4.3"/>Protocol Test Adapters 
+## Protocol Test Adapters 
 
 Adapters are configured in the test suite configuration file and can be retrieved from the ITestSite API.
 
@@ -147,7 +147,7 @@ The configuration allows an adapter to be created in various ways:
 
 * Interactive adapter
 
-    The Interactive adapter pops up a dialog-box to perform manual operations each time one of its methods is called. The dialog-box includes the method name, help text, input parameters, output parameters, and result. Users can confirm the completion of the manual operation by clicking the “Continue” button. If users can’t finish the operation for some reason, they can click the “Abort” button to terminate the test. In this case, the test will be treated as “Inconclusive”.
+    The Interactive adapter pops up a dialog-box to perform manual operations each time one of its methods is called. The dialog-box includes the method name, help text, input parameters, output parameters, and result. Users can confirm the completion of the manual operation by clicking the "Continue" button. If users can’t finish the operation for some reason, they can click the "Abort" button to terminate the test. In this case, the test will be treated as "Inconclusive".
 
 * PowerShell script adapter
 
@@ -167,21 +167,21 @@ Users can bind their adapter interfaces to a script adapter by defining them as 
 
 __Benefits__
 
-Script adapters are easy to use. For example, they are suitable for service setup/shutdown jobs. Users can write a Start.cmd containing “net start ServiceName”.
+Script adapters are easy to use. For example, they are suitable for service setup/shutdown jobs. Users can write a Start.cmd containing `net start ServiceName`.
 
-__Limitation __
+__Limitation__
 
 Do not use script using Unicode with Byte Order Mark.
 
 __Usage__
 
-Configure <Adapters\> section of the ptfconfig file:
+Configure `<Adapters>` section of the ptfconfig file:
 
 ```
 <Adapter xsi:type="script" name="IMyScriptAdapter" scriptdir=".\" />
 ```
    
-Subsequently, users can invoke IMyScriptAdapter.AMethod(parameters). PTF will look up a script named AMethod.cmd in the scriptdir directory and execute it with the parameters.
+Subsequently, users can invoke `IMyScriptAdapter.AMethod(parameters)`. PTF will look up a script named `AMethod.cmd` in the scriptdir directory and execute it with the parameters.
 
 __Parameters__
 
@@ -219,7 +219,7 @@ echo PtfAdReturn="%foldername%" > log.txt
 echo PtfAdFailureMessage="Create folder %foldername% failed?" >log.txt
 ```
 
-Provide the ToString() method and the Parse() method in a custom type to pass custom type values as parameters to script adapter, e.g.:
+Provide the `ToString()` method and the `Parse()` method in a custom type to pass custom type values as parameters to script adapter, e.g.:
 
 ```
 static public String ToString()
@@ -228,7 +228,7 @@ static public CustomType.Parse(String str)
 
 __Exception__
 
-If this script execution fails, PTF will raise an  AssertInconclusiveException.
+If this script execution fails, PTF will raise an `AssertInconclusiveException`.
 
 __PTF Properties__
 
@@ -246,7 +246,7 @@ For example, if a user has the following configuration in the PTFconfig
 
 __Examples__
 
-1.   Command “set ptfprop” can be used in the script to display all properties in the PTFconfig. User will get the outputs like:
+1.   Command `set ptfprop` can be used in the script to display all properties in the PTFconfig. User will get the outputs like:
 
 ```
 2008-04-07 14:46:20.121 [Comment] STDOUT: ptfpropfeaturename=MS-ATSVC
@@ -254,11 +254,11 @@ __Examples__
 2008-04-07 14:46:20.121 [Comment] STDOUT: ptfpropversion=2.0
 2008-04-07 14:46:20.121 [Comment] STDOUT: ptfpropservername=MS-Sever
 ```
-2.  User can get the property value and use it directly in the script via the environment variables with “ptfprop” prefix.
+2.  User can get the property value and use it directly in the script via the environment variables with "ptfprop" prefix.
 
 For example:
 
-Start an nps service on a server. The name of the server is specified using “servername” property.
+Start an nps service on a server. The name of the server is specified using `servername` property.
 
 ```
 sc  %ptfpropservername% start nps
@@ -274,7 +274,7 @@ Users don't need to write any extra code to run the test case in an interactive 
 
 __Limitation__
 
-Users are required to implement an extra method “Parse(String)” for their complex class if the class contains an actions with “out parameters”.
+Users are required to implement an extra method `Parse(String)` for their complex class if the class contains an actions with "out parameters".
 
 __Usage__
 
@@ -291,11 +291,11 @@ The interactive adapter can be defined in the configuration like the following l
 
 __Parameters__
 
-The user should override ToString() of the custom type to provide detailed information of each object, and interactive adapter would call ToString() automatically to show the string in the pop-up dialog box
+The user should override `ToString()` of the custom type to provide detailed information of each object, and interactive adapter would call ToString() automatically to show the string in the pop-up dialog box
 
 If the interactive adapter's method is invoked, a dialog box will be opened as shown in the following figure.
 
-![](https://github.com/Microsoft/ProtocolTestFramework/blob/master/docs/images/EnumReturnValue.png "EnumReturnValue")
+![](images/EnumReturnValue.png "EnumReturnValue")
 
 * The help text is displayed in a read-only text box. 
 * The action parameters (input parameters) are displayed in a read-only data grid control.
@@ -319,13 +319,13 @@ int Setup(string message);
 __Output Parameters__
 
 * The return value is treated just the same as output parameters
-* Output parameter data types, other than String, must have a static Parse(String) method which is used to convert from String types. If any exception occurs or parsing fails, a FormatException will be raised. A complex data type can be declared as the following example:
+* Output parameter data types, other than `String`, must have a static `Parse(String)` method which is used to convert from String types. If any exception occurs or parsing fails, a `FormatException` will be raised. A complex data type can be declared as the following example:
 
 ```
 public class MyUri : System.Uri
 {
-         private MyUri(String Uri) : base (Uri) {}
-         static public MyUri Parse(String theUri) {return new MyUri(theUri); }
+    private MyUri(String Uri) : base (Uri) {}
+    static public MyUri Parse(String theUri) {return new MyUri(theUri); }
 }
 ```
 
@@ -364,11 +364,11 @@ Configure <Adapters> section of .ptfconfig file like this:
 
 * "xsi:type": The value of this attribute must be "powershell".
 * "name": The value of this attribute is the name of the adapter interface which will be bound to the PowerShell adapter proxy.
-* “scriptdir”: The value of this attribute is the path of the directory which contains the corresponding PowerShell scripts.
+* "scriptdir": The value of this attribute is the path of the directory which contains the corresponding PowerShell scripts.
 
 __Parameters__
 
-Parameters are passed from PowerShell adapter to PowerShell script directly so that users can use them without any parsing. Users can also set values to out/ref parameters directly in their PowerShell scripts and the PowerShell adapter will pass them back to the test suite. The parameter name is the same as defined in the adapter interface. For example, If a parameter “int a” is defined, then you can use $a in the PowerShell adapter directly.
+Parameters are passed from PowerShell adapter to PowerShell script directly so that users can use them without any parsing. Users can also set values to out/ref parameters directly in their PowerShell scripts and the PowerShell adapter will pass them back to the test suite. The parameter name is the same as defined in the adapter interface. For example, If a parameter `int a` is defined, then you can use `$a` in the PowerShell adapter directly.
 
 __Example__
 
@@ -412,14 +412,14 @@ public void TestPowerShellAdapter()
 }
 ```
 
-## <a name="4.4"/>Extensive Logging Support 
+## Extensive Logging Support 
 
 PTF provides problem-oriented logging capabilities (begin/end test group, verification pass/failure, requirement capture, debugging). Most of the logging is done automatically so that the test suite developer does not have to write them manually.
 
 * Test Asserting failure/success,
 * Entering/Exiting Adapter Code.
 
-PTF provides the ability to define “logging profiles” in PTF configuration files. These profiles provide a way to define which logging event is piped to which sink. Logging profiles can be set dynamically by testing code. 
+PTF provides the ability to define "logging profiles" in PTF configuration files. These profiles provide a way to define which logging event is piped to which sink. Logging profiles can be set dynamically by testing code. 
 
 Note: If the user wants to log EnterMethod and ExitMethod, user should log EnterMethod first. The corresponding ExitMethod must not be omitted.
 
@@ -443,7 +443,7 @@ For example:
 </Sinks>
 ```
 
-The format attribute is to specify the file format. Use “xml” for XML file and “text” for plain text file.
+The format attribute is to specify the file format. Use `xml` for XML file and `text` for plain text file.
 
 The directory attribute is to specify the location of the log file.
 
@@ -573,7 +573,7 @@ __Usage__
 
     Capture test suite log using the Microsoft Message Analyzer.
     
-    ![](https://github.com/Microsoft/ProtocolTestFramework/blob/master/docs/images/TraceScenarioConfiguration.png "Trace Scenario Configuration")
+    ![](images/TraceScenarioConfiguration.png "Trace Scenario Configuration")
 
 
 ### Creating custom log sinks
@@ -582,20 +582,20 @@ PTF also allows users to create their own log sink. To create a custom log sink,
 
 ```
 public class MyCustomerSink : TextSink
+{
+    StreamWriter sw;
+    public MyCustomerSink(string name)
+        : base(name)
     {
-        StreamWriter sw;
-        public MyCustomerSink(string name)
-            : base(name)
-        {
-            String logFilename = “MyLog.txt”
-            sw = new StreamWriter(logFilename);
-        }
-
-        protected override TextWriter Writer
-        {
-            get { return sw; }
-        }
+        String logFilename = "MyLog.txt"
+        sw = new StreamWriter(logFilename);
     }
+
+    protected override TextWriter Writer
+    {
+        get { return sw; }
+    }
+}
 ```
 
 In order to use this new sink class, users should modify the configuration file as follows:
@@ -619,7 +619,7 @@ In order to use this new sink class, users should modify the configuration file 
 …
 ```
 
-## <a name="4.5"/>Checkers 
+## Checkers 
 
 PTF provides checkers to test validation and verification infrastructure. Protocol test code should direct all validation code to those checkers. The current test's execution will stop when an assertion fails and a corresponding entry will be automatically created in the test log. Depending on log settings, an entry may also be created if an assertion succeeds. In general, test code does not need to provide extra logging output related to an assertion pass or failure. 
 
@@ -627,7 +627,7 @@ As discussed previously, ITestSite provides three checkers: Assume, Assert and D
 
 The checkers could also be used in the thread created by a user to report an asynchronous error.
 
-## <a name="4.6"/>Requirement Tracing 
+## Requirement Tracing 
 
 The requirement tracing feature enables users to track the technical document requirement coverage by Model and Adapter. The requirement tracing feature is derived from an XML sink type. The user can use an XML log sink by adding the following line to the configuration
 
@@ -729,11 +729,11 @@ Note:
 
 Requirement ID in this property is case sensitive. 
 
-Do not have any leading zeroes in requirement ID. (For example, “MS-XXX_R01” will always be ignored)
+Do not have any leading zeroes in requirement ID. (For example, "MS-XXX_R01" will always be ignored)
 
 
 
-## <a name="4.7"/>Reporting Tool 
+## Reporting Tool 
 
 The Reporting Tool is a utility to generate a report from PTF test log and requirements table files. It reads XML format log files and requirements tables, and then generates a friendly report. Before using, the user can change the IE setting to allow the active content automatically.
 
@@ -741,7 +741,7 @@ Step:
 
 Open __IExplorer->Tools->Internet Options->Advanced__
 
-Then, select __“Allow active content to run in files on My Computer”__ in Security block.
+Then, select __"Allow active content to run in files on My Computer"__ in Security block.
 
 Or user can unblock the active content manually when opening the report html.
 
@@ -752,37 +752,33 @@ ReportingTool /log:<xml log> /table:<requirements table> [/out:report.html] [/re
 ReportingTool /log:<xml log>[ <xml log>....] /table:<requirements table>[ <requirements table>...] [/out:outputdir] [/replace]
 ```
 
-Note: The Reporting Tool reserves “/” and “-” to mark switches, so parameters cannot start with “/” or “-”.
+Note: The Reporting Tool reserves `/` and `-` to mark switches, so parameters cannot start with `/` or `-`.
 
+```
 Options:
 
 /help    Print this help message. Short form is '/?'.
-
-/out    Specifies the report output file name. Short form is '/o:'.
-
-/log    Specifies the test log filename. Short form is '/l:'.
-
-/table  Specifies the requirement table filename. Short form is '/t:'.
-
-/replace    Specifies the new output report file will replace the old one.Short form is '/r'.
+/out     Specifies the report output file name. Short form is '/o:'.
+/log     Specifies the test log filename. Short form is '/l:'.
+/table   Specifies the requirement table filename. Short form is '/t:'.
+/replace Specifies the new output report file will replace the old one.Short form is '/r'.
 
 Arguments:
-
-<xml log>       Filename of PTF test log in XML format.
-
+<xml log>           Filename of PTF test log in XML format.
 <requirement table> Filename of requirements table, XML format document of protocols.
+```
 
- Multiple file arguments of the same type may be provided.
+Multiple file arguments of the same type may be provided.
 
 
-## <a name="4.8"/>Auto Generate Test Report 
+## Auto Generate Test Report 
 
 The Auto Generate Test Report feature makes it convenient for users to automatically generate a test report after all tests are run. The user needs to add the configurations in the PTF config file in order to use this feature.  Requirement specification should be deployed in the test run configuration if the user wants to use relative path.
 
 The report html will automatically display after all test cases run.
 
 ```
-<TestReport autoGenerate=”true”>
+<TestReport autoGenerate="true">
     <RequirementFile location=".\req.xml" />
     <LogFile sink="XmlLogSink" />
     <Report autoDisplay="true" directory=".\" name="report.html"/>
@@ -795,7 +791,7 @@ Note:
 * Sink attribute must be an existing XML sink defined in the <Sinks\> tag.
 
 
-## <a name="4.9"/>Automatic Network Capturing 
+## Automatic Network Capturing 
 
 __Note:__ This feature is only available on Windows 8.1 or Windows Server 2012 R2.
 
@@ -824,7 +820,7 @@ __CaptureFileFolder:__ The path to put the capture files. Existing file will be 
 __StopRunningOnError:__ If it is true, the test case will fail when error happens in running network capture commands; otherwise, ignore the error.
 
 
-## <a name="4.10"/>Display Expected/Actual runtime of testsuite 
+## Display Expected/Actual runtime of testsuite 
 
 This feature enables a user to display expected/actual runtime of the test suite on the console.
 
@@ -842,7 +838,7 @@ Test suite will log and display the Actual time after the test run is completed.
 
 
 
-# <a name="5"/>Creating a Protocol Test Suite Manually 
+#  Protocol Test Suite Manually 
 
 The overall steps for creating a protocol test suite using PTF are as follows:
 
@@ -856,16 +852,16 @@ In the following sections, we will go through each of these steps in detail.
 In this example, we will test a multiplication operation: 5*4 = 20.
 
 
-## <a name="5.1"/>Create a Hello World Unit Test Project 
+## Create a Hello World Unit Test Project 
 
 The PTF project is hosted in the Unit Test Project. To create a PTF project:
 
 * Create a new project in Visual Studio.
 * Use Unit Test Project template in the Test category of Visual C#.
 * Add references to the PTF assemblies Microsoft.Protocols.TestTools.
-    * Right click “References” from Solution Explorer and choose “Add Reference…”.
-    * Select Microsoft.Protocols.TestTools and Microsoft.Protocols.TestTools.VSTS.
-* Delete automatically generated file UnitTest1.cs.
+    * Right click "References" from Solution Explorer and choose "Add Reference…".
+    * Select `Microsoft.Protocols.TestTools` and`Microsoft.Protocols.TestTools.VSTS`.
+* Delete automatically generated file `UnitTest1.cs`.
 
 ### Create PTF configuration file
 
@@ -904,8 +900,8 @@ xsi:schemaLocation="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/T
     <Profiles>
       <!-- Name of the profile.-->
       <Profile name="Verbose" extends="Error">
-        <!--“kind” is the name of log entry. “sink” is where the log messages.
-         Will log. Delete=”true” means disable the rule. -->
+        <!--"kind" is the name of log entry. "sink" is where the log messages.
+         Will log. Delete="true" means disable the rule. -->
         <Rule kind="CheckSucceeded" sink="Console" delete="false" />        
         <Rule kind="Comment" sink="Console" delete="false"/>
         <Rule kind="Debug" sink="Console" delete="false" />
@@ -975,21 +971,21 @@ namespace HelloWorld
 The test settings file contains settings of running the test suite. It is required for running PTF based test suite. Below are the steps of creating a test settings file.
 
 * Right click the solution in the Solution Explorer.
-* Choose Add  New Item.
+* Choose Add > New Item.
 * Select Test Settings in the Test Settings category and click Add button.
 * Check Enable deployment in the Deployment page.
-* Click Add File… and add the helloworld.ptfconfig. (You need to choose “All files” for the file type in the File dialog.)
+* Click Add File… and add the helloworld.ptfconfig. (You need to choose "All files" for the file type in the File dialog.)
 * Click Close to close the Test Settings dialog.
 
 ### Select the test settings file
 
-In Visual Studio 2012, you need to select the test settings file manually. Otherwise, test cases will fail with the error message “Cannot get the test site…”.
+In Visual Studio 2012, you need to select the test settings file manually. Otherwise, test cases will fail with the error message "Cannot get the test site…".
 
-* Open the menu item: Test  Test Settings  Select Test Settings file.
+* Open the menu item: Test > Test Settings > Select Test Settings file.
 * Open the test settings file created in the previous step.
 
 
-## <a name="5.2"/>Using Adapters 
+## Using Adapters 
 
 The overall steps to create a protocol test suite with adapters using PTF are as follows:
 
@@ -1003,7 +999,7 @@ In subsequent sections, we will walk through each of these steps in detail.
 
 ### Create adapter interfaces
 
-Following the previous example, we now add the addition operation into IOperation adapter which does the actual computation operation (which could be distributed, in native code, etc.).  We use a script adapter to “Setup the environment” and use an interactive adapter to do the “Clean up”.
+Following the previous example, we now add the addition operation into IOperation adapter which does the actual computation operation (which could be distributed, in native code, etc.).  We use a script adapter to "Setup the environment" and use an interactive adapter to do the "Clean up".
 
 Creates a C# file – Adapters.cs as follows:
 
@@ -1119,7 +1115,7 @@ echo PtfAdReturn="%ERRORLEVEL%"
 Enable the deployment of the script file.
 
 * Open Testsettings1.testsettings file from the Solution Explorer.
-* Add Setup.cmd file from the Deployment page. (You need to choose “All files” for the file type in the File dialog.)
+* Add Setup.cmd file from the Deployment page. (You need to choose "All files" for the file type in the File dialog.)
 
 ### Use the adapters in test case
 
@@ -1187,10 +1183,10 @@ namespace HelloWorld
 }
 ```
 
-## <a name="5.3"/>Run test cases 
+## Run test cases 
 
-To run test cases from Visual Studio, you can open the Test Explorer from the Menu: Test  Windows  Test Explorer.
+To run test cases from Visual Studio, you can open the Test Explorer from the Menu: Test > Windows > Test Explorer.
 
 Test cases are automatically listed in the Test Explorer after you compile the test project. You can run the test cases and view the results from the Test Explorer.
 
-![](https://github.com/Microsoft/ProtocolTestFramework/blob/master/docs/images/TestExplorer.png "Test Explorer")
+![](images/TestExplorer.png "Test Explorer")
