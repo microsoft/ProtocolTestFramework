@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?define CheckVSPath="Studio" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 
@@ -48,6 +49,12 @@
 	<PropertyRef Id="VS2012_ROOT_FOLDER"/>
 	<PropertyRef Id="VS2013_ROOT_FOLDER"/>
 	<PropertyRef Id="VS2015_ROOT_FOLDER"/>
+	
+	<Property Id="VSInstalled">0</Property>
+	
+	<SetProperty Id="VSInstalled" After="AppSearch" Value="1">
+		<![CDATA[(VS2012_ROOT_FOLDER >< $(var.CheckVSPath)) OR (VS2013_ROOT_FOLDER >< $(var.CheckVSPath)) OR (VS2015_ROOT_FOLDER >< $(var.CheckVSPath))]]>
+	</SetProperty>
 
     <!-- Directory Structure -->
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -198,9 +205,9 @@
 
         <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
         <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="PrivacyDlg" Order="2">NOT Installed</Publish>
-		<Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1">1</Publish>
-        <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="DependencyCheckWarningDlg" Order="2">
-			<![CDATA[NOT VS2012_ROOT_FOLDER AND NOT VS2013_ROOT_FOLDER AND NOT VS2015_ROOT_FOLDER]]>
+		<Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1"><![CDATA[VSInstalled = "1"]]></Publish>
+		<Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="DependencyCheckWarningDlg" Order="2">
+			<![CDATA[VSInstalled = "0"]]>
 		</Publish>
 		<Publish Dialog="DependencyCheckWarningDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg">1</Publish>
 		<Publish Dialog="DependencyCheckWarningDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
