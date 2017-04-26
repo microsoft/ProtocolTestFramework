@@ -182,12 +182,12 @@ namespace Microsoft.Protocols.TestTools
         /// <returns>Returns case name(key) and categories(value)</returns>
         private Dictionary<string, List<string>> GetTestCaseCategories()
         {
-            Dictionary<string, List<string>> testCases = new Dictionary<string, List<string>>(); 
+            Dictionary<string, List<string>> testCases = new Dictionary<string, List<string>>();
             DirectoryInfo info = new DirectoryInfo(Directory.GetCurrentDirectory());
             bool existBatch = false;
             if (info.FullName.EndsWith("Batch"))
                 existBatch = true;
-            
+
             string fullPath = existBatch ? info.Parent.FullName : info.FullName;
             foreach (string dllPath in dllFiles)
             {
@@ -340,9 +340,9 @@ namespace Microsoft.Protocols.TestTools
                 existBatch = true;
             string fullPath = existBatch ? info.Parent.FullName : info.FullName;
             string cfgFolder = Path.Combine(fullPath, "bin");
-            string[] ptfconfigFiles = Directory.GetFiles(cfgFolder, "*.ptfconfig", SearchOption.TopDirectoryOnly);
             try
             {
+                string[] ptfconfigFiles = Directory.GetFiles(cfgFolder, "*.ptfconfig", SearchOption.TopDirectoryOnly);
                 foreach (string configFile in ptfconfigFiles)
                 {
                     XmlDocument configXml = new XmlDocument();
