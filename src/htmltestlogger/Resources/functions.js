@@ -76,7 +76,7 @@ function CreateOneCase(id)
 function ClickChange(caseDiv, casename)
 {
     // Change src dynamically
-    document.getElementById("testcase").src = 'Html\\' + casename + '.html';
+    document.getElementById("testcase").src = 'Html/' + casename + '.html';
 
     document.getElementById('back_to_summary').style.display = '';
     document.getElementById('summary').style.display = '';
