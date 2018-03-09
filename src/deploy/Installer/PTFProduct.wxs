@@ -46,9 +46,9 @@
       NOT NEWER_VERSION_DETECTED OR Installed
     </Condition>
 
-	<PropertyRef Id="VS2012_ROOT_FOLDER"/>
-	<PropertyRef Id="VS2013_ROOT_FOLDER"/>
-	<PropertyRef Id="VS2015_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2013_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2015_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2017_ROOT_FOLDER"/>
 	
 	<Property Id="VSInstalled">0</Property>
 	
@@ -58,19 +58,6 @@
 
     <!-- Directory Structure -->
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="VS2012_ROOT_FOLDER">
-        <Directory Id="VS2012_Common7" Name="Common7">
-          <Directory Id="VS2012_IDE" Name="IDE">
-            <Directory Id="VS2012_CommonExtensions" Name="CommonExtensions">
-              <Directory Id="VS2012_Microsoft" Name="Microsoft">
-                <Directory Id="VS2012_TestWindow" Name="TestWindow">
-                  <Directory Id="VS2012_HtmlTestLogger_InstallLocation" Name="Extensions"/>
-                </Directory>
-              </Directory>
-            </Directory>
-          </Directory>
-        </Directory>
-      </Directory>
       <Directory Id="VS2013_ROOT_FOLDER">
         <Directory Id="VS2013_Common7" Name="Common7">
           <Directory Id="VS2013_IDE" Name="IDE">
@@ -96,7 +83,20 @@
             </Directory>
           </Directory>
         </Directory>
-      </Directory>	  
+      </Directory>
+      <Directory Id="VS2017_ROOT_FOLDER">
+        <Directory Id="VS2017_Common7" Name="Common7">
+          <Directory Id="VS2017_IDE" Name="IDE">
+            <Directory Id="VS2017_CommonExtensions" Name="CommonExtensions">
+              <Directory Id="VS2017_Microsoft" Name="Microsoft">
+                <Directory Id="VS2017_TestWindow" Name="TestWindow">
+                  <Directory Id="VS2017_HtmlTestLogger_InstallLocation" Name="Extensions"/>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
       <Directory Id="ProgramMenuFolder" >
         <Directory Id="ApplicationProgramsMenuFolder" Name="Protocol Test Framework" />
       </Directory> 
