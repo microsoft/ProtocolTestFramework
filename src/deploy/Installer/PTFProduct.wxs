@@ -53,7 +53,7 @@
 	<Property Id="VSInstalled">0</Property>
 	
 	<SetProperty Id="VSInstalled" After="AppSearch" Value="1">
-		<![CDATA[(VS2012_ROOT_FOLDER >< $(var.CheckVSPath)) OR (VS2013_ROOT_FOLDER >< $(var.CheckVSPath)) OR (VS2015_ROOT_FOLDER >< $(var.CheckVSPath))]]>
+		<![CDATA[(VS2017_ROOT_FOLDER >< $(var.CheckVSPath)) OR (VS2013_ROOT_FOLDER >< $(var.CheckVSPath)) OR (VS2015_ROOT_FOLDER >< $(var.CheckVSPath))]]>
 	</SetProperty>
 
     <!-- Directory Structure -->
