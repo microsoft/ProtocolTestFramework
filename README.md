@@ -7,7 +7,7 @@ It implements the fundamentals to support Protocol Test Suite, including logging
 PTF is based on Windows platform.
 You should install the following list of software in order to build PTF from source code.
 
-* .Net framework 4.6.1 or higher
+* .Net framework 4.7.1 or higher
 * Wix toolset [v3.11](https://github.com/wixtoolset/wix3/releases/tag/wix3111rtm)
 * Visual Studio or Visual Studio test agent, version 2013 or higher
 * [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/). It is only required if you want to build a PTF version that supports the test suites which contain [Model-Based Test](https://msdn.microsoft.com/en-us/library/ee620469.aspx) cases.
