@@ -1,6 +1,8 @@
 :: Copyright (c) Microsoft. All rights reserved.
 :: Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+@echo off
+
 :: Find vs2017path in registry
 set REGEXE="C:\WINDOWS\System32\reg.exe"
 set KEY_NAME="HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\SxS\VS7"
