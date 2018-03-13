@@ -3,7 +3,7 @@
 		<tool name="NET471" FileName="NET471.exe" AppName=".NET Framework 4.7.1" version="4.7.1" url="https://download.microsoft.com/download/9/0/1/901B684B-659E-4CBD-BEC8-B3F06967C2E7/NDP471-DevPack-ENU.exe" arguments="/q"/>
 		<tool name="Wix311" FileName="Wix311.exe" AppName="WiX Toolset v3.11" version="3.11.1" url="https://github.com/wixtoolset/wix3/releases/download/wix3111rtm/wix311.exe" arguments="/q"/>
 		<tool name="SE" FileName="SpecExplorer.msi" AppName="Spec Explorer 2010" version="3.5.3146.0" url="https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/file/36449/3/SpecExplorer.msi" arguments="/q"/>
-		<tool name="TestAgent2013" FileName="TestAgent2013.exe" InstallFileName="vstf_testagentlp.exe" NeedRestart="true" AppName="Microsoft Agents for Visual Studio 2013" version="12.0.40629.0" url="https://www.microsoft.com/en-us/download/confirmation.aspx?id=48141&6B49FDFB-8E5B-4B07-BC31-15695C5A2143=1" arguments="/q"/>
+		<tool name="TestAgent2013" FileName="TestAgent2013.exe" InstallFileName="vstf_testagentlp.exe" NeedRestart="true" AppName="Microsoft Agents for Visual Studio 2013" version="12.0.40629.0" url="https://www.microsoft.com/en-us/download/confirmation.aspx?id=48141&amp;6B49FDFB-8E5B-4B07-BC31-15695C5A2143=1" arguments="/q"/>
 		<tool name="VCRedist_x64" FileName="vcredistx64.exe" AppName="Redistributable (x64)" version="9.0.30729.17" url="https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe" arguments="/q"/>
 		<tool name="VCRedist_x86" FileName="vcredist.exe" AppName="Redistributable (x86)" version="9.0.30729.17" url="https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe" arguments="/q"/>
 	</tools>
