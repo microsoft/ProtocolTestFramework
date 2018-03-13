@@ -4,9 +4,9 @@
 @echo off
 
 set currentPath=%~dp0
-set PTF_Root=%currentPath%..\..\
-
-call "%PTF_Root%src\common\setEnv.cmd"
+set PTFTEST_Root=%currentPath%..\
+call "%PTFTEST_Root%common\setBuildTool.cmd"
+call "%PTFTEST_Root%common\setVsPath.cmd"
 
 %buildtool% TestPTF.sln /t:clean;rebuild
 if ErrorLevel 1 (
