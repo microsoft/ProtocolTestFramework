@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XXXX_TestSuite", "XXXX_TestSuite\XXXX_TestSuite.csproj", "{3AE5AA9B-2A5B-442F-AF5C-B0450126590D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XXXX_Adapter", "XXXX_Adapter\XXXX_Adapter.csproj", "{EE588106-E147-45A2-A16F-732547DB0060}"

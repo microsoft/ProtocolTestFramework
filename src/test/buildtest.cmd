@@ -9,3 +9,7 @@ set PTF_Root=%currentPath%..\..\
 call "%PTF_Root%src\common\setEnv.cmd"
 
 %buildtool% TestPTF.sln /t:clean;rebuild
+if ErrorLevel 1 (
+    echo Error: Failed to build TestPTF
+    exit /b 1
+)

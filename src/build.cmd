@@ -30,6 +30,10 @@ for /f "delims=" %%i in ('""%FindExe%" "AssemblyVersion" "%path%""') do set vers
 set PTF_VERSION=%versionStr:~28,-3%
 
 %buildtool% "%PTF_Root%src\ptf.sln" /t:Clean
+if ErrorLevel 1 (
+    echo Error: Failed to build Protol Test Framework
+    exit /b 1
+)
 
 if exist "%PTF_Root%drop" (
  rd /s /q "%PTF_Root%drop"
@@ -39,4 +43,8 @@ if /i "%~1"=="formodel" (
 	%buildtool% %currentPath%\deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /p:FORMODEL="1" /t:Clean;Rebuild /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk%
 ) else (
 	%buildtool% %currentPath%\deploy\Installer\ProtocolTestFrameworkInstaller.wixproj /t:Clean;Rebuild /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=%ptfsnk%
+)
+if ErrorLevel 1 (
+    echo Error: Failed to generate the msi installer
+    exit /b 1
 )
