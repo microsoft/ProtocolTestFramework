@@ -5,7 +5,7 @@
 .SYNOPSIS
     Install prerequisite tools
 .DESCRIPTION
-    This Powershell script is used to download and install prerequisite software dependencies for test suites. 
+    This Powershell script is used to download and install prerequisite software dependencies for Protocol Test Framework.
 .PARAMETER ConfigPath
     The ConfigPath is used to specify prerequisites configure file path, default value is ".\PrerequisitesConfig.xml".
 
@@ -28,7 +28,7 @@ if(-not $ConfigPath)
 $Category = "PTF"
 
 # Check if the required .NET framework version is installed on current machine
-Function CheckIfNet4IsInstalled{
+Function CheckIfNet47IsInstalled{
     $isInstalled = $false
 
     if(-not (Test-Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"))
@@ -292,7 +292,7 @@ foreach($item in $downloadList)
 
     if($item.Name.ToLower().Equals("net471"))
     {
-        $isInstalled = CheckIfNet4IsInstalled
+        $isInstalled = CheckIfNet47IsInstalled
 
         if(-not $isInstalled)
         {
