@@ -14,11 +14,6 @@ if not defined WIX (
 	exit /b 1
 )
 
-if "%WIX:3.11=%"=="%WIX%" (
-	echo WiX Toolset version 3.11 should be installed
-	exit /b 1
-)
-
 if not defined ptfsnk (
 	set ptfsnk=%currentPath%\TestKey.snk
 )
