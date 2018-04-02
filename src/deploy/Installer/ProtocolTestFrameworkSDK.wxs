@@ -101,7 +101,7 @@
                      Value="[Bin_DIR]" />
       </Component>
 
-      <!-- Registry information for reference (.Net 4.7) -->
+      <!-- Registry information for reference (.Net 4.7.1) -->
       <Component Id="PTF_REG_DOTNET_FX4" Guid="314F4564-5F1D-4298-80C5-D936D6FA4A61" Feature="PTF_All">
         <RegistryKey Id="PTF_REG_FOR_VS_REFERENCE_NET_47"
                      ForceCreateOnInstall="yes"
