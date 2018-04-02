@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportingTool", "reportingtool\ReportingTool.csproj", "{FABD7966-6611-4556-92CB-B13D7425AE82}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools", "testtools\TestTools.csproj", "{1CA2B935-3224-40F1-84BC-47FA1A9B242E}"

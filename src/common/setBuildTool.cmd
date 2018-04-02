@@ -12,8 +12,8 @@ if exist "%vs2017path%\MSBuild\15.0\Bin\MSBuild.exe" (
     set buildtool="%vs2017path%\MSBuild\15.0\Bin\MSBuild.exe"
 ) else if exist "%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" (
     set buildtool="%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe"
-) else if exist "%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe" (
-    set buildtool="%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe"
+) else (
+    for /f %%i in ('dir /b /ad /on "%windir%\Microsoft.NET\Framework\v4*"') do (@if exist "%windir%\Microsoft.NET\Framework\%%i\msbuild".exe set buildtool=%windir%\Microsoft.NET\Framework\%%i\msbuild.exe)
 )
 
 if not defined buildtool (
