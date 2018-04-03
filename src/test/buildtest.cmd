@@ -4,6 +4,7 @@
 @echo off
 
 set currentPath=%~dp0
+set PTF_Root=%currentPath%..\..\
 set PTFTEST_Root=%currentPath%..\
 call "%PTFTEST_Root%common\setBuildTool.cmd"
 
