@@ -9,13 +9,6 @@ set PTF_Root=%currentPath%..\
 call "%PTF_Root%src\common\setBuildTool.cmd"
 call "%PTF_Root%src\common\setVsPath.cmd"
 
-if exist "%vs2017path%" (
-    if not exist "%vs2017path%\MSBuild\Microsoft\WiX\v3.x\Wix.targets" (
-        echo Error: "%vs2017path%\MSBuild\Microsoft\WiX\v3.x\Wix.targets" cannot be found. Please install Wix Toolset Visual Studio 2017 Extension from https://marketplace.visualstudio.com/items?itemName=RobMensching.WixToolsetVisualStudio2017Extension
-        exit /b 1
-    )
-)
-
 if not defined WIX (
 	echo WiX Toolset version 3.11 should be installed
 	exit /b 1
