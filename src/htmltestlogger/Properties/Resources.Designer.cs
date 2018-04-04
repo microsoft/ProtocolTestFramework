@@ -63,8 +63,6 @@ namespace Microsoft.Properties {
         /// <summary>
         ///   Looks up a localized string similar to var filter = &quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAH8AAAAXCAYAAAAiGpAkAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAADjSURBVGhD7doxCoQwEAXQiYm5lhbiXsLDeBf7tJZeSGzcTjHLhCwry8KmnvkPJHEsPx9RYvb9GQlUqvIKCpl1XeOyLHRdVx6BZMYY6rqO6tqTmaYpDsOQH4EGIQTq+wdV3vs8Ai3O80wr3vmKIXzFEL5iCF8xhC9A27bpE+5+8ewfhC/AOI559/Fr9g3hC8Atb5om31Hao/mK3Jte0nqG8IV4t7+09QzhC8KNL209Q/iCcONLW88QvmIIXzGErxjCV6ziX4Ggy3EcaTXbtsV5nsk5lwYgm7U2HeOy1hFO76pF9AK1pjdhWLkJdwAAAABJRU5ErkJggg==&quot;;
         ///var spread = &quot;data:image [rest of string was truncated]&quot;;.
-        ///
-        ///var filter = &quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAH8AAAAXCAYAAAAiGpAkAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAADjSURBVGhD7doxCoQwEAXQiYm5lhbiXsLDeBf7tJZeSGzcTjHLhCwry8KmnvkPJHEsPx9RYvb9GQlUqvIKCpl1XeOyLHRdVx6BZMYY6rqO6tqTmaYpDsOQH4EGIQTq+wdV3vs8Ai3O80wr3vmKIXzFEL5iCF8xhC9A27bpE+5+8ewfhC/AOI559/Fr9g3hC8Atb5om31Hao/mK3 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string functions {
             get {
@@ -80,6 +78,7 @@ namespace Microsoft.Properties {
         ///&lt;style type=&quot;text/css&quot;&gt;
         ///div#header {background-color:#99bbbb;}
         ///div#left_sidebar {width:29%;float:left;overflow:auto;}
+        ///div#back_to_summary {width:68%;float:left;overflow:auto;}
         ///div#right_sidebar_summary {width:68%;float:left;overflow:auto;margin-left:-2px}
         ///div#right_sidebar_case {width:68%;float:left;overflow:auto;margin-left:-2px}
         ///div#footer {background-color:#99bbbb;clear:both;text-align:center;}
@@ -111,8 +110,7 @@ namespace Microsoft.Properties {
         ///h1.title{
         ///    color: #1382CE;
         ///    font-family:Arial,Verdana,Sans-serif;
-        ///    font-weight: bold;
-        ///    font-size:20px;
+        ///    font-weight: bolder;
         ///}
         ///
         ///div.frame {
