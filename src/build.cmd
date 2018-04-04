@@ -27,7 +27,7 @@ set PTF_VERSION=%versionStr:~28,-3%
 
 %buildtool% "%PTF_Root%src\ptf.sln" /t:Clean
 if ErrorLevel 1 (
-    echo Error: Failed to build Protol Test Framework
+    echo Error: Failed to build Protocol Test Framework
     exit /b 1
 )
 
