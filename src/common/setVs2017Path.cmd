@@ -9,6 +9,8 @@ set KEY_NAME="HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\SxS
 set VALUE_NAME=15.0
 set REG_QUERY_VS_2017_PATH=%REGEXE% QUERY %KEY_NAME% /v %VALUE_NAME%
 
+set vs2017path=
+
 %REG_QUERY_VS_2017_PATH%
 if ErrorLevel 1 (
     echo Visual Studio 2017 is not installed.
