@@ -7,7 +7,14 @@ set currentPath=%~dp0
 set PTF_Root=%currentPath%..\
 
 call "%PTF_Root%src\common\setBuildTool.cmd"
+if ErrorLevel 1 (
+	exit /b 1
+)
+
 call "%PTF_Root%src\common\setVsPath.cmd"
+if ErrorLevel 1 (
+	exit /b 1
+)
 
 if not defined WIX (
 	echo WiX Toolset version 3.11 should be installed
