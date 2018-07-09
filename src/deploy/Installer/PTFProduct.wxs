@@ -38,9 +38,9 @@
     </Upgrade>
 
     <!-- Conditions for product installation -->
-    <PropertyRef Id="NETFRAMEWORK40FULL"/>
-    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
-      Installed OR NETFRAMEWORK40FULL
+    <PropertyRef Id="NETFRAMEWORK45" />
+    <Condition Message="[ProductName] Requires .NET Framework 4.7.1 or later to be installed">
+    <![CDATA[Installed OR (NETFRAMEWORK45 AND NETFRAMEWORK45 >= "#461310")]]>
     </Condition>
     <Condition Message="A later version of [ProductName] is already installed. Setup will now exit.">
       NOT NEWER_VERSION_DETECTED OR Installed
