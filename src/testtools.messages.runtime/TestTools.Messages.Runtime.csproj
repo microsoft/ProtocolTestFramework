@@ -107,8 +107,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs10\" />
-    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs10\xmldocs\" />
-    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs10\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs\" />
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs\xmldocs\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PTF_Root)\drop\ProtocolTestFramework\Bin\vs\" />
   </Target>
 </Project>

@@ -77,7 +77,7 @@
           <Directory Id="DOCS_DIR" Name="docs" />
           <Directory Id="Bin_DIR" Name="bin">
           </Directory>
-          <Directory Id="PTF_GAC_VS10" Name="GAC_VS10" />
+          <Directory Id="PTF_GAC_VS" Name="GAC_VS" />
         </Directory>
       </Directory>
     </Directory>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?define PTF_SRC_ROOT=..\..\?>
 <?define SRCDIR=$(var.PTF_SRC_ROOT)..\drop\ProtocolTestFramework\Bin?>
-<?define SRCDIR_VS10=$(var.SRCDIR)\vs10?>
+<?define SRCDIR_VS=$(var.SRCDIR)\vs?>
 
 <?if $(var.Platform) = "x86"?>
 <?define BUILDTARGET=i386?>
@@ -102,7 +102,7 @@
     <!-- ETW Manifest -->
       <Component Id="TestSuiteProvider.man" Guid="0D1C33F2-F997-44AF-BCE0-77782A187CD8" Feature="PTF_All">
         <File Id="TestSuiteProvider.man" Source="$(var.PTF_SRC_ROOT)\TestTools.ExtendedLogging\TestSuiteProvider.man" >
-      <util:EventManifest MessageFile="[#Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS10]" ResourceFile="[#Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS10]"></util:EventManifest>
+      <util:EventManifest MessageFile="[#Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS]" ResourceFile="[#Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS]"></util:EventManifest>
     </File>
       </Component>
     </DirectoryRef>
@@ -110,106 +110,106 @@
     <DirectoryRef Id="Bin_DIR">
 
       <!-- Microsoft.Protocols.TestTools -->
-      <Component Id="Microsoft.Protocols.TestTools.dll_VS10" Guid="3F75FE1F-9951-4666-BF77-C4BF46E49692" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.dll" />
+      <Component Id="Microsoft.Protocols.TestTools.dll_VS" Guid="3F75FE1F-9951-4666-BF77-C4BF46E49692" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.dll" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.pdb_VS10" Guid="9141B891-0F7C-4E8E-B0D5-1B97204B9AD0" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.pdb_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.pdb" />
+      <Component Id="Microsoft.Protocols.TestTools.pdb_VS" Guid="9141B891-0F7C-4E8E-B0D5-1B97204B9AD0" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.pdb_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.pdb" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.xml_VS10" Guid="39BBC2DC-A820-493F-A3DB-B5A1362C2ADE" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.xml_VS10"
-              Source="$(var.SRCDIR_VS10)\xmldocs\Microsoft.Protocols.TestTools.xml" />
+      <Component Id="Microsoft.Protocols.TestTools.xml_VS" Guid="39BBC2DC-A820-493F-A3DB-B5A1362C2ADE" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.xml_VS"
+              Source="$(var.SRCDIR_VS)\xmldocs\Microsoft.Protocols.TestTools.xml" />
       </Component>
 
       <!-- Microsoft.Protocols.TestTools.Extension -->
-      <Component Id="Microsoft.Protocols.TestTools.Extension.dll_VS10" Guid="47A67D84-7CE2-4923-ABCA-7914D9B3547C" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.Extension.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.Extension.dll" />
+      <Component Id="Microsoft.Protocols.TestTools.Extension.dll_VS" Guid="47A67D84-7CE2-4923-ABCA-7914D9B3547C" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.Extension.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.Extension.dll" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.Extension.pdb_VS10" Guid="358DAD50-C664-4FF0-818C-8D3DA67F3220" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.Extension.pdb_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.Extension.pdb" />
+      <Component Id="Microsoft.Protocols.TestTools.Extension.pdb_VS" Guid="358DAD50-C664-4FF0-818C-8D3DA67F3220" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.Extension.pdb_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.Extension.pdb" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.Extension.xml_VS10" Guid="AF1700CF-4848-478E-A34B-6B05CE3F11C7" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.Extension.xml_VS10"
-              Source="$(var.SRCDIR_VS10)\xmldocs\Microsoft.Protocols.TestTools.Extension.xml" />
+      <Component Id="Microsoft.Protocols.TestTools.Extension.xml_VS" Guid="AF1700CF-4848-478E-A34B-6B05CE3F11C7" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.Extension.xml_VS"
+              Source="$(var.SRCDIR_VS)\xmldocs\Microsoft.Protocols.TestTools.Extension.xml" />
       </Component>
 
       <!-- Microsoft.Protocols.TestTools.Messages.Runtime -->
-      <Component Id="Microsoft.Protocols.TestTools.Messages.Runtime.dll_VS10" Guid="2692D1E3-C990-4835-B475-58F6F96CDC3C" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.Messages.Runtime.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.Messages.Runtime.dll" />
+      <Component Id="Microsoft.Protocols.TestTools.Messages.Runtime.dll_VS" Guid="2692D1E3-C990-4835-B475-58F6F96CDC3C" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.Messages.Runtime.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.Messages.Runtime.dll" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.Messages.Runtime.pdb_VS10" Guid="23BE7343-4826-4C81-81B0-A6C457DE0D3C" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.Messages.Runtime.pdb_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.Messages.Runtime.pdb" />
+      <Component Id="Microsoft.Protocols.TestTools.Messages.Runtime.pdb_VS" Guid="23BE7343-4826-4C81-81B0-A6C457DE0D3C" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.Messages.Runtime.pdb_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.Messages.Runtime.pdb" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.Messages.Runtime.xml_VS10" Guid="EDF11E41-442B-4903-BD01-0A97CDD0B5F5" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.Messages.Runtime.xml_VS10"
-              Source="$(var.SRCDIR_VS10)\xmldocs\Microsoft.Protocols.TestTools.Messages.Runtime.xml" />
+      <Component Id="Microsoft.Protocols.TestTools.Messages.Runtime.xml_VS" Guid="EDF11E41-442B-4903-BD01-0A97CDD0B5F5" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.Messages.Runtime.xml_VS"
+              Source="$(var.SRCDIR_VS)\xmldocs\Microsoft.Protocols.TestTools.Messages.Runtime.xml" />
       </Component>
 
       <!-- Microsoft.Protocols.TestTools.VSTS -->
-      <Component Id="Microsoft.Protocols.TestTools.VSTS.dll_VS10" Guid="30FD728A-C75C-463C-8C1C-EDBA807451DE" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.VSTS.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.VSTS.dll" />
+      <Component Id="Microsoft.Protocols.TestTools.VSTS.dll_VS" Guid="30FD728A-C75C-463C-8C1C-EDBA807451DE" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.VSTS.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.VSTS.dll" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.VSTS.pdb_VS10" Guid="EFE4FDC7-9BA9-46BA-AC55-C3D842CEFBFF" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.VSTS.pdb_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.VSTS.pdb" />
+      <Component Id="Microsoft.Protocols.TestTools.VSTS.pdb_VS" Guid="EFE4FDC7-9BA9-46BA-AC55-C3D842CEFBFF" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.VSTS.pdb_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.VSTS.pdb" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.VSTS.xml_VS10" Guid="D16B9E89-6340-4453-B9DA-9EBEF538DAD6" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.VSTS.xml_VS10"
-              Source="$(var.SRCDIR_VS10)\xmldocs\Microsoft.Protocols.TestTools.VSTS.xml" />
+      <Component Id="Microsoft.Protocols.TestTools.VSTS.xml_VS" Guid="D16B9E89-6340-4453-B9DA-9EBEF538DAD6" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.VSTS.xml_VS"
+              Source="$(var.SRCDIR_VS)\xmldocs\Microsoft.Protocols.TestTools.VSTS.xml" />
       </Component>
 
      <!-- Microsoft.Protocols.TestTools.ExtendedLogging -->
-      <Component Id="Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS10" Guid="7385F618-DCC8-4341-9ACF-4BE715B86F78" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.ExtendedLogging.dll" />
+      <Component Id="Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS" Guid="7385F618-DCC8-4341-9ACF-4BE715B86F78" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.ExtendedLogging.dll" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.ExtendedLogging.pdb_VS10" Guid="3099B4A4-2940-40AF-B800-B516C792A4D5" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.ExtendedLogging.pdb_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.ExtendedLogging.pdb" />
+      <Component Id="Microsoft.Protocols.TestTools.ExtendedLogging.pdb_VS" Guid="3099B4A4-2940-40AF-B800-B516C792A4D5" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.ExtendedLogging.pdb_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.ExtendedLogging.pdb" />
       </Component>
-      <Component Id="Microsoft.Protocols.TestTools.ExtendedLogging.xml_VS10" Guid="7BF280B0-C7A9-4D42-AFE5-FE4511A9DA34" Feature="PTF_All">
-        <File Id="Microsoft.Protocols.TestTools.ExtendedLogging.xml_VS10"
-              Source="$(var.SRCDIR_VS10)\xmldocs\Microsoft.Protocols.TestTools.ExtendedLogging.xml" />
+      <Component Id="Microsoft.Protocols.TestTools.ExtendedLogging.xml_VS" Guid="7BF280B0-C7A9-4D42-AFE5-FE4511A9DA34" Feature="PTF_All">
+        <File Id="Microsoft.Protocols.TestTools.ExtendedLogging.xml_VS"
+              Source="$(var.SRCDIR_VS)\xmldocs\Microsoft.Protocols.TestTools.ExtendedLogging.xml" />
       </Component>
     </DirectoryRef>
 
     <!-- PTF GAC -->
 
-    <DirectoryRef Id="PTF_GAC_VS10">
-      <Component Id="GAC_Microsoft.Protocols.TestTools.dll_VS10" Guid="656C7CF2-4781-4855-B45E-5C8251FFF2D3" Feature="PTF_All">
-        <File Id="GAC_Microsoft.Protocols.TestTools.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.dll"
+    <DirectoryRef Id="PTF_GAC_VS">
+      <Component Id="GAC_Microsoft.Protocols.TestTools.dll_VS" Guid="656C7CF2-4781-4855-B45E-5C8251FFF2D3" Feature="PTF_All">
+        <File Id="GAC_Microsoft.Protocols.TestTools.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.dll"
               KeyPath="yes"
               Assembly=".net" />
       </Component>
-      <Component Id="GAC_Microsoft.Protocols.TestTools.VSTS.dll_VS10" Guid="5D870B35-8003-494C-87E2-F95B15D88B0E" Feature="PTF_All">
-        <File Id="GAC_Microsoft.Protocols.TestTools.VSTS.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.VSTS.dll"
+      <Component Id="GAC_Microsoft.Protocols.TestTools.VSTS.dll_VS" Guid="5D870B35-8003-494C-87E2-F95B15D88B0E" Feature="PTF_All">
+        <File Id="GAC_Microsoft.Protocols.TestTools.VSTS.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.VSTS.dll"
               KeyPath="yes"
               Assembly=".net" />
       </Component>
-      <Component Id="GAC_Microsoft.Protocols.TestTools.Extension.dll_VS10" Guid="C58B0F42-4CCD-46A4-892B-D367938D70EC" Feature="PTF_All">
-        <File Id="GAC_Microsoft.Protocols.TestTools.Extension.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.Extension.dll"
+      <Component Id="GAC_Microsoft.Protocols.TestTools.Extension.dll_VS" Guid="C58B0F42-4CCD-46A4-892B-D367938D70EC" Feature="PTF_All">
+        <File Id="GAC_Microsoft.Protocols.TestTools.Extension.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.Extension.dll"
               KeyPath="yes"
               Assembly=".net" />
       </Component>
-      <Component Id="GAC_Microsoft.Protocols.TestTools.Messages.Runtime.dll_VS10" Guid="1DC260A1-0907-4367-BFA0-6A7A5C255D7E" Feature="PTF_All">
-        <File Id="GAC_Microsoft.Protocols.TestTools.Messages.Runtime.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.Messages.Runtime.dll"
+      <Component Id="GAC_Microsoft.Protocols.TestTools.Messages.Runtime.dll_VS" Guid="1DC260A1-0907-4367-BFA0-6A7A5C255D7E" Feature="PTF_All">
+        <File Id="GAC_Microsoft.Protocols.TestTools.Messages.Runtime.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.Messages.Runtime.dll"
               KeyPath="yes"
               Assembly=".net" />
       </Component>
-      <Component Id="GAC_Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS10" Guid="538D5842-F65A-47BA-818F-71F8C611D019" Feature="PTF_All">
-        <File Id="GAC_Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS10"
-              Source="$(var.SRCDIR_VS10)\Microsoft.Protocols.TestTools.ExtendedLogging.dll"
+      <Component Id="GAC_Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS" Guid="538D5842-F65A-47BA-818F-71F8C611D019" Feature="PTF_All">
+        <File Id="GAC_Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS"
+              Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.ExtendedLogging.dll"
               KeyPath="yes"
               Assembly=".net" />
       </Component>
