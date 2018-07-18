@@ -38,12 +38,12 @@
       <Component Id="VS2017_HtmlTestLogger.dll" Guid="817DF6E7-6169-4A10-AF67-A064CDBB38E5" Feature="PTF_All">
         <Condition>VS2017_ROOT_FOLDER</Condition>
         <File Id="VS2017_HtmlTestLogger.dll"
-              Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.HtmlTestLogger.dll" />
+              Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.Html.TestLogger.dll" />
       </Component>
       <Component Id="VS2017_HtmlTestLogger.pdb" Guid="D2869602-1C51-48D5-A81C-91B0332F00C7" Feature="PTF_All">
         <Condition>VS2017_ROOT_FOLDER</Condition>
         <File Id="VS2017_HtmlTestLogger.pdb"
-              Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.HtmlTestLogger.pdb" />
+              Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.Html.TestLogger.pdb" />
       </Component>
     </DirectoryRef>
     

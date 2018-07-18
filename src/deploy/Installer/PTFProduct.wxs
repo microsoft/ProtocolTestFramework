@@ -59,11 +59,9 @@
       <Directory Id="VS2017_ROOT_FOLDER">
         <Directory Id="VS2017_Common7" Name="Common7">
           <Directory Id="VS2017_IDE" Name="IDE">
-            <Directory Id="VS2017_CommonExtensions" Name="CommonExtensions">
-              <Directory Id="VS2017_Microsoft" Name="Microsoft">
-                <Directory Id="VS2017_TestWindow" Name="TestWindow">
-                  <Directory Id="VS2017_HtmlTestLogger_InstallLocation" Name="Extensions"/>
-                </Directory>
+            <Directory Id="VS2017_Extensions" Name="Extensions">
+              <Directory Id="VS2017_TestPlatform" Name="TestPlatform">
+                <Directory Id="VS2017_HtmlTestLogger_InstallLocation" Name="Extensions" />
               </Directory>
             </Directory>
           </Directory>
