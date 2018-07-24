@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportingTool", "reportingtool\ReportingTool.csproj", "{FABD7966-6611-4556-92CB-B13D7425AE82}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools", "testtools\TestTools.csproj", "{1CA2B935-3224-40F1-84BC-47FA1A9B242E}"
@@ -57,5 +59,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3005C0B4-5942-4167-9D63-9ACF591DB423}
 	EndGlobalSection
 EndGlobal

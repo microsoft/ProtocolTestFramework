@@ -13,7 +13,6 @@ if ErrorLevel 1 (
 :: Set buildtool
 if exist "%vs2017path%\MSBuild\15.0\Bin\MSBuild.exe" (
     set buildtool="%vs2017path%\MSBuild\15.0\Bin\MSBuild.exe"
-    set VisualStudioVer=15.0
 )
 
 if not defined buildtool (
