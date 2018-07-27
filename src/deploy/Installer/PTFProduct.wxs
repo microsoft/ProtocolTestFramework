@@ -38,65 +38,35 @@
     </Upgrade>
 
     <!-- Conditions for product installation -->
-    <PropertyRef Id="NETFRAMEWORK40FULL"/>
-    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
-      Installed OR NETFRAMEWORK40FULL
+    <PropertyRef Id="NETFRAMEWORK45" />
+    <Condition Message="This application requires .NET Framework 4.7.1 or later to be installed">
+    <![CDATA[Installed OR (NETFRAMEWORK45 AND NETFRAMEWORK45 >= "#461310")]]>
     </Condition>
     <Condition Message="A later version of [ProductName] is already installed. Setup will now exit.">
       NOT NEWER_VERSION_DETECTED OR Installed
     </Condition>
 
-	<PropertyRef Id="VS2012_ROOT_FOLDER"/>
-	<PropertyRef Id="VS2013_ROOT_FOLDER"/>
-	<PropertyRef Id="VS2015_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2017_ROOT_FOLDER"/>
 	
 	<Property Id="VSInstalled">0</Property>
 	
 	<SetProperty Id="VSInstalled" After="AppSearch" Value="1">
-		<![CDATA[(VS2012_ROOT_FOLDER >< $(var.CheckVSPath)) OR (VS2013_ROOT_FOLDER >< $(var.CheckVSPath)) OR (VS2015_ROOT_FOLDER >< $(var.CheckVSPath))]]>
+		<![CDATA[(VS2017_ROOT_FOLDER >< $(var.CheckVSPath))]]>
 	</SetProperty>
 
     <!-- Directory Structure -->
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="VS2012_ROOT_FOLDER">
-        <Directory Id="VS2012_Common7" Name="Common7">
-          <Directory Id="VS2012_IDE" Name="IDE">
-            <Directory Id="VS2012_CommonExtensions" Name="CommonExtensions">
-              <Directory Id="VS2012_Microsoft" Name="Microsoft">
-                <Directory Id="VS2012_TestWindow" Name="TestWindow">
-                  <Directory Id="VS2012_HtmlTestLogger_InstallLocation" Name="Extensions"/>
-                </Directory>
+      <Directory Id="VS2017_ROOT_FOLDER">
+        <Directory Id="VS2017_Common7" Name="Common7">
+          <Directory Id="VS2017_IDE" Name="IDE">
+            <Directory Id="VS2017_Extensions" Name="Extensions">
+              <Directory Id="VS2017_TestPlatform" Name="TestPlatform">
+                <Directory Id="VS2017_HtmlTestLogger_InstallLocation" Name="Extensions" />
               </Directory>
             </Directory>
           </Directory>
         </Directory>
       </Directory>
-      <Directory Id="VS2013_ROOT_FOLDER">
-        <Directory Id="VS2013_Common7" Name="Common7">
-          <Directory Id="VS2013_IDE" Name="IDE">
-            <Directory Id="VS2013_CommonExtensions" Name="CommonExtensions">
-              <Directory Id="VS2013_Microsoft" Name="Microsoft">
-                <Directory Id="VS2013_TestWindow" Name="TestWindow">
-                  <Directory Id="VS2013_HtmlTestLogger_InstallLocation" Name="Extensions"/>
-                </Directory>
-              </Directory>
-            </Directory>
-          </Directory>
-        </Directory>
-      </Directory>
-      <Directory Id="VS2015_ROOT_FOLDER">
-        <Directory Id="VS2015_Common7" Name="Common7">
-          <Directory Id="VS2015_IDE" Name="IDE">
-            <Directory Id="VS2015_CommonExtensions" Name="CommonExtensions">
-              <Directory Id="VS2015_Microsoft" Name="Microsoft">
-                <Directory Id="VS2015_TestWindow" Name="TestWindow">
-                  <Directory Id="VS2015_HtmlTestLogger_InstallLocation" Name="Extensions"/>
-                </Directory>
-              </Directory>
-            </Directory>
-          </Directory>
-        </Directory>
-      </Directory>	  
       <Directory Id="ProgramMenuFolder" >
         <Directory Id="ApplicationProgramsMenuFolder" Name="Protocol Test Framework" />
       </Directory> 
@@ -105,7 +75,7 @@
           <Directory Id="DOCS_DIR" Name="docs" />
           <Directory Id="Bin_DIR" Name="bin">
           </Directory>
-          <Directory Id="PTF_GAC_VS10" Name="GAC_VS10" />
+          <Directory Id="PTF_GAC_VS" Name="GAC_VS" />
         </Directory>
       </Directory>
     </Directory>

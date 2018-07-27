@@ -3,17 +3,13 @@
 
 @echo off
 
-if not defined vspath (
-	if defined VS110COMNTOOLS (
-		set vspath="%VS110COMNTOOLS%"
-	) else if defined VS120COMNTOOLS (
-		set vspath="%VS120COMNTOOLS%"
-	) else if defined VS140COMNTOOLS (
-		set vspath="%VS140COMNTOOLS%"
-	) else (
-		echo Visual Studio or Visual Studio test agent should be installed, version 2012 or higher
-		goto :eof
-	)
+set currentPath=%~dp0
+set PTFTEST_Root=%currentPath%..\..\
+
+call "%PTFTEST_Root%src\common\setVsPath.cmd"
+if ErrorLevel 1 (
+	exit /b 1
 )
+
 :: Does not run Interactive adapter cases in automation test
 %vspath%..\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe "TestProperties\bin\Debug\TestProperties.dll" "TestChecker\bin\Debug\TestChecker.dll" "TestLogging\bin\Debug\TestLogging.dll" "TestRequirementCapture\bin\Debug\TestRequirementCapture.dll" "TestAdapter\bin\Debug\TestAdapter.dll" /TestCaseFilter:"Name!=InteractiveAdapterAbort&Name!=InteractiveAdapterReturnInt&Name!=InteractiveAdapterReturnString" /Settings:Local.testsettings /Logger:trx

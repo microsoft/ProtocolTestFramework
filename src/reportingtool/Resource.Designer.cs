@@ -223,7 +223,8 @@ namespace Microsoft.Protocols.ReportingTool {
         ///        &lt;/tr&gt;
         ///        $CONFIG$
         ///        &lt;tr&gt;
-        ///            &lt;td align=&quot;center&quot; class=&quot;TableCellHighlighted&quot; colspan=&quot;2&quot;&gt;        /// [rest of string was truncated]&quot;;.
+        ///            &lt;td align=&quot;center&quot; class=&quot;TableCellHighlighted&quot; colspan=&quot;2&quot;&gt;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string LogTable {
             get {

@@ -979,7 +979,7 @@ The test settings file contains settings of running the test suite. It is requir
 
 ### Select the test settings file
 
-In Visual Studio 2012, you need to select the test settings file manually. Otherwise, test cases will fail with the error message "Cannot get the test site…".
+In Visual Studio 2017, you need to select the test settings file manually. Otherwise, test cases will fail with the error message "Cannot get the test site…".
 
 * Open the menu item: Test > Test Settings > Select Test Settings file.
 * Open the test settings file created in the previous step.
