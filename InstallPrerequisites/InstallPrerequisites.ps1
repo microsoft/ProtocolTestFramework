@@ -308,6 +308,11 @@ foreach($item in $downloadList)
         }
     }
 
+    if ($item.Name.ToLower().Equals("vs2017community"))
+    {
+        cmd.exe /C "InstallVs2017Community.cmd"
+    }
+
     if(-not $IsInstalled)
     {
         Write-Host $content -ForegroundColor Yellow
