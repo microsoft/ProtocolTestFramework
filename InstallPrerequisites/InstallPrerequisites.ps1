@@ -312,31 +312,33 @@ foreach($item in $downloadList)
     {
         cmd.exe /C "InstallVs2017Community.cmd"
     }
-
-    if(-not $IsInstalled)
+    else
     {
-        Write-Host $content -ForegroundColor Yellow
-        
-        $content = "Downloading file " + $item.Name + ". Please wait..."
-        Write-Host $content
-        $outputPath = $tempFolder + "\" + $item.FileName
+        if(-not $IsInstalled)
+        {
+            Write-Host $content -ForegroundColor Yellow
+            
+            $content = "Downloading file " + $item.Name + ". Please wait..."
+            Write-Host $content
+            $outputPath = $tempFolder + "\" + $item.FileName
 
-        try
-        {
-            DownloadAndInstallApplication -PSVersion $psVer -AppItem $item -OutputPath $outputPath
-        }
-        catch
-        {
-            $failedList += $item.Name
-            $IsInstalled = $false;
-            $ErrorMessage = $_.Exception.Message
-            Write-Host $ErrorMessage -ForegroundColor Red
-            Break;
-        }
+            try
+            {
+                DownloadAndInstallApplication -PSVersion $psVer -AppItem $item -OutputPath $outputPath
+            }
+            catch
+            {
+                $failedList += $item.Name
+                $IsInstalled = $false;
+                $ErrorMessage = $_.Exception.Message
+                Write-Host $ErrorMessage -ForegroundColor Red
+                Break;
+            }
 
-        if($item.NeedRestart)
-        {
-            $IsNeedRestart = $true;
+            if($item.NeedRestart)
+            {
+                $IsNeedRestart = $true;
+            }
         }
     }
 }
