@@ -27,45 +27,6 @@ if(-not $ConfigPath)
 
 $Category = "PTF"
 
-# Check if the required .NET framework version is installed on current machine
-Function CheckIfNet47IsInstalled{
-    $isInstalled = $false
-
-    if(-not (Test-Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"))
-    {
-        return $false
-    }
-    else
-    {
-        try
-        {
-            $NetVersion = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" -Name Version).Version
-
-            if($NetVersion)
-            {
-                $majorVersion = [int]$NetVersion.Substring(0,1)
-                if($majorVersion -gt 4)
-                {
-                    $isInstalled = $true
-                }
-                elseif ($majorVersion -eq 4)
-                {
-                    $minorVersion = [int]$NetVersion.Substring(2,3)
-                    if ($minorVersion -ge 7)
-                    {
-                        $isInstalled = $true
-                    }
-                }
-            }
-        }
-        catch
-        {
-            $isInstalled = $false
-        }
-    }
-    return $isInstalled;
-}
-
 # Check if application is installed on current machine.
 Function CheckIfAppInstalled{
     Param (
@@ -289,23 +250,10 @@ $psVer = [int](Get-Host).Version.ToString().Substring(0,1)
 foreach($item in $downloadList)
 {
     $isInstalled = $false;
-
-    if($item.Name.ToLower().Equals("net471"))
+    $isInstalled = CheckIfAppInstalled -AppName $item.AppName -Version $item.version -Compatible $item.BackwardCompatible
+    if(-not $isInstalled)
     {
-        $isInstalled = CheckIfNet47IsInstalled
-
-        if(-not $isInstalled)
-        {
-            $content = ".NET Framework 4.7.1 is not installed"
-        }
-    }
-    else
-    {
-        $isInstalled = CheckIfAppInstalled -AppName $item.AppName -Version $item.version -Compatible $item.BackwardCompatible
-        if(-not $isInstalled)
-        {
-            $content = "Application: " +$item.AppName + " is not installed"
-        }
+        $content = "Application: " +$item.AppName + " is not installed"
     }
 
     if ($item.Name.ToLower().Equals("vs2017community"))
