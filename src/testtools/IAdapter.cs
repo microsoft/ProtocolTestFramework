@@ -11,9 +11,7 @@ namespace Microsoft.Protocols.TestTools
     /// <summary>
     /// An interface that every adapter must implement.
     /// </summary>
-#if FORMODEL
     [Microsoft.SpecExplorer.Runtime.Testing.TestAdapter]
-#endif
     public interface IAdapter : IDisposable
     {
         /// <summary>
