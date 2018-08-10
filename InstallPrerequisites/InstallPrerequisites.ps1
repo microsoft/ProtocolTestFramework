@@ -27,45 +27,6 @@ if(-not $ConfigPath)
 
 $Category = "PTF"
 
-# Check if the required .NET framework version is installed on current machine
-Function CheckIfNet47IsInstalled{
-    $isInstalled = $false
-
-    if(-not (Test-Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"))
-    {
-        return $false
-    }
-    else
-    {
-        try
-        {
-            $NetVersion = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" -Name Version).Version
-
-            if($NetVersion)
-            {
-                $majorVersion = [int]$NetVersion.Substring(0,1)
-                if($majorVersion -gt 4)
-                {
-                    $isInstalled = $true
-                }
-                elseif ($majorVersion -eq 4)
-                {
-                    $minorVersion = [int]$NetVersion.Substring(2,3)
-                    if ($minorVersion -ge 7)
-                    {
-                        $isInstalled = $true
-                    }
-                }
-            }
-        }
-        catch
-        {
-            $isInstalled = $false
-        }
-    }
-    return $isInstalled;
-}
-
 # Check if application is installed on current machine.
 Function CheckIfAppInstalled{
     Param (
@@ -289,49 +250,43 @@ $psVer = [int](Get-Host).Version.ToString().Substring(0,1)
 foreach($item in $downloadList)
 {
     $isInstalled = $false;
-
-    if($item.Name.ToLower().Equals("net471"))
+    $isInstalled = CheckIfAppInstalled -AppName $item.AppName -Version $item.version -Compatible $item.BackwardCompatible
+    if(-not $isInstalled)
     {
-        $isInstalled = CheckIfNet47IsInstalled
+        $content = "Application: " +$item.AppName + " is not installed"
+    }
 
-        if(-not $isInstalled)
-        {
-            $content = ".NET Framework 4.7.1 is not installed"
-        }
+    if ($item.Name.ToLower().Equals("vs2017community"))
+    {
+        cmd.exe /C "InstallVs2017Community.cmd"
     }
     else
     {
-        $isInstalled = CheckIfAppInstalled -AppName $item.AppName -Version $item.version -Compatible $item.BackwardCompatible
-        if(-not $isInstalled)
+        if(-not $IsInstalled)
         {
-            $content = "Application: " +$item.AppName + " is not installed"
-        }
-    }
+            Write-Host $content -ForegroundColor Yellow
+            
+            $content = "Downloading file " + $item.Name + ". Please wait..."
+            Write-Host $content
+            $outputPath = $tempFolder + "\" + $item.FileName
 
-    if(-not $IsInstalled)
-    {
-        Write-Host $content -ForegroundColor Yellow
-        
-        $content = "Downloading file " + $item.Name + ". Please wait..."
-        Write-Host $content
-        $outputPath = $tempFolder + "\" + $item.FileName
+            try
+            {
+                DownloadAndInstallApplication -PSVersion $psVer -AppItem $item -OutputPath $outputPath
+            }
+            catch
+            {
+                $failedList += $item.Name
+                $IsInstalled = $false;
+                $ErrorMessage = $_.Exception.Message
+                Write-Host $ErrorMessage -ForegroundColor Red
+                Break;
+            }
 
-        try
-        {
-            DownloadAndInstallApplication -PSVersion $psVer -AppItem $item -OutputPath $outputPath
-        }
-        catch
-        {
-            $failedList += $item.Name
-            $IsInstalled = $false;
-            $ErrorMessage = $_.Exception.Message
-            Write-Host $ErrorMessage -ForegroundColor Red
-            Break;
-        }
-
-        if($item.NeedRestart)
-        {
-            $IsNeedRestart = $true;
+            if($item.NeedRestart)
+            {
+                $IsNeedRestart = $true;
+            }
         }
     }
 }
