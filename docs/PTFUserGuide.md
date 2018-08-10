@@ -32,13 +32,13 @@ Refer to Creating a Test Suite Manually included as a simple test suite example.
 
 
 
-# Protocol Test Environment Requirements 
+# <a name="2"> Protocol Test Environment Requirements 
 
 ## Computer Systems
 
 * SUT: system under test
     * Computer that is intended to be tested
-* Test Driver Computer running Windows 8.1 or Windows Server 2012 R2
+* Test Driver Computer running Windows 8.1/Windows Server 2012 R2 or later
 
 ## Network Infrastructure
 * A test network is required to connect the test computer systems
@@ -54,9 +54,9 @@ Refer to Creating a Test Suite Manually included as a simple test suite example.
 Refer to the Privacy Statement and EULA for futher information
 
 
-# Key Features of Protocol Test Framework 
+# <a name="4"> Key Features of Protocol Test Framework 
 
-## Default test environment 
+## <a name="4.1"> Default test environment 
 
 PTF provides an interface, `ITestSite`, to represent the environment for test cases execution. The interface allows access to basic context information (like OS information), configuration, functions for error checking, and adapter instance generation. PTF also contains a default implementation of this interface.
 
@@ -80,7 +80,7 @@ Assert.AreEqual<int>(0x40, bitFlag, "The G bit for NEGOTIATE was not set")
 Debug.IsNotNull(myObj, "Could not allocate new myObj")
 ```
 
-## PTF Configuration -- ptfconfig 
+## <a name="4.2"> PTF Configuration -- ptfconfig 
 
 PTF configuration files provide the user an interface to change the behavior of the test suites without changing the code. You can see the configuration file in the example. 
 Here is a partial list of some of the changes you can make by editing the PTF configuration file:
@@ -131,7 +131,7 @@ Example:
 </Group>
 ```
 
-## Protocol Test Adapters 
+## <a name="4.3"> Protocol Test Adapters 
 
 Adapters are configured in the test suite configuration file and can be retrieved from the ITestSite API.
 
@@ -345,7 +345,7 @@ int Hello(
     );
 ```
 
-![](https://github.com/Microsoft/ProtocolTestFramework/blob/master/docs/images/hello.png "hello")
+![](images/hello.png "hello")
 
 ### PowerShell Adapter
 
@@ -412,7 +412,7 @@ public void TestPowerShellAdapter()
 }
 ```
 
-## Extensive Logging Support 
+## <a name="4.4"> Extensive Logging Support 
 
 PTF provides problem-oriented logging capabilities (begin/end test group, verification pass/failure, requirement capture, debugging). Most of the logging is done automatically so that the test suite developer does not have to write them manually.
 
@@ -619,7 +619,7 @@ In order to use this new sink class, users should modify the configuration file 
 …
 ```
 
-## Checkers 
+## <a name="4.5"> Checkers 
 
 PTF provides checkers to test validation and verification infrastructure. Protocol test code should direct all validation code to those checkers. The current test's execution will stop when an assertion fails and a corresponding entry will be automatically created in the test log. Depending on log settings, an entry may also be created if an assertion succeeds. In general, test code does not need to provide extra logging output related to an assertion pass or failure. 
 
@@ -627,7 +627,7 @@ As discussed previously, ITestSite provides three checkers: Assume, Assert and D
 
 The checkers could also be used in the thread created by a user to report an asynchronous error.
 
-## Requirement Tracing 
+## <a name="4.6"> Requirement Tracing 
 
 The requirement tracing feature enables users to track the technical document requirement coverage by Model and Adapter. The requirement tracing feature is derived from an XML sink type. The user can use an XML log sink by adding the following line to the configuration
 
@@ -733,7 +733,7 @@ Do not have any leading zeroes in requirement ID. (For example, "MS-XXX_R01" wil
 
 
 
-## Reporting Tool 
+## <a name="4.7">  Reporting Tool 
 
 The Reporting Tool is a utility to generate a report from PTF test log and requirements table files. It reads XML format log files and requirements tables, and then generates a friendly report. Before using, the user can change the IE setting to allow the active content automatically.
 
@@ -771,7 +771,7 @@ Arguments:
 Multiple file arguments of the same type may be provided.
 
 
-## Auto Generate Test Report 
+## <a name="4.8"> Auto Generate Test Report 
 
 The Auto Generate Test Report feature makes it convenient for users to automatically generate a test report after all tests are run. The user needs to add the configurations in the PTF config file in order to use this feature.  Requirement specification should be deployed in the test run configuration if the user wants to use relative path.
 
@@ -791,7 +791,7 @@ Note:
 * Sink attribute must be an existing XML sink defined in the <Sinks\> tag.
 
 
-## Automatic Network Capturing 
+## <a name="4.9"> Automatic Network Capturing 
 
 __Note:__ This feature is only available on Windows 8.1 or Windows Server 2012 R2.
 
@@ -820,7 +820,7 @@ __CaptureFileFolder:__ The path to put the capture files. Existing file will be 
 __StopRunningOnError:__ If it is true, the test case will fail when error happens in running network capture commands; otherwise, ignore the error.
 
 
-## Display Expected/Actual runtime of testsuite 
+## <a name="4.10"> Display Expected/Actual runtime of testsuite 
 
 This feature enables a user to display expected/actual runtime of the test suite on the console.
 
@@ -838,7 +838,7 @@ Test suite will log and display the Actual time after the test run is completed.
 
 
 
-#  Protocol Test Suite Manually 
+# <a name="5"> Creating a Protocol Test Suite Manually
 
 The overall steps for creating a protocol test suite using PTF are as follows:
 
@@ -852,7 +852,7 @@ In the following sections, we will go through each of these steps in detail.
 In this example, we will test a multiplication operation: 5*4 = 20.
 
 
-## Create a Hello World Unit Test Project 
+## <a name="5.1"> Create a Hello World Unit Test Project 
 
 The PTF project is hosted in the Unit Test Project. To create a PTF project:
 
@@ -985,7 +985,7 @@ In Visual Studio 2017, you need to select the test settings file manually. Other
 * Open the test settings file created in the previous step.
 
 
-## Using Adapters 
+## <a name="5.2"> Using Adapters 
 
 The overall steps to create a protocol test suite with adapters using PTF are as follows:
 
@@ -1183,7 +1183,7 @@ namespace HelloWorld
 }
 ```
 
-## Run test cases 
+## <a name="5.3"> Run test cases 
 
 To run test cases from Visual Studio, you can open the Test Explorer from the Menu: Test > Windows > Test Explorer.
 
