@@ -220,7 +220,7 @@
     <DirectoryRef Id="DOCS_DIR">
       <!-- PTF User Guide -->
       <Component Id="PTF_User_Guide" Guid="B3F7E4AF-8751-4FEC-83C0-239918499DA3" Feature="PTF_All">
-        <File Id="PTFUserGuide.docx" Source="$(var.PTF_SRC_ROOT)..\docs\PTFUserGuide.md" />
+        <File Id="PTFUserGuide.md" Source="$(var.PTF_SRC_ROOT)..\docs\PTFUserGuide.md" />
       </Component>
     </DirectoryRef>
 
@@ -238,7 +238,7 @@
       <Component Id="PTF_User_Guide_Shortcut" Guid="E360B475-A8F0-4FA6-96A1-A410DA9BAF73" Feature="PTF_All">
         <Shortcut Id="PTF_User_Guide_Shortcut"
                   Name="PTF User Guide"
-                  Target="[DOCS_DIR]PTFUserGuide.docx" />
+                  Target="[DOCS_DIR]PTFUserGuide.md" />
 
         <RemoveFolder Id="PTF_User_Guide_Shortcut" On="uninstall" />
         <RegistryValue Id="PTF_User_Guide_Shortcut"
