@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
-#if FORMODEL
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -364,4 +362,3 @@ namespace Microsoft.Protocols.TestTools
         #endregion
     }
 }
-#endif

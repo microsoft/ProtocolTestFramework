@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -121,7 +121,6 @@
     </ProjectReference>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <Copy Condition="$(FORMODEL)==1" SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFiles="$(PTF_Root)drop\ProtocolTestFramework\installer\$(TargetFileName)ForModel.msi" />
-	<Copy Condition="$(FORMODEL)!=1" SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFolder="$(PTF_Root)drop\ProtocolTestFramework\installer\" />
+    <Copy SourceFiles="$(TargetDir)en-us\$(TargetFileName).msi" DestinationFolder="$(PTF_Root)drop\ProtocolTestFramework\installer\" />
   </Target>
 </Project>

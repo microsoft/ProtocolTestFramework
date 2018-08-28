@@ -2,13 +2,17 @@
 :: Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 @echo off
-if not defined buildtool (
-	for /f %%i in ('dir /b /ad /on "%windir%\Microsoft.NET\Framework\v4*"') do (@if exist "%windir%\Microsoft.NET\Framework\%%i\msbuild".exe set buildtool=%windir%\Microsoft.NET\Framework\%%i\msbuild.exe)
+
+set currentPath=%~dp0
+set PTF_Root=%currentPath%..\..\
+set PTFTEST_Root=%currentPath%..\
+call "%PTFTEST_Root%common\setBuildTool.cmd"
+if ErrorLevel 1 (
+	exit /b 1
 )
 
-if not defined buildtool (
-	echo No msbuild.exe was found, install .Net Framework version 4.0 or higher
-	goto :eof
+%buildtool% TestPTF.sln /t:clean;rebuild
+if ErrorLevel 1 (
+    echo Error: Failed to build TestPTF
+    exit /b 1
 )
-
-%buildtool% TestPTF.sln /t:clean;rebuild 

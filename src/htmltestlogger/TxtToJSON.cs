@@ -25,7 +25,8 @@ namespace Microsoft.Protocols.TestTools
         // Stores the map between case name and class
         private Dictionary<string, string> caseClass = new Dictionary<string, string>();
         // Auxiliary variable to save information as JSON
-        private JavaScriptSerializer serializer = new JavaScriptSerializer();
+        // Initialize the maximum length of JSON output to 32M
+        private JavaScriptSerializer serializer = new JavaScriptSerializer() { MaxJsonLength = 32 * 1024 * 1024 };
 
         private enum LogType
         {

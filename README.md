@@ -6,11 +6,34 @@ It implements the fundamentals to support Protocol Test Suite, including logging
 ## Prerequisites
 PTF is based on Windows platform.
 You should install the following list of software in order to build PTF from source code.
+You can use the script in **InstallPrerequisites** folder to automatically download and install these software.
 
-* .Net framework 4.0 or higher
-* Wix toolset [v3.10](https://wix.codeplex.com/releases/view/619491)
-* Visual Studio or Visual Studio test agent, version 2012 or higher
-* [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/). It is only required if you want to build a PTF version that supports the test suites which contain [Model-Based Test](https://msdn.microsoft.com/en-us/library/ee620469.aspx) cases.
+* .Net framework 4.7.1 or higher
+* Wix toolset [v3.11](https://github.com/wixtoolset/wix3/releases/tag/wix3111rtm)
+* Visual Studio version 2017
+* [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/)
+
+Tips when using the script in **InstallPrerequisites** folder:
+
+* To run the script, open **Windows PowerShell**, and execute the commands below in the **PowerShell Window**:
+
+```
+cd ProtocolTestFramework\InstallPrerequisites
+.\InstallPrerequisites.ps1
+```
+
+* If you meet errors about **Execution Policy**, make sure you run **Windows PowerShell** as **Administrator**, and type the following and enter:
+
+```
+Set-ExecutionPolicy RemoteSigned
+```
+
+You could run the command below to verify if the **Execution Policy** is correctly set:
+
+```
+Get-ExecutionPolicy
+```
+
 
 ## Build
 
@@ -19,21 +42,13 @@ After you clone a copy of this repo, change to the ProtocolTestFramework directo
 cd ProtocolTestFramework
 ```
 
-PTF can be built into two versions:
-
-* The **nomodel** version is used to support the protocol test suite that does not contain Model-Based Test cases, change to src directory and run build.cmd
+Change to src directory and run build.cmd:
   ```
   cd src
   build.cmd
   ```
 After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
-* The **formodel** version is used to support the protocol test suite that contains Model-Based Test cases, you should install [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/) first and then build PTF with the option **formodel**.
-  ```
-  cd src
-  build.cmd formodel
-  ```
-After the build succeeds, ProtocolTestFrameworkInstallerForModel.msi should be generated in the folder drop\ProtocolTestFramework\installer\.
 
 ## Samples
 You can find samples of how to develop a protocol test suite using PTF [here](https://github.com/Microsoft/ProtocolTestFramework/tree/master/samples).
