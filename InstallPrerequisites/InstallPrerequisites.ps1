@@ -28,12 +28,13 @@ if(-not $ConfigPath)
 $Category = "PTF"
 
 # Check if application is installed on current machine.
-Function CheckIfAppInstalled{
+Function CheckIfAppInstalled
+{
     Param (
-		[string]$AppName,	# Application Name
-		[string]$Version,	# Application Version
-		[bool]$Compatible	# Is support backward compatible
-	)
+        [string]$AppName,   # Application Name
+        [string]$Version,   # Application Version
+        [bool]$Compatible   # Is support backward compatible
+    )
 
     #check if the required software is installed on current machine
     if ([IntPtr]::Size -eq 4) {
@@ -45,29 +46,37 @@ Function CheckIfAppInstalled{
             'HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*'
         )
     }
-	
+    
     $app = Get-ItemProperty $regpath | .{process{if($_.DisplayName -and $_.UninstallString) { $_ } }} | Where-Object {$_.DisplayName -match $AppName} | Select DisplayName, DisplayVersion -First 1
     
-    if($app){
-		if($Compatible){
+    if($app)
+    {
+        if($Compatible)
+        {
             return ([System.Version]$app.DisplayVersion -ge [System.Version]$Version);
-		}else{
-			return ([System.Version]$app.DisplayVersion -eq [System.Version]$Version);
-		}
-    }else{
-		if($AppName -match "Microsoft Agents for Visual Studio"){
-			#If Test Agent was not installed we also need check if Visual Studio installed.
-			$app = Get-ItemProperty $regpath | .{process{if($_.DisplayName -and $_.UninstallString) { $_ } }} | Where-Object {$_.DisplayName -match "Microsoft Visual Studio \d{4} Devenv"} | Sort-Object -Property DisplayVersion -Descending | Select DisplayName, Version, DisplayVersion -First 1
-			if($app){
-				return $true;
-			}
-		}
-		return $false;
+        }
+        else
+        {
+            return ([System.Version]$app.DisplayVersion -eq [System.Version]$Version);
+        }
+    }
+    else
+    {
+        if($AppName -match "Microsoft Agents for Visual Studio")
+        {
+            #If Test Agent was not installed we also need check if Visual Studio installed.
+            $app = Get-ItemProperty $regpath | .{process{if($_.DisplayName -and $_.UninstallString) { $_ } }} | Where-Object {$_.DisplayName -match "Microsoft Visual Studio \d{4} Devenv"} | Sort-Object -Property DisplayVersion -Descending | Select DisplayName, Version, DisplayVersion -First 1
+            if($app){
+                return $true;
+            }
+        }
+        return $false;
     }
 }
 
 # Mount ISO and return application path searched from ISO
-Function MountISOAndGetAppPath{
+Function MountISOAndGetAppPath
+{
     Param (
         [string]$AppName,
         [string]$ISOPath
@@ -85,14 +94,16 @@ Function MountISOAndGetAppPath{
         $content = $AppName + "cannot be found in ISO"
         Write-Host $content -ForegroundColor Red
         retun "";
-    }else
+    }
+    else
     {
         return $appPath.FullName;
     }
 }
 
 # Reject app Disk
-Function UnmountDisk{
+Function UnmountDisk
+{
     Param (
         [string]$AppPath
        )
@@ -135,13 +146,13 @@ Function GetDownloadTools{
         $tool.URL = $item.url;
         $tool.InstallFileName = $item.InstallFileName;
         $tool.NeedRestart = $false
-		$tool.BackwardCompatible = $true
-		
+        $tool.BackwardCompatible = $true
+        
         if($item.NeedRestart)
         {
             $tool.NeedRestart = [bool]$item.NeedRestart;
         }
-		if($item.BackwardCompatible)
+        if($item.BackwardCompatible)
         {
             $tool.BackwardCompatible = [bool]$item.BackwardCompatible;
         }
@@ -163,10 +174,11 @@ Function GetDownloadTools{
 }
 
 # Create a tempoary folder under current folder, which is used to store downloaded files.
-Function CreateTemporaryFolder{
+Function CreateTemporaryFolder
+{
     #create temporary folder for downloading tools
     $tempPath = (get-location).ToString() + "\" + [system.guid]::newguid().ToString()
-    Write-Host "Create temporary folder for downloading files"
+    Write-Host "Create temporary folder for downloading files"``
     $outFile = New-Item -ItemType Directory -Path $tempPath
     Write-Host "Temporary folder $outFile is created"
 
@@ -176,20 +188,27 @@ Function CreateTemporaryFolder{
 # Download and install prerequisite tool
 Function DownloadAndInstallApplication
 {
-    param(
-        [int]$PSVersion,
+    param(        
         $AppItem,
         [string]$OutputPath
     )
-    # Check if Powershell version greate than 3.0, if not then use WebClient to download file, otherwise use Invoke-WebRequest.
-    if($psVersion -ge 3)
+
+    try       
     {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -Uri $AppItem.URL -OutFile $OutputPath
-    }else
-    {
-        (New-Object System.Net.WebClient).DownloadFile($AppItem.URL, $OutputPath)
+        Invoke-WebRequest -Uri $item.URL -OutFile $OutputPath                     
     }
+    catch
+    {
+        try
+        {                   
+            (New-Object System.Net.WebClient).DownloadFile($item.URL, $OutputPath)
+        }
+        catch
+        {          
+            Write-host "Download $item.Name failed with exception: $_.Exception.Message"   
+            Return                    
+        }                              
+    }       
             
     $content = "Downloading " + $AppItem.Name + " completed. Path:" + $OutputPath
     Write-Host $content
@@ -197,45 +216,56 @@ Function DownloadAndInstallApplication
     # Check if the downloaded file is ISO
     if($AppItem.FileName.ToLower().EndsWith("iso"))
     {
-        if($psVersion -ge 3)
-        {
-            Write-Host "Mounting ISO image";
-            $OutputPath = MountISOAndGetAppPath -AppName $AppItem.InstallFileName -ISOPath $OutputPath
-            Write-Host $OutputPath
-        }
-        else
-        {
-            $content = "Your system does not support Mount-DiskImage command. Please install " + $AppItem.AppName;
-
-            Write-Host "Your system does not support Mount-DiskImage command. Please mount and install manually";
-        }
+        Write-Host "Mounting ISO image";
+        $OutputPath = MountISOAndGetAppPath -AppName $AppItem.InstallFileName -ISOPath $OutputPath
+        Write-Host $OutputPath        
     }
+    
             
     # start to Install file
+    
     $content = "Installing " + $AppItem.Name + ". Please wait..."
     Write-Host $content
 
-    $FLAGS  = $AppItem.Arguments
-
-    $ExitCode = (Start-Process -FILEPATH $OutputPath $FLAGS -Wait -PassThru).ExitCode
-    if ($ExitCode -EQ 0)
-    {
-        $content = "Application " + $AppItem.Name +" is successfully installed on current machine"
-        Write-Host $content -ForegroundColor Green
-    }
+    if ($item.Name.ToLower().Equals("vs2017community"))
+    {        
+        cmd.exe /C "InstallVs2017Community.cmd $OutputPath"
+    }    
     else
     {
-        $failedList += $AppItem.Name
-        $content = "Installing " + $AppItem.Name +" failed, Error Code:" + $ExitCode
-        Write-Host "ERROR $ExitCode"; 
-    }
+        $FLAGS  = $AppItem.Arguments
+        $ExitCode = 0
+        if ($AppItem.Arguments.Trim().Length -lt 1 )
+        {
+            $ExitCode = (Start-Process -FILEPATH $OutputPath -Wait -PassThru).ExitCode
+        }
+        else
+        {        
+            $ExitCode = (Start-Process -FILEPATH $OutputPath $FLAGS -Wait -PassThru).ExitCode
+        }
+        
+        if ($ExitCode -EQ 0)
+        {
+            $content = "Application " + $AppItem.Name +" is successfully installed on current machine"
+            Write-Host $content -ForegroundColor Green
+        }
+        else
+        {
+            $failedList += $AppItem.Name
+            $content = "Installing " + $AppItem.Name +" failed, Error Code:" + $ExitCode
+            Write-Host "ERROR $ExitCode"; 
+        }
 
-    # If the file is ISO, unmount it.
-    if($AppItem.FileName.ToLower().EndsWith("iso"))
-    {
-        UnmountDisk -AppPath $OutputPath
+        # If the file is ISO, unmount it.
+        if($AppItem.FileName.ToLower().EndsWith("iso"))
+        {
+            UnmountDisk -AppPath $OutputPath
+        }
     }
 }
+
+$AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
 
 # Start get all needed tools from configure file.
 $downloadList = GetDownloadTools -DpConfigPath $ConfigPath -ToolCategory $Category
@@ -243,9 +273,6 @@ $tempFolder = CreateTemporaryFolder
 $failedList = @();
 $IsNeedRestart = $false;
 
-# Check PowerShell version
-
-$psVer = [int](Get-Host).Version.ToString().Substring(0,1)
 
 foreach($item in $downloadList)
 {
@@ -255,46 +282,86 @@ foreach($item in $downloadList)
     {
         $content = "Application: " +$item.AppName + " is not installed"
     }
-
-    if ($item.Name.ToLower().Equals("vs2017community"))
+    
+    if(-not $IsInstalled)
     {
-        cmd.exe /C "InstallVs2017Community.cmd"
+        Write-Host $content -ForegroundColor Yellow
+        
+        $content = "Downloading file " + $item.Name + ". Please wait..."
+        Write-Host $content
+        $outputPath = $tempFolder + "\" + $item.FileName
+
+        try
+        {
+            DownloadAndInstallApplication -AppItem $item -OutputPath $outputPath
+        }
+        catch
+        {
+            $failedList += $item.Name
+            $IsInstalled = $false;
+            $ErrorMessage = $_.Exception.Message
+            Write-Host $ErrorMessage -ForegroundColor Red
+            Break;
+        }
+
+        if($item.NeedRestart)
+        {
+            $IsNeedRestart = $true;
+        }
     }
     else
     {
-        if(-not $IsInstalled)
+        if($item.AppName -match "Microsoft Agents for Visual Studio")
         {
-            Write-Host $content -ForegroundColor Yellow
-            
-            $content = "Downloading file " + $item.Name + ". Please wait..."
-            Write-Host $content
-            $outputPath = $tempFolder + "\" + $item.FileName
-
-            try
+            if($item.BackwardCompatible)
             {
-                DownloadAndInstallApplication -PSVersion $psVer -AppItem $item -OutputPath $outputPath
+                $content = $item.AppName + " or later version or Microsoft Visual Studio is already installed"
             }
-            catch
+            else
             {
-                $failedList += $item.Name
-                $IsInstalled = $false;
-                $ErrorMessage = $_.Exception.Message
-                Write-Host $ErrorMessage -ForegroundColor Red
-                Break;
-            }
-
-            if($item.NeedRestart)
-            {
-                $IsNeedRestart = $true;
+                $content = $item.AppName + " or Microsoft Visual Studio is already installed"
             }
         }
+        else
+        {
+            if($item.BackwardCompatible)
+            {
+                $content = $item.AppName + " or later version is already installed"
+            }
+            else
+            {
+                $content = $item.AppName + " is already installed"
+            }
+        }
+        Write-Host $content -ForegroundColor Green
     }
+    
 }
 
-if($psVersion -ge 3)
+$downloadList.Clear();
+
+if($failedList.Length -eq 0) #No failure occurs
 {
-    $downloadList.Clear();
+    if(Test-Path $tempFolder)
+    {
+        Write-Host "Remove temporary folder"
+        Remove-Item -Path $tempFolder -Recurse -Force
+    }
+    Write-Host "Prerequisite tools are all installed." -ForegroundColor Green
+    if($IsNeedRestart)
+    {
+        Write-Host "Please restart your computer before build the test suites." -ForegroundColor Yellow
+    }
 }
-else{
-    $downloadList = @();
+else
+{
+    if($failedList.Length -gt 0)
+    {
+        Write-Host "The following prerequisite tools are not installed. Please install them manually."
+        Write-Host "You can get the setup files under "$tempFolder
+
+        $failedList|ForEach-Object{
+            Write-Host $_ -ForegroundColor Red
+        }
+    }
 }
