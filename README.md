@@ -19,7 +19,7 @@ Tips when using the script in **InstallPrerequisites** folder:
 
 ```
 cd ProtocolTestFramework\InstallPrerequisites
-.\InstallPrerequisites.ps1
+.\InstallPrerequisitesForPTF.ps1
 ```
 
 * If you meet errors about **Execution Policy**, make sure you run **Windows PowerShell** as **Administrator**, and type the following and enter:
