@@ -1,6 +1,6 @@
 <Dependency>
 	<tools>
-		<tool name="VS2017Community" FileName="vs_community.exe" AppName="Visual Studio 2017 Community" version="15.7.27703.2042" url="https://aka.ms/vs/15/release/vs_community.exe" arguments="/q /">
+		<tool name="VS2017Community" FileName="vs_community.exe" AppName="Visual Studio 2017 Community" version="15.7.27703.2042" url="https://aka.ms/vs/15/release/vs_community.exe" arguments="/q"/>
 		<tool name="Wix311" FileName="Wix311.exe" AppName="WiX Toolset v3.11" version="3.11.1" url="https://github.com/wixtoolset/wix3/releases/download/wix3111rtm/wix311.exe" arguments="/q"/>
 		<tool name="SE" FileName="SpecExplorer.msi" AppName="Spec Explorer 2010" version="3.5.3146.0" url="https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/file/36449/3/SpecExplorer.msi" arguments="/q"/>
 	</tools>
