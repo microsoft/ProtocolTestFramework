@@ -27,11 +27,11 @@ Function DownloadFile
     }
 }
 
-$ifInstallPrerequisitesExist = Test-Path .\InstallPrerequisites.ps1
-$ifInstallVs2017Community    = Test-Path .\InstallVs2017Community.cmd
-$ifPrerequisitesConfigExist  = Test-Path .\PrerequisitesConfig.xml
-if (!$ifInstallPrerequisitesExist -or
-    !$ifInstallVs2017Community -or
+$ifInstallPrerequisitesExist   = Test-Path .\InstallPrerequisites.ps1
+$ifInstallVs2017CommunityExist = Test-Path .\InstallVs2017Community.cmd
+$ifPrerequisitesConfigExist    = Test-Path .\PrerequisitesConfig.xml
+if (!$ifInstallPrerequisitesExist   -or
+    !$ifInstallVs2017CommunityExist -or
     !$ifPrerequisitesConfigExist) {
     
     try {
@@ -39,7 +39,7 @@ if (!$ifInstallPrerequisitesExist -or
         $WebResponse = Invoke-WebRequest https://github.com/Microsoft/WindowsProtocolTestSuites/tree/staging/InstallPrerequisites/ -UseBasicParsing
 
         # Download InstallVs2017Community.cmd
-        if (!$ifInstallVs2017Community) {
+        if (!$ifInstallVs2017CommunityExist) {
             $CmdFile = $WebResponse.Links |?{$_.href -match "InstallVs2017Community.cmd"}
             DownloadFile -File $CmdFile
         }
