@@ -57,7 +57,7 @@ if (!$ifInstallPrerequisitesExist   -or
         }
     }
     catch {
-        Write-Host "Please download the following InstallPrerequisites-related files manually from Github page https://github.com/Microsoft/WindowsProtocolTestSuites/tree/staging/InstallPrerequisites"
+        Write-Host "Please download the following InstallPrerequisites-related files manually from WindowsProtocolTestSuites Github page https://github.com/Microsoft/WindowsProtocolTestSuites/tree/staging/InstallPrerequisites"
         Write-Host "1. InstallPrerequisites.ps1"
         Write-Host "2. InstallVs2017Community.cmd"
         Write-Host "3. PrerequisitesConfig.xml"
