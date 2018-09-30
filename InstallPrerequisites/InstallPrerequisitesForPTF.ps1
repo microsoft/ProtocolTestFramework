@@ -36,6 +36,8 @@ if (!$ifInstallPrerequisitesExist   -or
 
     try {
         $prefix = "https://raw.githubusercontent.com/Microsoft/WindowsProtocolTestSuites/staging/InstallPrerequisites/"
+        $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+        [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
         $WebResponse = Invoke-WebRequest https://github.com/Microsoft/WindowsProtocolTestSuites/tree/staging/InstallPrerequisites/ -UseBasicParsing
 
         # Download InstallVs2017Community.cmd
