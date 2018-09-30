@@ -4,7 +4,7 @@
 # Download files
 Function DownloadFile
 {
-    param(        
+    param(
         $File
     )
 
@@ -33,9 +33,9 @@ $ifPrerequisitesConfigExist    = Test-Path .\PrerequisitesConfig.xml
 if (!$ifInstallPrerequisitesExist   -or
     !$ifInstallVs2017CommunityExist -or
     !$ifPrerequisitesConfigExist) {
-    
+
     try {
-        $prefix = 'https://raw.githubusercontent.com/Microsoft/WindowsProtocolTestSuites/staging/InstallPrerequisites/'
+        $prefix = "https://raw.githubusercontent.com/Microsoft/WindowsProtocolTestSuites/staging/InstallPrerequisites/"
         $WebResponse = Invoke-WebRequest https://github.com/Microsoft/WindowsProtocolTestSuites/tree/staging/InstallPrerequisites/ -UseBasicParsing
 
         # Download InstallVs2017Community.cmd
