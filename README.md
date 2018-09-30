@@ -9,9 +9,14 @@ PTF is based on Windows platform.
 You should install the following list of software in order to build PTF from source code.
 You can use the script in **InstallPrerequisites** folder to automatically download and install these software.
 
-* .Net framework 4.7.1 or higher
+* [Visual Studio 2017](https://visualstudio.microsoft.com/downloads/) and the features below:
+  * Workload ".NET desktop development" and the component ".NET Framework 4.7.1 development tools". 
+    * Note: .Net Framework 4.7.1 is supported in Windows 7 SP1, Windows 8.1, Windows 10 Anniversary Update, Windows 10 Creators Update, Windows Server 2008 R2 SP1, Windows Server 2012, Windows Server 2012 R2 and Windows Server 2016.
+  * Individual component "Testing tools core features".
+  * Individual component "MSBuild".
+  * Workload "Desktop development with C++" and the components "VC++ 2017 version 15.8 v14.15 latest v141 tools", "Windows 10 SDK (10.0.16299.0) for Desktop C++ [x86 and x64]".
+    * They are required if you want to build test suites (ADFamily, MS-SMBD) or Protocol Test Manager which have C++ code.  
 * Wix toolset [v3.11](https://github.com/wixtoolset/wix3/releases/tag/wix3111rtm)
-* Visual Studio version 2017
 * [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/)
 
 Tips when using the script in **InstallPrerequisites** folder:
