@@ -6,19 +6,20 @@ It implements the fundamentals to support Protocol Test Suite, including logging
 ## Prerequisites
 
 PTF is based on Windows platform.
-You should install the following list of software in order to build PTF from source code.
+You should install the softwares listed below based on your testing purpose, including their own dependencies.
+* [Visual Studio 2017](https://visualstudio.microsoft.com/downloads/) with some individual components required by installing in Visual Studio Installer:
+ 
+    |Individual Component\Purpose|Run test suites based on Protocol Test Framework (PTF)|Build Protocol Test Framework (PTF) from source code|
+    |---|---|---|
+    |.NET Framework 4.7.1 targeting pack|Required|Required|
+    |Testing tools core features|Required|Required|
+    |.NET Framework 4.7.1 SDK||Required|
+    |C# and Visual Basic Roslyn compilers||Required|
+* [Spec Explorer 2010 v3.5.3146.0](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/). It is required if you want to build Protocol Test Framework (PTF) from source code.
+* [Wix Toolset v3.11](https://github.com/wixtoolset/wix3/releases/tag/wix3111rtm) and [Wix Toolset Visual Studio 2017 Extension](https://marketplace.visualstudio.com/items?itemName=RobMensching.WixToolsetVisualStudio2017Extension). It is required if you want to build Protocol Test Framework (PTF) from source code.
+
+
 You can use the script in **InstallPrerequisites** folder to automatically download and install these software.
-
-* [Visual Studio 2017](https://visualstudio.microsoft.com/downloads/) and the features below:
-  * Workload ".NET desktop development" and the component ".NET Framework 4.7.1 development tools". 
-    * Note: .Net Framework 4.7.1 is supported in Windows 7 SP1, Windows 8.1, Windows 10 Anniversary Update, Windows 10 Creators Update, Windows Server 2008 R2 SP1, Windows Server 2012, Windows Server 2012 R2 and Windows Server 2016.
-  * Individual component "Testing tools core features".
-  * Individual component "MSBuild".
-  * Workload "Desktop development with C++" and the components "VC++ 2017 version 15.8 v14.15 latest v141 tools", "Windows 10 SDK (10.0.16299.0) for Desktop C++ [x86 and x64]".
-    * They are required if you want to build test suites (ADFamily, MS-SMBD) or Protocol Test Manager which have C++ code.  
-* Wix toolset [v3.11](https://github.com/wixtoolset/wix3/releases/tag/wix3111rtm)
-* [Spec Explorer](https://visualstudiogallery.msdn.microsoft.com/271d0904-f178-4ce9-956b-d9bfa4902745/)
-
 Tips when using the script in **InstallPrerequisites** folder:
 
 * To run the script, open **Windows PowerShell**, and execute the commands below in the **PowerShell Window**:
