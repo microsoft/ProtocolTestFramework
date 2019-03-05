@@ -7,18 +7,12 @@ xsi:schemaLocation="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/T
 
     <!-- Test suite properties which value not changed when running in different test environments -->
     <Property name="FeatureName" value="PTF:Adapter" />
-    
-    <!-- Properties used in testing Tcp adapter -->
-    <Property name="MyTcpAdapter.hostname" value="127.0.0.1" />
-    <Property name="MyTcpAdapter.port" value="8000" />
   </Properties>
   <Adapters>
     <Adapter xsi:type="managed" name="IManagedAdapter" adaptertype="Microsoft.Protocols.TestTools.Test.TestAdapter.ManagedAdapter"/>
     <Adapter xsi:type="shell" name="IShellAdapter" scriptdir=".\"/>
     <Adapter xsi:type="powershell" name="IPowershellAdapter" scriptdir=".\"/>
     <Adapter xsi:type="interactive" name="IInteractiveAdapter"/>
-    <Adapter xsi:type="rpc" name="IMyRpcAdapter"/>
-    <Adapter xsi:type="managed" name="IMyTcpAdapter" adaptertype="Microsoft.Protocols.TestTools.Test.TestAdapter.MyTcpAdapter"/>
   </Adapters>
   <!-- The default profile name.  Provide maximum logging. -->
   <TestLog defaultprofile="Verbose">

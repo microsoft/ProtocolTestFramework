@@ -37,10 +37,6 @@ namespace Microsoft.Protocols.TestTools
         // Adapter Dictionary to contain created adapters.
         private Dictionary<Type, IAdapter> adapters = new Dictionary<Type, IAdapter>();
 
-        // Dictionary which contains custom adapter type providers
-        private static Dictionary<string, CustomAdapterProvider> customAdapterTypes =
-            new Dictionary<string, CustomAdapterProvider>();
-
         // Test Suite Name
         private string testSuiteName;
 
@@ -78,7 +74,7 @@ namespace Microsoft.Protocols.TestTools
         private const string reqIdFlag = "ContainsReqId";
 
         /// <summary>
-        /// Implements <see cref="ITestSite.TestResultsStatistics"/>. 
+        /// Implements <see cref="ITestSite.TestResultsStatistics"/>.
         /// </summary>
         public Dictionary<PtfTestOutcome, int> TestResultsStatistics
         {
@@ -89,7 +85,7 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Constructs a new instance of DefaultTestSite. 
+        /// Constructs a new instance of DefaultTestSite.
         /// All checkers, loggers and adapter types are initialized in this constructor.
         /// </summary>
         /// <param name="config">Configuration data from ptfconfig</param>
@@ -126,8 +122,6 @@ namespace Microsoft.Protocols.TestTools
                 skipRequirement.Add(RequirementType.Product);
             if (Convert.ToBoolean(properties.Get("SkipUNDEFINEDRequirements")))
                 skipRequirement.Add(RequirementType.Undefined);
-
-            RegisterCustomAdapterTypes();
         }
 
         /// <summary>
@@ -158,46 +152,6 @@ namespace Microsoft.Protocols.TestTools
                     throw new InvalidOperationException("The checker kind is not supported: " + kvp.Key.ToString());
                 }
             }
-        }
-
-        /// <summary>
-        /// Registers the all custom adapter types to this test site.
-        /// </summary>
-        protected void RegisterCustomAdapterTypes()
-        {
-            // register rpc proxy
-            RegisterCustomAdapterType("rpc",
-                    delegate(Type type)
-                    {
-                        try
-                        {
-                            string assemblyName = "Microsoft.Protocols.TestTools.Extension.dll";
-                            string assemblyPath;
-                            string[] files = System.IO.Directory.GetFiles(deploymentDirectory, assemblyName, SearchOption.TopDirectoryOnly);
-
-                            // Search the dll in deployment directory first, if not found, then use the one in installation directory.
-                            if (files != null && files.Length > 0)
-                            {
-                                assemblyPath = files[0];
-                            }
-                            else
-                            {
-                                string ptfInstallDir = GetReportToolInstallDir();
-                                assemblyPath = Path.Combine(ptfInstallDir, assemblyName);
-                            }
-
-                            Assembly.LoadFrom(assemblyPath);
-                            // Use reflection to get the type of RpcAdapterProxy.
-                            Type rpcAdapterProxyType = TestToolHelpers.ResolveTypeFromAssemblies("Microsoft.Protocols.TestTools.Messages.RpcAdapterProxy", deploymentDirectory);
-                            object rpcAdapterProxy = TestToolHelpers.CreateInstanceFromTypeName("Microsoft.Protocols.TestTools.Messages.RpcAdapterProxy", new object[] { type, this });
-                            return rpcAdapterProxyType.InvokeMember("GetTransparentProxy", BindingFlags.InvokeMethod, null, rpcAdapterProxy, null) as IAdapter;
-                        }
-                        catch (Exception e)
-                        {
-                            throw new InvalidOperationException("RPC adapter proxy cannot be registered.", e);
-                        }
-                    });
-
         }
 
         /// <summary>
@@ -234,31 +188,10 @@ namespace Microsoft.Protocols.TestTools
             adapters.Clear();
         }
 
-        #region Custom Adapter Providers
-
-        /// <summary>
-        /// A delegate which represents custom adapter type provider.
-        /// </summary>
-        /// <param name="type">The type of the custom adapter.</param>
-        /// <returns>An instance of the custom adapter.</returns>
-        public delegate IAdapter CustomAdapterProvider(Type type);
-
-        /// <summary>
-        /// Registers a custom adapter type.
-        /// </summary>
-        /// <param name="type">The name of the adapter type.</param>
-        /// <param name="provider">The provider for the given adapter type.</param>
-        public static void RegisterCustomAdapterType(string type, CustomAdapterProvider provider)
-        {
-            customAdapterTypes[type] = provider;
-        }
-
-        #endregion
-
         #region ITestSite Members
 
         /// <summary>
-        /// Implements <see cref="ITestSite.Properties"/>. 
+        /// Implements <see cref="ITestSite.Properties"/>.
         /// </summary>
         public virtual NameValueCollection Properties
         {
@@ -306,7 +239,7 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.FeatureName"/>. 
+        /// Implements <see cref="ITestSite.FeatureName"/>.
         /// </summary>
         public virtual string FeatureName
         {
@@ -321,8 +254,8 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.TestName"/>. 
-        /// </summary>   
+        /// Implements <see cref="ITestSite.TestName"/>.
+        /// </summary>
         public virtual string TestName
         {
             get
@@ -336,8 +269,8 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.TestSuiteName"/>. 
-        /// </summary>   
+        /// Implements <see cref="ITestSite.TestSuiteName"/>.
+        /// </summary>
         public virtual string TestSuiteName
         {
             get
@@ -347,8 +280,8 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.Log"/>. 
-        /// </summary>    
+        /// Implements <see cref="ITestSite.Log"/>.
+        /// </summary>
         public virtual ILogger Log
         {
             get
@@ -359,8 +292,8 @@ namespace Microsoft.Protocols.TestTools
 
 
         /// <summary>
-        /// Implements <see cref="ITestSite.Assert"/>. 
-        /// </summary>           
+        /// Implements <see cref="ITestSite.Assert"/>.
+        /// </summary>
         public virtual IChecker Assert
         {
             get
@@ -370,8 +303,8 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.Assume"/>. 
-        /// </summary>           
+        /// Implements <see cref="ITestSite.Assume"/>.
+        /// </summary>
         public virtual IChecker Assume
         {
             get
@@ -381,8 +314,8 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.Debug"/>. 
-        /// </summary>           
+        /// Implements <see cref="ITestSite.Debug"/>.
+        /// </summary>
         public virtual IChecker Debug
         {
             get
@@ -392,7 +325,7 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.GetAdapter"/>. 
+        /// Implements <see cref="ITestSite.GetAdapter"/>.
         /// </summary>
         /// <remarks>
         /// For script and interactive adapter, test site provides the default implementations in PTF.
@@ -490,23 +423,6 @@ namespace Microsoft.Protocols.TestTools
                         String.Format("The type of the adapter ({0}) could not be found.", adapterType.Name), e);
                 }
             }
-            else if (adapterConfig is RpcAdapterConfig)
-            {
-                CustomAdapterProvider provider;
-                if (customAdapterTypes.TryGetValue(((RpcAdapterConfig)adapterConfig).Type, out provider))
-                {
-                    adapter = provider(adapterType);
-                }
-            }
-
-            else if (adapterConfig is CustomAdapterConfig)
-            {
-                CustomAdapterProvider provider;
-                if (customAdapterTypes.TryGetValue(((CustomAdapterConfig)adapterConfig).Type, out provider))
-                {
-                    adapter = provider(adapterType);
-                }
-            }
 
             if (adapter == null)
             {
@@ -540,8 +456,8 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.ReportAsyncErrorToTcm"/>.  
-        /// </summary> 
+        /// Implements <see cref="ITestSite.ReportAsyncErrorToTcm"/>.
+        /// </summary>
         /// <param name="formatString">A composite format string.</param>
         /// <param name="parameters">An Object array containing one or more objects to format.</param>
         public void ReportAsyncErrorToTcm(string formatString, params object[] parameters)
@@ -560,7 +476,7 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.TestStarted"/>. 
+        /// Implements <see cref="ITestSite.TestStarted"/>.
         /// </summary>
         public event EventHandler<TestStartFinishEventArgs> TestStarted
         {
@@ -574,7 +490,7 @@ namespace Microsoft.Protocols.TestTools
             }
         }
         /// <summary>
-        /// Implements <see cref="ITestSite.TestFinished"/>. 
+        /// Implements <see cref="ITestSite.TestFinished"/>.
         /// </summary>
         public event EventHandler<TestStartFinishEventArgs> TestFinished
         {
@@ -1310,8 +1226,8 @@ namespace Microsoft.Protocols.TestTools
         /// can be disposed.
         /// </summary>
         /// <param name="disposing">
-        /// If disposing equals false, the method is called by the 
-        /// runtime from inside the finalizer and you should not reference 
+        /// If disposing equals false, the method is called by the
+        /// runtime from inside the finalizer and you should not reference
         /// other objects. Only unmanaged resources can be disposed.
         /// </param>
         protected virtual void Dispose(bool disposing)
@@ -1332,21 +1248,21 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. 
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
             Dispose(true);
             // This object will be cleaned up by the Dispose method.
             // Therefore, you should call GC.SupressFinalize to
-            // take this object off the finalization queue 
+            // take this object off the finalization queue
             // and prevent finalization code for this object
             // from executing a second time.
             GC.SuppressFinalize(this);
         }
 
         /// <summary>
-        /// This destructor will run only if the Dispose method 
+        /// This destructor will run only if the Dispose method
         /// does not get called.
         /// It gives your base class the opportunity to finalize.
         /// Do not provide destructors in types derived from this class.

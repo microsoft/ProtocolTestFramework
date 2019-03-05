@@ -43,9 +43,7 @@
     <Compile Include="TestManagedAdapter.cs" />
     <Compile Include="TestInteractiveAdapter.cs" />
     <Compile Include="TestPowershellAdapter.cs" />
-    <Compile Include="TestRpcAdapter.cs" />
     <Compile Include="TestShellAdapter.cs" />
-    <Compile Include="TestTcpAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PowerShell\ThrowException.ps1" />

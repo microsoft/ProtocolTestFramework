@@ -292,38 +292,9 @@ namespace Microsoft.Protocols.TestTools
                 }
                 adapter = new ManagedAdapterConfig(adapterName, adapterTypeName, disablevalidation);
             }
-            // Create instance for rpc type adapter.
-            else if (type.Equals("rpc", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string validationSwitch = this.TryGetAdapterAttribute(adapterName, "autovalidate", "");
-                string callingConventionString = this.TryGetAdapterAttribute(adapterName, "callingconvention", "");
-                string charsetString = this.TryGetAdapterAttribute(adapterName, "charset", "");
-
-                bool autoValidate = true;
-                if (!String.IsNullOrEmpty(validationSwitch))
-                {
-                    autoValidate = Boolean.Parse(validationSwitch);
-                }
-
-                //since the specified value has been validated by schema already, no need to re-check if the value is defined in Enum.
-                CallingConvention callingConvention = CallingConvention.Winapi; //by default
-                if (!String.IsNullOrEmpty(callingConventionString))
-                {
-                    callingConvention = (CallingConvention)Enum.Parse(typeof(CallingConvention), callingConventionString, true);
-                }
-
-
-                CharSet charset = CharSet.Auto; //by default
-                if (!String.IsNullOrEmpty(charsetString))
-                {
-                    charset = (CharSet)Enum.Parse(typeof(CharSet), charsetString, true);
-                }
-
-                adapter = new RpcAdapterConfig(adapterName, type, autoValidate, callingConvention, charset);
-            }
             else
             {
-                adapter = new CustomAdapterConfig(adapterName, type);
+                throw new ArgumentException(String.Format("Unsupported adapter type: {0}", type));
             }
 
             return adapter;

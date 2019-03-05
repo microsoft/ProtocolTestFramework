@@ -158,35 +158,6 @@ namespace Microsoft.Protocols.TestTools
     }
 
     /// <summary>
-    /// An abstract class which stores custom adapter information
-    /// </summary>
-    [Serializable]
-    public class CustomAdapterConfig : AdapterConfig
-    {
-        private string type;
-
-        /// <summary>
-        /// Constructs a customer adapter config.
-        /// </summary>
-        /// <param name="name">Adapter name</param>
-        /// <param name="type">Adapter implementation class name</param>
-        public CustomAdapterConfig(string name, string type)
-            : base(name)
-        {
-            this.type = type;
-        }
-
-        /// <summary>
-        /// Gets the customer defined adapter type name,
-        /// for example, "RPC"
-        /// </summary>
-        public string Type
-        {
-            get { return this.type; }
-        }
-    }
-
-    /// <summary>
     /// An abstract class which stores interactive adapter information
     /// </summary>
     [Serializable]
@@ -506,68 +477,4 @@ namespace Microsoft.Protocols.TestTools
             get { return this.baseProfile; }
         }
     }
-
-    /// <summary>
-    /// An abstract class which stores rpc adapter information
-    /// </summary>
-    [Serializable]
-    public class RpcAdapterConfig : AdapterConfig
-    {
-        private bool needAutoValidate = true;
-        private CallingConvention callingConvention;
-        private CharSet charset;
-
-        private string type;
-
-        /// <summary>
-        /// Constructs an instance of this class by passing adapter name and type and whether to enable the auto validation.
-        /// </summary>
-        /// <param name="name">The name of the adapter</param>
-        /// <param name="type">The adapter type</param>
-        /// <param name="autoValidate">True if it needs to autovalidate by default, false means to ignore validation.</param>
-        /// <param name="callingConvention">The calling convention specified by the user through the config, the value could be winapi, stdcall or cdecl</param>
-        /// <param name="charset">The char set specified by the user through the config, the value could be auto, ansi or unicode</param>
-        public RpcAdapterConfig(string name, string type, bool autoValidate, CallingConvention callingConvention, CharSet charset)
-            : base(name)
-        {
-            this.type = type;
-            this.needAutoValidate = autoValidate;
-            this.callingConvention = callingConvention;
-            this.charset = charset;
-        }
-
-        /// <summary>
-        /// Gets the customer defined adapter type name,
-        /// for example, "RPC"
-        /// </summary>
-        public string Type
-        {
-            get { return this.type; }
-        }
-
-        /// <summary>
-        /// Gets the adapter implementation class name
-        /// </summary>
-        public bool NeedAutoValidate
-        {
-            get { return this.needAutoValidate; }
-        }
-
-        /// <summary>
-        /// Gets the calling convention specified by the user
-        /// </summary>
-        public CallingConvention CallingConvention
-        {
-            get { return callingConvention; }
-        }
-
-        /// <summary>
-        /// Gets the char set specified by the user
-        /// </summary>
-        public CharSet Charset
-        {
-            get { return charset; }
-        }
-    }
-
 }

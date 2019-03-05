@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools", "testtools\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools.VSTS", "testtools.vsts\TestTools.VSTS.csproj", "{3CB878CB-0CD3-447F-8DD8-8A0C62B7C3AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools.Extension", "TestTools.Extension\TestTools.Extension.csproj", "{E41414B3-95F3-430F-823B-55B82F0BA198}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools.Messages.Runtime", "testtools.messages.runtime\TestTools.Messages.Runtime.csproj", "{5D50C8BD-F26A-4A45-9D4A-025163B894BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools.ExtendedLogging", "TestTools.ExtendedLogging\TestTools.ExtendedLogging.csproj", "{EEB7AC20-C23F-447A-A2E7-E92519592DB0}"
@@ -38,10 +36,6 @@ Global
 		{3CB878CB-0CD3-447F-8DD8-8A0C62B7C3AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CB878CB-0CD3-447F-8DD8-8A0C62B7C3AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CB878CB-0CD3-447F-8DD8-8A0C62B7C3AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E41414B3-95F3-430F-823B-55B82F0BA198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E41414B3-95F3-430F-823B-55B82F0BA198}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E41414B3-95F3-430F-823B-55B82F0BA198}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E41414B3-95F3-430F-823B-55B82F0BA198}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D50C8BD-F26A-4A45-9D4A-025163B894BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D50C8BD-F26A-4A45-9D4A-025163B894BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D50C8BD-F26A-4A45-9D4A-025163B894BD}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -15,7 +15,6 @@
     <Adapter xsi:type="interactive" name="IMyDefaultAdapter" />
     <Adapter xsi:type="script" name="IMyScriptAdapter" scriptdir=".\" />
     <Adapter xsi:type="managed" name="IMyManagedAdapter" adaptertype="MyProtocol.MyAdapter, MyAssembly" />
-    <Adapter xsi:type="rpc" name="MyRpcAdapter"/>
     -->
   </Adapters>
   <!--'profile' attribute indicates which log profile will be used by default..-->
