@@ -13,7 +13,6 @@
       <Console id="Console"/>
       <Console id="CommandLineConsole"/>
       <Sink id="Beacon" type="Microsoft.Protocols.TestTools.Logging.BeaconLogSink" assembly="Microsoft.Protocols.TestTools"/>
-	  <Sink id="Etw" type="Microsoft.Protocols.TestTools.Logging.EtwLogSink" assembly="Microsoft.Protocols.TestTools"/>
     </Sinks>
     <Profiles>
       <Profile name="Error">

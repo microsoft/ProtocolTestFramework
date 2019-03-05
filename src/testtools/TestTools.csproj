@@ -80,7 +80,6 @@
     <Compile Include="IConfigurationData.cs" />
     <Compile Include="Logging\ApplicationLog.cs" />
     <Compile Include="Logging\DerivedTypes\BeaconLogSink.cs" />
-    <Compile Include="Logging\DerivedTypes\EtwLogSink.cs" />
     <Compile Include="Logging\DerivedTypes\LogProviders.cs" />
     <Compile Include="Logging\DerivedTypes\LogSinkTypes.cs" />
     <Compile Include="Logging\DerivedTypes\PipeSink.cs" />
@@ -152,12 +151,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>PTFLogging.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TestTools.ExtendedLogging\TestTools.ExtendedLogging.csproj">
-      <Project>{EEB7AC20-C23F-447A-A2E7-E92519592DB0}</Project>
-      <Name>TestTools.ExtendedLogging</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

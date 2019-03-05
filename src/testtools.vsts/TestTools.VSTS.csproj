@@ -60,10 +60,6 @@
     <Compile Include="VstsTestContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TestTools.ExtendedLogging\TestTools.ExtendedLogging.csproj">
-      <Project>{EEB7AC20-C23F-447A-A2E7-E92519592DB0}</Project>
-      <Name>TestTools.ExtendedLogging</Name>
-    </ProjectReference>
     <ProjectReference Include="..\testtools\TestTools.csproj">
       <Project>{1CA2B935-3224-40F1-84BC-47FA1A9B242E}</Project>
       <Name>TestTools</Name>

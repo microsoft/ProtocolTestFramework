@@ -196,7 +196,6 @@ namespace Microsoft.Protocols.TestTools
         {
             //on test start
             string testName = this.GetType().FullName + "." + ProtocolTestContext.TestMethodName;
-            Microsoft.Protocols.TestTools.ExtendedLogging.ExtendedLoggerConfig.CaseName = ProtocolTestContext.TestMethodName;
             this.ptfTestNotify.OnTestStarted(this, testName, ProtocolTestContext.TestOutcome, AssertExceptionHandler);
             try
             {
@@ -229,8 +228,6 @@ namespace Microsoft.Protocols.TestTools
                 baseTestSite.Log.Add(LogEntryKind.Warning, "Auto capture cleanup Error: " + e.Message);
                 if (e.StopRunning) throw;
             }
-
-            Microsoft.Protocols.TestTools.ExtendedLogging.ExtendedLoggerConfig.CaseName = "N/A";
         }
 
         /// <summary>
@@ -274,8 +271,6 @@ namespace Microsoft.Protocols.TestTools
         /// <param name="testSuiteName">The name of the test suite. The test site uses this name to find configuration files.</param>
         public static void Initialize(TestContext testContext, string testSuiteName)
         {
-
-            Microsoft.Protocols.TestTools.ExtendedLogging.ExtendedLoggerConfig.TestSuiteName = testSuiteName;
             executionStartTime = DateTime.Now;
             if (testContext == null)
             {

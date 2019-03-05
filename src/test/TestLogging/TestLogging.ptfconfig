@@ -76,23 +76,6 @@ xsi:schemaLocation="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/T
         <Rule kind="BeginGroup" sink="CommandLineConsole" delete="false"/>
         <Rule kind="EndGroup" sink="CommandLineConsole" delete="false"/>
 
-        <!-- Etw logging -->
-        <!-- The Event Tracing for Windows (ETW) logging sink can log test suite logs and test messages to an ETW provider. 
-        A user can capture these ETW logs using captures tools, such as the Microsoft Message Analyzer.-->
-        <Rule kind="TestStep" sink="Etw" delete="false"/>
-        <Rule kind="Checkpoint" sink="Etw" delete="false"/>
-        <Rule kind="CheckSucceeded" sink="Etw" delete="false"/>
-        <Rule kind="CheckFailed" sink="Etw" delete="false"/>
-        <Rule kind="CheckInconclusive" sink="Etw" delete="false"/>
-        <Rule kind="Comment" sink="Etw" delete="false"/>
-        <Rule kind="Warning" sink="Etw" delete="false"/>
-        <Rule kind="Debug" sink="Etw" delete="false"/>
-        <Rule kind="TestFailed" sink="Etw" delete="false"/>
-        <Rule kind="TestInconclusive" sink="Etw" delete="false"/>
-        <Rule kind="TestPassed" sink="Etw" delete="false"/>
-        <Rule kind="BeginGroup" sink="Etw" delete="false"/>
-        <Rule kind="EndGroup" sink="Etw" delete="false"/>
-
         <!-- Beacon logging -->
         <!-- Beacon logging provides a way for PTF users to log necessary log messages as network packets. 
         A user can define a beacon logging sink in the PTF Config file which is similar with other log sinks, and then the log messages are sent to the UDP broadcast address using port 58727. -->
