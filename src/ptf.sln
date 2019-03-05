@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportingTool", "reportingtool\ReportingTool.csproj", "{FABD7966-6611-4556-92CB-B13D7425AE82}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools", "testtools\TestTools.csproj", "{1CA2B935-3224-40F1-84BC-47FA1A9B242E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTools.VSTS", "testtools.vsts\TestTools.VSTS.csproj", "{3CB878CB-0CD3-447F-8DD8-8A0C62B7C3AF}"
@@ -22,10 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FABD7966-6611-4556-92CB-B13D7425AE82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FABD7966-6611-4556-92CB-B13D7425AE82}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FABD7966-6611-4556-92CB-B13D7425AE82}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FABD7966-6611-4556-92CB-B13D7425AE82}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1CA2B935-3224-40F1-84BC-47FA1A9B242E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1CA2B935-3224-40F1-84BC-47FA1A9B242E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CA2B935-3224-40F1-84BC-47FA1A9B242E}.Release|Any CPU.ActiveCfg = Release|Any CPU

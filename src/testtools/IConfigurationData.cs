@@ -38,56 +38,6 @@ namespace Microsoft.Protocols.TestTools
         string DefaultProfile { get; }
 
         /// <summary>
-        /// Gets the output path of log analysis report file.
-        /// </summary>
-        string TestReportOutputFile { get; }
-
-        /// <summary>
-        /// Gets whether it needs to generate log analysis report automatically
-        /// </summary>
-        bool NeedGenerateReport { get; }
-
-        /// <summary>
-        /// Gets whether it needs to display the log analysis report after a test run
-        /// </summary>
-        bool NeedAutoDisplay { get; }
-
-        /// <summary>
-        /// Gets whether it needs to use the default test deployment directory
-        /// </summary>
-        bool UseDefaultOutputDir { get; }
-
-        /// <summary>
-        /// Gets all the requirement spec file names
-        /// </summary>
-        string[] RequirementFiles { get; }
-
-        /// <summary>
-        /// Gets all the log file names
-        /// </summary>
-        string[] LogFiles { get; }
-
-        /// <summary>
-        /// Gets the in scope parameter value
-        /// </summary>
-        string InScope { get; }
-
-        /// <summary>
-        /// Gets the out of scope parameter value
-        /// </summary>
-        string OutScope { get; }
-
-        /// <summary>
-        /// Gets the Document short name
-        /// </summary>
-        string Prefix { get; }
-
-        /// <summary>
-        /// Gets whether it needs to use the verbose mode of reporting tool
-        /// </summary>
-        bool VerboseMode { get; }
-
-        /// <summary>
         /// Gets all the name-value collection properties
         /// </summary>
         NameValueCollection Properties { get; }
