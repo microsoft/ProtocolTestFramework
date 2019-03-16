@@ -262,6 +262,34 @@ namespace Microsoft.Protocols.TestTools
     /// An abstract class which stores PowerShell script adapter information
     /// </summary>
     [Serializable]
+    public class ShellAdapterConfig : AdapterConfig
+    {
+        private string scriptDir;
+
+        /// <summary>
+        /// Constructs a PowerShell adapter instance
+        /// </summary>
+        /// <param name="name">Adapter name</param>
+        /// <param name="scriptDir">The directory name of the PowerShell scripts path</param>
+        public ShellAdapterConfig(string name, string scriptDir)
+            : base(name)
+        {
+            this.scriptDir = scriptDir;
+        }
+
+        /// <summary>
+        /// Gets the directory name of the PowerShell script path
+        /// </summary>
+        public string ScriptDir
+        {
+            get { return this.scriptDir; }
+        }
+    }
+
+    /// <summary>
+    /// An abstract class which stores PowerShell script adapter information
+    /// </summary>
+    [Serializable]
     public class PsWrapperAdapterConfig : AdapterConfig
     {
         private string scriptFile;

@@ -442,6 +442,14 @@ namespace Microsoft.Protocols.TestTools
                     adapterType).GetTransparentProxy();
             }
 
+            // Create proxy for PowerShell Core script type adapter
+            else if (adapterConfig is ShellAdapterConfig)
+            {
+                adapter = (IAdapter)new ShellAdapterProxy(
+                    ((ShellAdapterConfig)adapterConfig).ScriptDir,
+                    adapterType).GetTransparentProxy();
+            }
+
             else if (adapterConfig is PsWrapperAdapterConfig)
             {
                 adapter = (IAdapter)new PsWrapperAdapterProxy(

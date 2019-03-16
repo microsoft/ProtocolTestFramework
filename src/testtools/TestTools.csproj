@@ -57,6 +57,7 @@
       <DependentUpon>InteractiveAdapterDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Adapters\Script\PsWrapperAdapterProxy.cs" />
+    <Compile Include="Adapters\Script\ShellAdapterProxy.cs" />
     <Compile Include="IProtocolTestContext.cs" />
     <Compile Include="IProtocolTestNotify.cs" />
     <Compile Include="IProtocolTestsManager.cs" />
