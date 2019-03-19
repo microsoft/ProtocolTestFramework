@@ -426,14 +426,6 @@ namespace Microsoft.Protocols.TestTools
                 adapter = (IAdapter)new InteractiveAdapterProxy(adapterType).GetTransparentProxy();
             }
 
-            // Create proxy for command script type adapter.
-            else if (adapterConfig is ScriptAdapterConfig)
-            {
-                adapter = (IAdapter)new ScriptAdapterProxy(
-                    ((ScriptAdapterConfig)adapterConfig).ScriptDir,
-                    adapterType).GetTransparentProxy();
-            }
-
             // Create proxy for PowerShell script type adapter
             else if (adapterConfig is PowerShellAdapterConfig)
             {

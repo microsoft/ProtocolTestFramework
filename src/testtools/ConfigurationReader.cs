@@ -266,13 +266,6 @@ namespace Microsoft.Protocols.TestTools
                 adapter = new InteractiveAdapterConfig(adapterName);
             }
 
-            // Create proxy for command script type adapter.
-            else if (type.Equals("script", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string scriptdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
-                adapter = new ScriptAdapterConfig(adapterName, scriptdir);
-            }
-
             // Create proxy for PowerShell script type adapter
             else if (type.Equals("powershell", StringComparison.CurrentCultureIgnoreCase))
             {

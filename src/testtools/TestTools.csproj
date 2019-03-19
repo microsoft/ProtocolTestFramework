@@ -108,7 +108,6 @@
     </Compile>
     <Compile Include="Adapters\ManagedAdapterBase.cs" />
     <Compile Include="DefaultTestSite.cs" />
-    <Compile Include="Adapters\Script\ScriptAdapterProxy.cs" />
     <Compile Include="NetworkEventSimulator.cs" />
     <Compile Include="PTFOptionParser.cs" />
     <Compile Include="ProtocolTestsManager.cs" />
