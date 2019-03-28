@@ -29,7 +29,7 @@ namespace Microsoft.Protocols.TestTools
             PowerShellAdapterProxy self = (PowerShellAdapterProxy)proxy;
 
             AdapterProxyBase.SetParameters(self, typeToProxy);
-            self.scriptDirectory = scriptDirectory;
+            self.scriptDirectory = scriptDirectory.Replace("\\", "/");
 
             return (T)proxy;
         }

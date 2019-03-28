@@ -52,7 +52,7 @@ namespace Microsoft.Protocols.TestTools.Logging
 
         private List<LogProvider> registeredProviders = new List<LogProvider>();
 
-        private static Dictionary<ITestSite, bool> outputStatistics = new Dictionary<ITestSite, bool>();
+        private Dictionary<ITestSite, bool> outputStatistics = new Dictionary<ITestSite, bool>();
 
         private Thread logRunner;
 

@@ -36,7 +36,7 @@ namespace Microsoft.Protocols.TestTools
         {
             get
             {
-                return "testconfig.xsd";
+                return "TestConfig.xsd";
             }
         }
 
@@ -72,7 +72,7 @@ namespace Microsoft.Protocols.TestTools
             }
 
             //<TestSuiteName>.ptfconfig is required.
-            if (!File.Exists(testDeploymentDirectory + "\\" + testSuiteName + ".ptfconfig"))
+            if (!File.Exists(Path.Combine(testDeploymentDirectory, String.Format("{0}.ptfconfig", testSuiteName))))
             {
                 throw new InvalidOperationException(
                     String.Format("Cannot find {0}. Please make sure it is placed in test deployment directory {1}.",
