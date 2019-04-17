@@ -442,13 +442,6 @@ namespace Microsoft.Protocols.TestTools
                     adapterType).GetTransparentProxy();
             }
 
-            else if (adapterConfig is PsWrapperAdapterConfig)
-            {
-                adapter = (IAdapter)new PsWrapperAdapterProxy(
-                    ((PsWrapperAdapterConfig)adapterConfig).ScriptFile,
-                    adapterType).GetTransparentProxy();
-            }
-
             // Create instance for dot net type adapter.
             else if (adapterConfig is ManagedAdapterConfig)
             {

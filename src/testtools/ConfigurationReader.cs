@@ -280,13 +280,6 @@ namespace Microsoft.Protocols.TestTools
                 adapter = new ShellAdapterConfig(adapterName, scriptdir);
             }
 
-            // Create proxy for PowerShell wrapper adapter
-            else if (type.Equals("pswrapper", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string psfile = this.GetAdapterAttribute(adapterName, "scriptfile", "");
-                adapter = new PsWrapperAdapterConfig(adapterName, psfile);
-            }
-
             // Create instance for dot net type adapter.
             else if (type.Equals("managed", StringComparison.CurrentCultureIgnoreCase))
             {

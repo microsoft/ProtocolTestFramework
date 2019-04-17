@@ -259,34 +259,6 @@ namespace Microsoft.Protocols.TestTools
     }
 
     /// <summary>
-    /// An abstract class which stores PowerShell script adapter information
-    /// </summary>
-    [Serializable]
-    public class PsWrapperAdapterConfig : AdapterConfig
-    {
-        private string scriptFile;
-
-        /// <summary>
-        /// Constructs a PowerShell adapter instance
-        /// </summary>
-        /// <param name="name">Adapter name</param>
-        /// <param name="scriptFile">The directory name of the PowerShell scripts path</param>
-        public PsWrapperAdapterConfig(string name, string scriptFile)
-            : base(name)
-        {
-            this.scriptFile = scriptFile;
-        }
-
-        /// <summary>
-        /// Gets the directory name of the PowerShell script path
-        /// </summary>
-        public string ScriptFile
-        {
-            get { return this.scriptFile; }
-        }
-    }
-
-    /// <summary>
     /// An abstract class which stores log sink config information
     /// </summary>
     [Serializable]
