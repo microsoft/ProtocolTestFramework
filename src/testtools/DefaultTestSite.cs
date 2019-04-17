@@ -434,7 +434,7 @@ namespace Microsoft.Protocols.TestTools
                     adapterType).GetTransparentProxy();
             }
 
-            // Create proxy for PowerShell Core script type adapter
+            // Create proxy for Shell script type adapter
             else if (adapterConfig is ShellAdapterConfig)
             {
                 adapter = (IAdapter)new ShellAdapterProxy(

@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 namespace Microsoft.Protocols.TestTools
 {
     /// <summary>
-    /// A class which is used as proxy for constructing IAdapter of command script type
+    /// A class which is used as proxy for constructing IAdapter of Shell script type
     /// and executing methods in IAdapter.
     /// </summary>
     class ShellAdapterProxy : AdapterProxyBase
@@ -262,6 +262,8 @@ namespace Microsoft.Protocols.TestTools
                     proc.StartInfo.UseShellExecute = false;
                     proc.StartInfo.RedirectStandardError = true;
                     proc.StartInfo.RedirectStandardOutput = true;
+
+                    // FIXME: cannot just pass those environment variables directly into WSL
                     foreach (string key in TestSite.Properties.AllKeys)
                     {
                         string envVar = "PTFProp" + key;

@@ -269,15 +269,15 @@ namespace Microsoft.Protocols.TestTools
             // Create proxy for PowerShell script type adapter
             else if (type.Equals("powershell", StringComparison.CurrentCultureIgnoreCase))
             {
-                string psdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
-                adapter = new PowerShellAdapterConfig(adapterName, psdir);
+                string scriptdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
+                adapter = new PowerShellAdapterConfig(adapterName, scriptdir);
             }
 
-            // Create proxy for PowerShell Core script type adapter
+            // Create proxy for Shell script type adapter
             else if (type.Equals("shell", StringComparison.CurrentCultureIgnoreCase))
             {
-                string psdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
-                adapter = new ShellAdapterConfig(adapterName, psdir);
+                string scriptdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
+                adapter = new ShellAdapterConfig(adapterName, scriptdir);
             }
 
             // Create proxy for PowerShell wrapper adapter
