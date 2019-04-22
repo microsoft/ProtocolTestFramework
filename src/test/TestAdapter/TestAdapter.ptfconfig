@@ -14,7 +14,7 @@ xsi:schemaLocation="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/T
   </Properties>
   <Adapters>
     <Adapter xsi:type="managed" name="IManagedAdapter" adaptertype="Microsoft.Protocols.TestTools.Test.TestAdapter.ManagedAdapter"/>
-    <Adapter xsi:type="script" name="IScriptAdapter" scriptdir=".\"/>
+    <Adapter xsi:type="shell" name="IShellAdapter" scriptdir=".\"/>
     <Adapter xsi:type="powershell" name="IPowershellAdapter" scriptdir=".\"/>
     <Adapter xsi:type="interactive" name="IInteractiveAdapter"/>
     <Adapter xsi:type="rpc" name="IMyRpcAdapter"/>

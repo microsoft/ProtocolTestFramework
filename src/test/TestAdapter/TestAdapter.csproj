@@ -44,18 +44,19 @@
     <Compile Include="TestInteractiveAdapter.cs" />
     <Compile Include="TestPowershellAdapter.cs" />
     <Compile Include="TestRpcAdapter.cs" />
-    <Compile Include="TestScriptAdapter.cs" />
+    <Compile Include="TestShellAdapter.cs" />
     <Compile Include="TestTcpAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PowerShell\ThrowException.ps1" />
-    <Content Include="CommandLine\SetFailureMessage.cmd" />
-    <Content Include="CommandLine\GetPtfProp.cmd" />
-    <Content Include="CommandLine\ReturnInputParameterValue.cmd" />
     <Content Include="PowerShell\ReturnInt.ps1" />
+    <Content Include="PowerShell\ReturnBool.ps1" />
     <Content Include="PowerShell\ReturnString.ps1" />
-    <Content Include="CommandLine\ReturnHelpText.cmd" />
-    <Content Include="CommandLine\SetPtfProp.cmd" />
+    <Content Include="Shell\GetPtfProp.sh" />
+    <Content Include="Shell\ThrowException.sh" />
+    <Content Include="Shell\ReturnInt.sh" />
+    <Content Include="Shell\ReturnBool.sh" />
+    <Content Include="Shell\ReturnString.sh" />
     <Content Include="TestAdapter.ptfconfig" />
   </ItemGroup>
   <ItemGroup>
@@ -75,11 +76,6 @@
       <Project>{cbe396d2-d8d0-43cd-bdb8-fd8ba46bb3fd}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CommandLine\ReturnInputParameterNameAndType.cmd" />
-    <Content Include="CommandLine\ReturnTypeOfReturnValue.cmd" />
-    <Content Include="PowerShell\ReturnBool.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

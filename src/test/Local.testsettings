@@ -12,7 +12,7 @@
     <DeploymentItem filename="TestChecker\TestChecker.ptfconfig" />
     <DeploymentItem filename="TestAdapter\TestAdapter.ptfconfig" />
     <DeploymentItem filename="TestAdapter\Powershell\" />
-    <DeploymentItem filename="TestAdapter\CommandLine\" />
+    <DeploymentItem filename="TestAdapter\Shell\" />
   </Deployment>
   <Execution hostProcessPlatform="MSIL">
     <TestTypeSpecific>
