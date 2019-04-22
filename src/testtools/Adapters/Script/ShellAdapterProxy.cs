@@ -20,10 +20,12 @@ namespace Microsoft.Protocols.TestTools
     /// </summary>
     class ShellAdapterProxy : AdapterProxyBase
     {
-        private string scriptDirectory;
+        private readonly string scriptDirectory;
         private ParameterDataBuilder builder;
-        private static Regex normalizePattern = new Regex(@"[\s]+", RegexOptions.Compiled);
         private object[] outArgs;
+        private bool compatMode;
+        private string lastOutput;
+        private StringBuilder errorMsg;
 
         /// <summary>
         /// Constructs a new command script adapter proxy.
@@ -122,7 +124,7 @@ namespace Microsoft.Protocols.TestTools
         protected override IMessage Invoke(IMethodCallMessage mcall)
         {
             // set to compat Mode to allow running of Initialize.sh or Reset.sh if call from IAdapter context
-            bool compatMode = ((mcall.MethodName == "Initialize" || mcall.MethodName == "Reset")
+            compatMode = ((mcall.MethodName == "Initialize" || mcall.MethodName == "Reset")
                 && AdapterType.IsAdapterTypeFullName(mcall.MethodBase.DeclaringType.FullName)
                 );
             if (compatMode)
@@ -132,8 +134,11 @@ namespace Microsoft.Protocols.TestTools
             builder = new ParameterDataBuilder(mcall);
             builder.Build();
 
-            object retVal = null;
             outArgs = mcall.Args;
+            lastOutput = null;
+            errorMsg = new StringBuilder();
+
+            object retVal = null;
             string arguments = BuildScriptArguments();
 
             // Check if this is a method from IAdapter. Any IAdapter methods should be ignored.
@@ -158,14 +163,17 @@ namespace Microsoft.Protocols.TestTools
                     else
                     {
                         int scriptRet = InvokeScript(path, arguments);
+
                         if (scriptRet != 0)
                         {
-                            TestSite.Assume.Fail(
-                                "Script {0}.sh exited with non-zero code. Error code: {1}.",
-                                mcall.MethodName,
-                                scriptRet);
+                            string exceptionMessage = string.Format("Exception thrown when executing {0}.sh.\nExit code: {1}\nError message: {2}\n", mcall.MethodName, scriptRet, errorMsg);
+                            throw new InvalidOperationException(exceptionMessage);
                         }
-                        retVal = null;
+
+                        if (builder.HasReturnVal)
+                        {
+                            retVal = AdapterProxyHelpers.ParseResult(builder.RetValType, lastOutput);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -228,9 +236,8 @@ namespace Microsoft.Protocols.TestTools
             foreach (Type t in builder.InArgTypes)
             {
                 var row = builder.InArgDataTable.Rows[i++];
-                //string name = (string)row["Name"];
                 string value = (string)row["Value"];
-                ret.Append(String.Format("{0} ", value));
+                ret.Append(String.Format("\"{0}\" ", value));
             }
 
             return ret.ToString();
@@ -249,30 +256,47 @@ namespace Microsoft.Protocols.TestTools
             {
                 using (Process proc = new Process())
                 {
+                    string winDir = Environment.GetEnvironmentVariable("WINDIR");
+                    string wslPath;
                     if (Environment.Is64BitProcess)
                     {
-                        proc.StartInfo.FileName = @"C:\Windows\System32\bash.exe";
+                        wslPath = string.Format(@"{0}\System32\bash.exe", winDir);
                     }
                     else
                     {
-                        proc.StartInfo.FileName = @"C:\Windows\Sysnative\bash.exe";
+                        wslPath = string.Format(@"{0}\Sysnative\bash.exe", winDir);
                     }
 
+                    if (!File.Exists(wslPath))
+                    {
+                        TestSite.Assume.Fail("Windows Subsystem for Linux (WSL) is not installed.");
+                    }
+
+                    proc.StartInfo.FileName = wslPath;
                     proc.StartInfo.Arguments = String.Format("{0} {1}", path, arguments);
                     proc.StartInfo.UseShellExecute = false;
+                    proc.StartInfo.CreateNoWindow = true;
                     proc.StartInfo.RedirectStandardError = true;
                     proc.StartInfo.RedirectStandardOutput = true;
 
-                    // FIXME: cannot just pass those environment variables directly into WSL
+                    List<string> wslEnvs = new List<string>();
+
+                    // set ptfconfig properties as environment variables
                     foreach (string key in TestSite.Properties.AllKeys)
                     {
-                        string envVar = "PTFProp" + key;
+                        string envVar = "PTFProp_" + key.Replace(".", "_");
                         if (proc.StartInfo.EnvironmentVariables.ContainsKey(envVar))
                         {
                             proc.StartInfo.EnvironmentVariables.Remove(envVar);
                         }
                         proc.StartInfo.EnvironmentVariables.Add(envVar, TestSite.Properties[key]);
+
+                        wslEnvs.Add(envVar + "/u");
                     }
+
+                    // Set WSLENV to pass those environment variables into WSL
+                    proc.StartInfo.EnvironmentVariables.Add("WSLENV", String.Join(":", wslEnvs));
+
                     proc.OutputDataReceived += new DataReceivedEventHandler(OutputDataReceivedHandler);
                     proc.ErrorDataReceived += new DataReceivedEventHandler(ErrorDataReceivedHandler);
                     proc.Start();
@@ -295,6 +319,8 @@ namespace Microsoft.Protocols.TestTools
             if (e.Data != null)
             {
                 TestSite.Log.Add(LogEntryKind.Comment, "STDERR: {0}", e.Data);
+
+                errorMsg.Append(e.Data);
             }
         }
 
@@ -303,6 +329,11 @@ namespace Microsoft.Protocols.TestTools
             if (e.Data != null)
             {
                 TestSite.Log.Add(LogEntryKind.Comment, "STDOUT: {0}", e.Data);
+
+                if (!String.IsNullOrEmpty(e.Data.Trim()))
+                {
+                    lastOutput = e.Data.Trim();
+                }
             }
         }
     }
