@@ -111,13 +111,20 @@ namespace Microsoft.Protocols.TestTools.Test.TestAdapter
 
         [TestMethod]
         [TestCategory("TestAdapter")]
-        public void ShellAdapterReturnBool()
+        public void ShellAdapterReturnTrue()
         {
-            bool result = false;
-            BaseTestSite.Assert.AreEqual(
-                result,
-                shellAdapter.ReturnBool(result),
-                "Shell adapter should return " + result);
+            BaseTestSite.Assert.IsTrue(
+                shellAdapter.ReturnBool(true),
+                "Shell adapter should return true");
+        }
+
+        [TestMethod]
+        [TestCategory("TestAdapter")]
+        public void ShellAdapterReturnFalse()
+        {
+            BaseTestSite.Assert.IsFalse(
+                shellAdapter.ReturnBool(false),
+                "Shell adapter should return false");
         }
 
         [TestMethod]
