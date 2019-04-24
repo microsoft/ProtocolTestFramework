@@ -141,128 +141,21 @@ ITestSite is disposed in the TestClassBase.Cleanup method call. The user must ca
 
 The configuration allows an adapter to be created in various ways:
 
-* Script adapter
-
-    The Script adapter allows users to map interface methods to cmd scripts and use the scripts to perform operations during the test. Users must specify the location of the scripts and have a .cmd script with a name corresponding to each API call in the test suit.  Parameters will be output with standard .cmd quoting conventions.  When the API is called, the script will be called and its stdout and stderr are recorded in the test log as LogEntryType.Comment.
-
 * Interactive adapter
 
     The Interactive adapter pops up a dialog-box to perform manual operations each time one of its methods is called. The dialog-box includes the method name, help text, input parameters, output parameters, and result. Users can confirm the completion of the manual operation by clicking the "Continue" button. If users can’t finish the operation for some reason, they can click the "Abort" button to terminate the test. In this case, the test will be treated as "Inconclusive".
 
-* PowerShell script adapter
+* PowerShell adapter
 
-    PowerShell script adapter maps interface methods to PowerShell scripts. Users are able to pass objects between their managed test code and PowerShell scripts directly. This avoids the parameter and return value parsing issue.
+    PowerShell adapter maps interface methods to PowerShell scripts. Users are able to pass objects between their managed test code and PowerShell scripts directly. This avoids the parameter and return value parsing issue.
+
+* Shell adapter
+
+    The Shell adapter, which leverages Windows Subsystem for Linux (WSL), allows users to map interface methods to shell scripts and use the scripts to perform operations during the test. Users must specify the location of the scripts and have a .sh script with a name corresponding to each API call in the test suit. When the API is called, the script will be invoked and its stdout and stderr are recorded in the test log as LogEntryType.Comment.
 
 * Managed adapter
 
     The managed adapter allows users to use managed code to implement the interface methods.
-
-* PowerShell wrapped adapter
-
-    PowerShell wrapped adapter allows users to use a single PowerShell ps1 file to implement an adapter interface.
-
-### Script Adapter
-
-Users can bind their adapter interfaces to a script adapter by defining them as "script" in the PTF configuration files. The implementation will run the corresponding script file when one of the adapter's methods is called.
-
-__Benefits__
-
-Script adapters are easy to use. For example, they are suitable for service setup/shutdown jobs. Users can write a Start.cmd containing `net start ServiceName`.
-
-__Limitation__
-
-Do not use script using Unicode with Byte Order Mark.
-
-__Usage__
-
-Configure `<Adapters>` section of the ptfconfig file:
-
-```
-<Adapter xsi:type="script" name="IMyScriptAdapter" scriptdir=".\" />
-```
-   
-Subsequently, users can invoke `IMyScriptAdapter.AMethod(parameters)`. PTF will look up a script named `AMethod.cmd` in the scriptdir directory and execute it with the parameters.
-
-__Parameters__
-
-PTF invokes a cmd script using the following parameters:
-
- __Parameter name__ | __Value__
- -------------------|----------
-%1%                 |[PtfAdReturn:<type of returnValue\>;][<name of outParam1\>:<type of outParam1\>[;<name of outParam2\>:<type of outParam2\>]…]
-%2%                 |[<name of inParam1\>:<type of inParam1\>[;<name of inParam2\>:<type of inParam2\>]
-%3%                 |Help text of the method.
-%4%                 |First input parameter.
-%5%                 |Second input parameter.
-...                 |
-
-__Return values__
-
-To pass a return value and out parameters value back to PTF, use the following syntax in a script: (case-sensitive, double quotation mark is required)
-
-```
-echo [PtfAdReturn="value"][;<name of outParam1>="value"[;<name of outParam2>="value"]…]
-```
-
-To pass a failure message back to PTF, use the following syntax in a script: (case-sensitive, double quotation mark is required)
-
-```
-echo PtfAdFailureMessage="<failure message>"
-```
-
-Use the call keyword to call another script inside the current script, e.g.:
-
-```
-set foldername=%4
-call another.cmd
-echo PtfAdReturn="%foldername%" > log.txt
-echo PtfAdFailureMessage="Create folder %foldername% failed?" >log.txt
-```
-
-Provide the `ToString()` method and the `Parse()` method in a custom type to pass custom type values as parameters to script adapter, e.g.:
-
-```
-static public String ToString()
-static public CustomType.Parse(String str)
-```
-
-__Exception__
-
-If this script execution fails, PTF will raise an `AssertInconclusiveException`.
-
-__PTF Properties__
-
-PTF properties are provided to script adapters by environment variables with ptfprop as prefix. 
-For example, if a user has the following configuration in the PTFconfig
-
-```
-<Properties>
-    <Property name="TestName" value="ATSVC" />
-    <Property name="FeatureName" value="MS-ATSVC" />
-    <Property name="Version" value="2.0" />
-    <Property name="ServerName" value="MS-Sever" />
-</Properties>
-```
-
-__Examples__
-
-1.   Command `set ptfprop` can be used in the script to display all properties in the PTFconfig. User will get the outputs like:
-
-```
-2008-04-07 14:46:20.121 [Comment] STDOUT: ptfpropfeaturename=MS-ATSVC
-2008-04-07 14:46:20.121 [Comment] STDOUT: ptfproptestname=ATSVC
-2008-04-07 14:46:20.121 [Comment] STDOUT: ptfpropversion=2.0
-2008-04-07 14:46:20.121 [Comment] STDOUT: ptfpropservername=MS-Sever
-```
-2.  User can get the property value and use it directly in the script via the environment variables with "ptfprop" prefix.
-
-For example:
-
-Start an nps service on a server. The name of the server is specified using `servername` property.
-
-```
-sc  %ptfpropservername% start nps
-```
 
 ### Interactive Adapter
 
@@ -410,6 +303,81 @@ public void TestPowerShellAdapter()
   int r = sampleAdapter.AMethod("This is parameter1.", 2);
   BaseTestSite.Assert.AreEqual<int>(0, r, "Verify the return value.");
 }
+```
+
+### Shell Adapter
+
+Shell Adapter leverages bash in Windows Subsystem for Linux (WSL) to run shell scripts. Users can bind their adapter interfaces to a shell adapter by defining them as "shell" in the PTF configuration files. The implementation will run the corresponding shell script file when one of the adapter's methods is called.
+
+__Benefits__
+
+Shell adapters are easy to use. For example, they are suitable for service setup/shutdown jobs. Users can write a Stop.sh to login a Linux machine via SSH and stop a service.
+
+__Limitation__
+
+1. WSL must be running on Windows 10 version 1607 (the Anniversary update) or later.
+2. Do not encode the shell script using UTF-8 with Byte Order Mark.
+
+__Usage__
+
+Configure `<Adapters>` section of the ptfconfig file:
+
+```
+<Adapter xsi:type="shell" name="IMyScriptAdapter" scriptdir=".\" />
+```
+   
+Subsequently, users can invoke `IMyScriptAdapter.AMethod(parameters)`. PTF will look up a script named `AMethod.sh` in the scriptdir directory and execute it with the parameters.
+
+__Parameters__
+
+PTF invokes a shell script using the following parameters:
+
+ __Parameter name__ | __Value__
+ -------------------|----------
+$1                  |First input parameter.
+$2                  |Second input parameter.
+...                 |
+
+__Return values__
+
+To pass a return value back to PTF, print the return value at the last line of stdout.
+
+To pass an exception message back to PTF, print the message to stderr and exit the script with a non-zero exit code.
+
+```
+echo "<failure message>" >&2
+exit 1
+```
+
+Provide the `ToString()` method and the `Parse()` method in a custom type to pass custom type values as parameters to script adapter, e.g.:
+
+```
+static public String ToString()
+static public CustomType.Parse(String str)
+```
+
+__Exception__
+
+If the shell script execution fails, PTF will raise an `InvalidOperationException`.
+
+If the shell script file is not found, PTF will raise an `AssertInconclusiveException`.
+
+__PTF Properties__
+
+PTF properties are provided to shell adapters by environment variables with PTFProp_ as prefix, and dot in property name replaced by underline(_).
+For example, if a user has the following configuration in the PTFconfig
+
+```
+<Properties>
+    <Property name="ServerName" value="MS-Server" />
+    <Property name="SSH.Port" value="4242" />
+</Properties>
+```
+
+To initiate an SSH connection to the server. You can use the following command in shell script.
+
+```
+ssh -p $PTFProp_SSH_Port $PTFProp_ServerName
 ```
 
 ## <a name="4.4"> Extensive Logging Support 
@@ -1084,38 +1052,27 @@ namespace HelloWorld
 
 ### Create script file for script adapter
 
-Create script file Setup.cmd.
+Create script file Setup.sh.
 
 ```
 echo Hello, setting up
 
-echo %CMDcmdLine%
+# First argument of the method
+echo arg1: $1
+# Second argument of the method
+echo arg2: $2
 
-REM Which command is executing this script (e.g. Setup)
-echo arg0: %0
-REM Return type for this script (e.g. Int32)
-echo arg1: %1
-REM Types for arguments.  First arg is %4
-echo arg2: %2
-REM MethodHelp instructions -- usually good for printing.
-echo arg3: %3
-REM First actual argument to the method represented by this script.
-echo arg4: %4
+# Do something...
 
-REM This will show PTFConfig properties as ptfprop....=value
-set >con
-
-echo Method: %0   Help Text: %3 >con
-set ptfprop
-
-set ERRORLEVEL=0
-echo PtfAdReturn="%ERRORLEVEL%"
+# Set exit code as 0 to indicate success.
+# Exit with a non-zero code to indicate failure.
+exit 0
 ```
 
 Enable the deployment of the script file.
 
 * Open Testsettings1.testsettings file from the Solution Explorer.
-* Add Setup.cmd file from the Deployment page. (You need to choose "All files" for the file type in the File dialog.)
+* Add Setup.sh file from the Deployment page. (You need to choose "All files" for the file type in the File dialog.)
 
 ### Use the adapters in test case
 

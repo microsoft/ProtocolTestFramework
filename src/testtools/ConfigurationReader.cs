@@ -266,25 +266,18 @@ namespace Microsoft.Protocols.TestTools
                 adapter = new InteractiveAdapterConfig(adapterName);
             }
 
-            // Create proxy for command script type adapter.
-            else if (type.Equals("script", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string scriptdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
-                adapter = new ScriptAdapterConfig(adapterName, scriptdir);
-            }
-
             // Create proxy for PowerShell script type adapter
             else if (type.Equals("powershell", StringComparison.CurrentCultureIgnoreCase))
             {
-                string psdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
-                adapter = new PowerShellAdapterConfig(adapterName, psdir);
+                string scriptdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
+                adapter = new PowerShellAdapterConfig(adapterName, scriptdir);
             }
 
-            // Create proxy for PowerShell wrapper adapter
-            else if (type.Equals("pswrapper", StringComparison.CurrentCultureIgnoreCase))
+            // Create proxy for Shell script type adapter
+            else if (type.Equals("shell", StringComparison.CurrentCultureIgnoreCase))
             {
-                string psfile = this.GetAdapterAttribute(adapterName, "scriptfile", "");
-                adapter = new PsWrapperAdapterConfig(adapterName, psfile);
+                string scriptdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
+                adapter = new ShellAdapterConfig(adapterName, scriptdir);
             }
 
             // Create instance for dot net type adapter.

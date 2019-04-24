@@ -203,34 +203,6 @@ namespace Microsoft.Protocols.TestTools
     }
 
     /// <summary>
-    /// An abstract class which stores script adapter information
-    /// </summary>
-    [Serializable]
-    public class ScriptAdapterConfig : AdapterConfig
-    {
-        private string scriptDir;
-
-        /// <summary>
-        /// Constructs a script adapter instance
-        /// </summary>
-        /// <param name="name">Adapter name</param>
-        /// <param name="scriptDir">The directory name of the scripts path</param>
-        public ScriptAdapterConfig(string name, string scriptDir)
-            : base(name)
-        {
-            this.scriptDir = scriptDir;
-        }
-
-        /// <summary>
-        /// Gets the directory name of scripts path
-        /// </summary>
-        public string ScriptDir
-        {
-            get { return this.scriptDir; }
-        }
-    }
-
-    /// <summary>
     /// An abstract class which stores PowerShell script adapter information
     /// </summary>
     [Serializable]
@@ -259,30 +231,30 @@ namespace Microsoft.Protocols.TestTools
     }
 
     /// <summary>
-    /// An abstract class which stores PowerShell script adapter information
+    /// An abstract class which stores Shell script adapter information
     /// </summary>
     [Serializable]
-    public class PsWrapperAdapterConfig : AdapterConfig
+    public class ShellAdapterConfig : AdapterConfig
     {
-        private string scriptFile;
+        private string scriptDir;
 
         /// <summary>
-        /// Constructs a PowerShell adapter instance
+        /// Constructs a Shell adapter instance
         /// </summary>
         /// <param name="name">Adapter name</param>
-        /// <param name="scriptFile">The directory name of the PowerShell scripts path</param>
-        public PsWrapperAdapterConfig(string name, string scriptFile)
+        /// <param name="scriptDir">The directory name of the Shell scripts path</param>
+        public ShellAdapterConfig(string name, string scriptDir)
             : base(name)
         {
-            this.scriptFile = scriptFile;
+            this.scriptDir = scriptDir;
         }
 
         /// <summary>
-        /// Gets the directory name of the PowerShell script path
+        /// Gets the directory name of the Shell script path
         /// </summary>
-        public string ScriptFile
+        public string ScriptDir
         {
-            get { return this.scriptFile; }
+            get { return this.scriptDir; }
         }
     }
 

@@ -56,7 +56,7 @@
     <Compile Include="Adapters\Interactive\InteractiveAdapterDialog.Designer.cs">
       <DependentUpon>InteractiveAdapterDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Adapters\Script\PsWrapperAdapterProxy.cs" />
+    <Compile Include="Adapters\Script\ShellAdapterProxy.cs" />
     <Compile Include="IProtocolTestContext.cs" />
     <Compile Include="IProtocolTestNotify.cs" />
     <Compile Include="IProtocolTestsManager.cs" />
@@ -107,7 +107,6 @@
     </Compile>
     <Compile Include="Adapters\ManagedAdapterBase.cs" />
     <Compile Include="DefaultTestSite.cs" />
-    <Compile Include="Adapters\Script\ScriptAdapterProxy.cs" />
     <Compile Include="NetworkEventSimulator.cs" />
     <Compile Include="PTFOptionParser.cs" />
     <Compile Include="ProtocolTestsManager.cs" />
