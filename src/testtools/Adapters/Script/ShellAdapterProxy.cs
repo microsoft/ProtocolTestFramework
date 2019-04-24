@@ -237,7 +237,12 @@ namespace Microsoft.Protocols.TestTools
             {
                 var row = builder.InArgDataTable.Rows[i++];
                 string value = (string)row["Value"];
-                ret.Append(String.Format("\"{0}\" ", value));
+
+                // escape single quotes
+                value = value.Replace("'", "'\\''");
+
+                // put argument inside single quotes to escape special charaters
+                ret.Append(String.Format("'{0}' ", value));
             }
 
             return ret.ToString();

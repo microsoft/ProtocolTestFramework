@@ -119,6 +119,17 @@ namespace Microsoft.Protocols.TestTools.Test.TestAdapter
                 shellAdapter.ReturnBool(result),
                 "Shell adapter should return " + result);
         }
+
+        [TestMethod]
+        [TestCategory("TestAdapter")]
+        public void ShellAdpaterReturnStringContainingSpecialCharaters()
+        {
+            string str = "It's great!!";
+            BaseTestSite.Assert.AreEqual(
+                str,
+                shellAdapter.ReturnString(str),
+                "Shell adapter should return " + str);
+        }
         #endregion
     }
 }
