@@ -306,14 +306,11 @@ namespace Microsoft.Protocols.TestTools
                 throw new InvalidOperationException("Cannot get 'SetVariable' method from SessionStateProxy.");
             }
 
-            //set all properties and help message as variable 
-            //which can be used in PowerShell script.
-            //set help message as variable
-            methodSetVariable.Invoke(proxyInstance, new object[] { "PtfHelpMessage", helpMessage });
             //set all properties as variables
+            //which can be used in PowerShell script.
             foreach (string key in this.TestSite.Properties.AllKeys)
             {
-                string propName = "PTFProp" + key;
+                string propName = "PTFProp_" + key.Replace(".", "_");
                 methodSetVariable.Invoke(
                     proxyInstance,
                     new object[] { propName, this.TestSite.Properties[key] }
