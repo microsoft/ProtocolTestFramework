@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,7 @@ namespace Microsoft.Protocols.TestTools
 {
     [ExtensionUri("logger://HtmlTestLogger")]
     [FriendlyName("Html")]
-    public class HtmlTestLogger : ITestLogger
+    public class HtmlTestLogger : ITestLoggerWithParameters
     {
         private string reportFolderPath; //The path to the report folder
         private string txtResultFolderPath; //The path to the result folder which stores all the txt files
@@ -32,24 +32,61 @@ namespace Microsoft.Protocols.TestTools
         private const string jsFileName_Functions = "functions.js";
         private const string jsFileName_Jquery = "jquery-1.11.0.min.js";
         private const string indexHtmlName = "index.html";
-        private const string rootFolderName = "HtmlTestResults";
         private const string txtResultFolderName = "Txt";
         private const string htmlResultFolderName = "Html";
         private const string jsFolderName = "js";
         private const string captureFolderName = "Captures";
 
+        private const string outputFolderKey = "OutputFolder";
+
+        private Dictionary<string, string> parametersDictionary;
+        private string testResultsDirPath;
+
         /// <summary>
         /// Initializes the Test Logger.
         /// </summary>
         /// <param name="events">Events which can be registered for.</param>
-        /// <param name="testRunDirectory">Test Run Directory</param>
-        public void Initialize(TestLoggerEvents events, string testRunDirectory)
+        /// <param name="testResultsDirPath">Test Results Directory</param>
+        public void Initialize(TestLoggerEvents events, string testResultsDirPath)
         {
+            if (events == null)
+            {
+                throw new ArgumentNullException(nameof(events));
+            }
+
+            if (string.IsNullOrEmpty(testResultsDirPath))
+            {
+                throw new ArgumentNullException(nameof(testResultsDirPath));
+            }
+
             // Register for the events.
             events.TestRunMessage += TestMessageHandler;
             events.TestResult += TestResultHandler;
             events.TestRunComplete += TestRunCompleteHandler;
+
+            this.testResultsDirPath = testResultsDirPath;
             CreateReportFolder();
+        }
+
+        /// <summary>
+        /// Initializes the Test Logger.
+        /// </summary>
+        /// <param name="events">Events which can be registered for.</param>
+        /// <param name="parameters">Collection of parameters</param>
+        public void Initialize(TestLoggerEvents events, Dictionary<string, string> parameters)
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            if (parameters.Count == 0)
+            {
+                throw new ArgumentException("No default parameters added", nameof(parameters));
+            }
+
+            this.parametersDictionary = parameters;
+            this.Initialize(events, this.parametersDictionary[DefaultLoggerParameterNames.TestRunDirectory]);
         }
 
         #region Implement three events
@@ -154,9 +191,22 @@ namespace Microsoft.Protocols.TestTools
         /// </summary>
         private void CreateReportFolder()
         {
-            reportFolderPath = Path.Combine(
-                Path.Combine(Directory.GetCurrentDirectory(), rootFolderName), 
-                DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            if (this.parametersDictionary != null)
+            {
+                var isoutputFolderParameterExists = this.parametersDictionary.TryGetValue(outputFolderKey, out string outputFolderValue);
+                if (isoutputFolderParameterExists && !string.IsNullOrWhiteSpace(outputFolderValue))
+                {
+                    reportFolderPath = Path.Combine(testResultsDirPath, outputFolderValue);
+                }
+                else
+                {
+                    reportFolderPath = Path.Combine(testResultsDirPath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+                }
+            }
+            else
+            {
+                reportFolderPath = Path.Combine(testResultsDirPath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            }
 
             Directory.CreateDirectory(reportFolderPath);
 
@@ -191,19 +241,13 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Constructs listObj and summaryObj used in functions.js
+        /// Constructs listObj used in functions.js
         /// </summary>
         private string ConstructListAndSummaryObj(TestRunCompleteEventArgs e)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine();
             sb.AppendLine("var listObj = " + txtToJSON.TestCasesString(txtResultFolderPath, captureFolderPath) + ";");
-            sb.Append("var summaryObj = "
-                + txtToJSON.SummaryTable(e.TestRunStatistics.ExecutedTests,
-                e.TestRunStatistics[TestOutcome.Passed],
-                e.TestRunStatistics[TestOutcome.Failed],
-                testRunStartTime,
-                testRunEndTime) + ";");
 
             // Clean the temp file
             File.Delete(txtToJSON.CaseCategoryFile);

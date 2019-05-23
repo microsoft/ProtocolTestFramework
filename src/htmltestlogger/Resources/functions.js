@@ -298,17 +298,20 @@ function FindIndexofClass(cls)
 // Show summary of the test run
 function ShowSummary()
 {
+    var totalCount = listObj.TestCases.length;
+    var passedCount = listObj.TestCases.filter(function (tc) { return tc.Result === "Passed" }).length;
+    var failedCount = listObj.TestCases.filter(function (tc) { return tc.Result === "Failed" }).length;
+    var inconclusiveCount = listObj.TestCases.filter(function (tc) { return tc.Result === "Inconclusive" }).length;
+    var passRate = (totalCount === 0 ? 0 : passedCount / totalCount).toFixed(2);
+
     var tbody = document.getElementById("tableid");
     var newrow = tbody.insertRow(-1);
-    CreateText(newrow.insertCell(0), summaryObj.TotalCount);
-    CreateText(newrow.insertCell(1), summaryObj.PassedCount);
-    CreateText(newrow.insertCell(2), summaryObj.FailedCount);
-    CreateText(newrow.insertCell(3), summaryObj.InconclusiveCount);
-    CreateText(newrow.insertCell(4), summaryObj.PassRate + "%");
-    var pt = document.getElementById("time");
-    pt.innerHTML = "Start Time:&nbsp" + summaryObj.StartTime + "<br />End Time:&nbsp&nbsp" + summaryObj.EndTime
-    + "<br />Duration:&nbsp&nbsp&nbsp" + summaryObj.Duration;
-    pt.style.fontFamily = "Tahoma";
+    
+    CreateText(newrow.insertCell(0), totalCount);
+    CreateText(newrow.insertCell(1), passedCount);
+    CreateText(newrow.insertCell(2), failedCount);
+    CreateText(newrow.insertCell(3), inconclusiveCount);
+    CreateText(newrow.insertCell(4), passRate + "%");
 }
 
 // Used by [casename].html
