@@ -89,8 +89,8 @@
 
     <!-- Spec Explorer dependency check-->
     <Property Id="SPEC_EXPLORER_INSTALLED">
-      <DirectorySearch Id="SeSearch" Path="[ProgramFilesFolder]Spec Explorer 2010 v3.5.3146.0" Depth="1">
-        <FileSearch Name="SpecExplorer.exe" Languages="0" />
+      <DirectorySearch Id="SeSearch" Path="[ProgramFilesFolder]\Spec Explorer 2010" Depth="1">
+        <FileSearch Name="SpecExplorer.exe" Languages="0" MinVersion="3.5.3146.0" />
       </DirectorySearch>
     </Property>
 
