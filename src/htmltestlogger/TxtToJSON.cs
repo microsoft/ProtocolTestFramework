@@ -264,7 +264,7 @@ namespace Microsoft.Protocols.TestTools
         /// <returns>Returns the test case list with basic information</returns>
         private List<DataType.TestCase> GetTestCaseList(string resultFolder, string captureFolder)
         {
-            List<DataType.TestCase> testCaseList = new List<DataType.TestCase>();
+            Dictionary<string, DataType.TestCase> testCases = new Dictionary<string, DataType.TestCase>();
 
             if (!File.Exists(CaseCategoryFile))
             {
@@ -272,11 +272,17 @@ namespace Microsoft.Protocols.TestTools
             }
 
             string sJSON = File.ReadAllText(CaseCategoryFile);
-            Dictionary<string, List<string>> testCases = serializer.Deserialize<Dictionary<string, List<string>>>(sJSON);
-            string[] txtfiles = Directory.GetFiles(resultFolder);
+            Dictionary<string, List<string>> testCaseToCategory = serializer.Deserialize<Dictionary<string, List<string>>>(sJSON);
+            string[] txtfiles = Directory.GetFiles(resultFolder)
+                                    .Select(file => Path.GetFileNameWithoutExtension(file)).ToArray();
+
+            // File name structure is {datetime}_{result}_{casename}.
+            // So order them by name, they are also ordered by execution time.
+            // Using casename as the key of dictionary, the new record will overwrite the old one.
+            txtfiles = txtfiles.OrderBy(i => i).ToArray();
             foreach (var file in txtfiles)
             {
-                string caseName = Path.GetFileNameWithoutExtension(file);
+                string caseName = file;
                 int i = caseName.IndexOf('_');
                 caseName = caseName.Substring(i + 1); // out the sort id
                 i = caseName.IndexOf('_');
@@ -287,10 +293,12 @@ namespace Microsoft.Protocols.TestTools
                     Name = caseName,
                     Result = caseStatus,
                     ClassType = caseClass.ContainsKey(caseName) ? caseClass[caseName] : null,
-                    Category = testCases.ContainsKey(caseName) ? testCases[caseName] : null,
+                    Category = testCaseToCategory.ContainsKey(caseName) ? testCaseToCategory[caseName] : null,
                 };
-                testCaseList.Add(tc);
+                testCases[caseName] = tc; // overwrite the same case if any
             }
+
+            List<DataType.TestCase> testCaseList = testCases.Values.OrderBy(tc => tc.Name).ToList(); // Sort by case name
             return testCaseList;
         }
 

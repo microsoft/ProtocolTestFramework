@@ -38,25 +38,75 @@
     </Upgrade>
 
     <!-- Conditions for product installation -->
-    <PropertyRef Id="NETFRAMEWORK45" />
-    <Condition Message="This application requires .NET Framework 4.7.1 or later to be installed">
-    <![CDATA[Installed OR (NETFRAMEWORK45 AND NETFRAMEWORK45 >= "#461310")]]>
-    </Condition>
-    <Condition Message="A later version of [ProductName] is already installed. Setup will now exit.">
-      NOT NEWER_VERSION_DETECTED OR Installed
-    </Condition>
 
-    <PropertyRef Id="VS2017_ROOT_FOLDER"/>
-	
-	<Property Id="VSInstalled">0</Property>
-	
-	<SetProperty Id="VSInstalled" After="AppSearch" Value="1">
-		<![CDATA[(VS2017_ROOT_FOLDER >< $(var.CheckVSPath))]]>
-	</SetProperty>
+    <!-- .NET Framework v4.7.1 dependency check-->
+    <Property Id="DOTNET471">
+      <DirectorySearch Id="DOTNET471Search" Path="[ProgramFilesFolder]\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.1">
+      </DirectorySearch>
+    </Property>
+
+    <InstallUISequence>
+      <Custom Action="SET_DOTNET471_NOT_INSTALLED_WARNING_TEXT" After="AppSearch">
+        <![CDATA[NOT DOTNET471]]>
+      </Custom>
+    </InstallUISequence>
+
+    <CustomAction Id="SET_DOTNET471_NOT_INSTALLED_WARNING_TEXT"
+                  Property="DOTNET471_NOT_INSTALLED_WARNING_TEXT"
+                  Value="• .NET Framework 4.7.1 targeting pack&#xA;" />
+
+    <!-- Visual Studio 2017 dependency check-->
+    <Property Id="VS2017SEARCH">
+      <RegistrySearch Id="Vs2017Search64"
+                      Root="HKLM"
+                      Key="SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7"
+                      Name="15.0"
+                      Type="raw"
+                      Win64="yes" />
+      <RegistrySearch Id="Vs2017Search"
+                      Root="HKLM"
+                      Key="SOFTWARE\Microsoft\VisualStudio\SxS\VS7"
+                      Name="15.0"
+                      Type="raw" />
+    </Property>
+
+    <Property Id="VSTEST2017">
+      <DirectorySearch Id="Vs2017VsTestSearch" Path="[VS2017SEARCH]\Common7\IDE\CommonExtensions\Microsoft\TestWindow" Depth="1">
+        <FileSearch Name="vstest.console.exe"
+                    Languages="0" />
+      </DirectorySearch>
+    </Property>
+
+    <InstallUISequence>
+      <Custom Action="SET_VSTEST_AGENT_OR_VS_NOT_INSTALLED_WARNING_TEXT_2017ORHigher" After="AppSearch">
+        <![CDATA[NOT VSTEST2017]]>
+      </Custom>
+    </InstallUISequence>
+
+    <CustomAction Id="SET_VSTEST_AGENT_OR_VS_NOT_INSTALLED_WARNING_TEXT_2017ORHigher"
+                  Property="VSTEST_AGENT_NOT_INSTALLED_WARNING_TEXT"
+                  Value="• Microsoft Visual Studio 2017 or Agents for Visual Studio 2017&#xA;" />
+
+    <!-- Spec Explorer dependency check-->
+    <Property Id="SPEC_EXPLORER_INSTALLED">
+      <DirectorySearch Id="SeSearch" Path="[ProgramFilesFolder]\Spec Explorer 2010" Depth="1">
+        <FileSearch Name="SpecExplorer.exe" Languages="0" MinVersion="3.5.3146.0" />
+      </DirectorySearch>
+    </Property>
+
+    <CustomAction Id="SET_SE_NOT_INSTALLED_WARNING_TEXT"
+                  Property="SE_NOT_INSTALLED_WARNING_TEXT"
+                  Value="• Microsoft Spec Explorer 2010&#xA;" />
+
+    <InstallUISequence>
+      <Custom Action="SET_SE_NOT_INSTALLED_WARNING_TEXT" After="AppSearch">
+        <![CDATA[NOT SPEC_EXPLORER_INSTALLED]]>
+      </Custom>
+    </InstallUISequence>
 
     <!-- Directory Structure -->
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="VS2017_ROOT_FOLDER">
+      <Directory Id="VS2017SEARCH">
         <Directory Id="VS2017_Common7" Name="Common7">
           <Directory Id="VS2017_IDE" Name="IDE">
             <Directory Id="VS2017_Extensions" Name="Extensions">
@@ -69,7 +119,7 @@
       </Directory>
       <Directory Id="ProgramMenuFolder" >
         <Directory Id="ApplicationProgramsMenuFolder" Name="Protocol Test Framework" />
-      </Directory> 
+      </Directory>
       <Directory Id="ProgramFilesFolder">
         <Directory Id="ROOT_DIR" Name="Protocol Test Framework">
           <Directory Id="DOCS_DIR" Name="docs" />
@@ -115,13 +165,13 @@
                  ConfigurableDirectory="ROOT_DIR">
 
       <ComponentRef Id="ApplicationShortcut"/>
-	  <!-- Protocol Test Framework -->
+      <!-- Protocol Test Framework -->
       <Feature Id="Feature_ProtocolTestFramework"
                Title="Protocol Test Framework"
                Description="Protocol Test Framework"
                Level="1" >
-      <FeatureRef Id="PTF_All" />
-	  </Feature>
+        <FeatureRef Id="PTF_All" />
+      </Feature>
     </Feature>
 
     <!-- Default sequence -->
@@ -146,52 +196,52 @@
     <UIRef Id="WixUI_ErrorProgressText" />
 
     <UI Id="WixUI_FeatureTree">
-        <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
-        <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
-        <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
 
-        <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
-        <Property Id="WixUI_Mode" Value="FeatureTree" />
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+      <Property Id="WixUI_Mode" Value="FeatureTree" />
 
-        <DialogRef Id="ErrorDlg" />
-        <DialogRef Id="FatalError" />
-        <DialogRef Id="FilesInUse" />
-        <DialogRef Id="MsiRMFilesInUse" />
-        <DialogRef Id="PrepareDlg" />
-        <DialogRef Id="ProgressDlg" />
-        <DialogRef Id="ResumeDlg" />
-        <DialogRef Id="UserExit" />
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+      <DialogRef Id="PrepareDlg" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ResumeDlg" />
+      <DialogRef Id="UserExit" />
 
-        <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
 
-        <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
 
-        <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
-        <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="PrivacyDlg">LicenseAccepted = "1"</Publish>
+      <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="PrivacyDlg">LicenseAccepted = "1"</Publish>
 
-        <Publish Dialog="PrivacyDlg" Control="Cancel" Event="EndDialog" Value="Return">1</Publish>
-        <Publish Dialog="PrivacyDlg" Control="Next" Event="NewDialog" Value="CustomizeDlg">1</Publish>
-        <Publish Dialog="PrivacyDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+      <Publish Dialog="PrivacyDlg" Control="Cancel" Event="EndDialog" Value="Return">1</Publish>
+      <Publish Dialog="PrivacyDlg" Control="Next" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+      <Publish Dialog="PrivacyDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
 
-        <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
-        <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="PrivacyDlg" Order="2">NOT Installed</Publish>
-		<Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1"><![CDATA[VSInstalled = "1"]]></Publish>
-		<Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="DependencyCheckWarningDlg" Order="2">
-			<![CDATA[VSInstalled = "0"]]>
-		</Publish>
-		<Publish Dialog="DependencyCheckWarningDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg">1</Publish>
-		<Publish Dialog="DependencyCheckWarningDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
-        <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="1">NOT Installed </Publish>
-        <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="2">WixUI_InstallMode = "Change"</Publish>
-        <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="3"><![CDATA[Installed AND (WixUI_InstallMode <> "Change")]]></Publish>
+      <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
+      <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="PrivacyDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1"><![CDATA[DOTNET471 AND VSTEST2017 AND SPEC_EXPLORER_INSTALLED]]></Publish>
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="DependencyCheckWarningDlg" Order="2">
+        <![CDATA[(NOT DOTNET471) OR (NOT VSTEST2017) OR (NOT SPEC_EXPLORER_INSTALLED)]]>
+      </Publish>
+      <Publish Dialog="DependencyCheckWarningDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+      <Publish Dialog="DependencyCheckWarningDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="1">NOT Installed </Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="2">WixUI_InstallMode = "Change"</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="3"><![CDATA[Installed AND (WixUI_InstallMode <> "Change")]]></Publish>
 
-        <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
 
-        <Publish Dialog="MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog" Value="CustomizeDlg">1</Publish>
-        <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
-        <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
-        <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
-    
+      <Publish Dialog="MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+
     </UI>
 
     <!-- Properties for "Add or Reomve Program Entries" -->

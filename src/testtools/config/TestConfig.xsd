@@ -73,8 +73,8 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <!-- Script Adapter -->
-  <xs:complexType name="script">
+  <!-- PowerShell Script Adapter -->
+  <xs:complexType name="powershell">
     <xs:complexContent>
       <xs:extension base="tc:adapterBase">
         <!-- Attribute "scriptdir" is the scripts' location. -->
@@ -83,8 +83,8 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <!-- PowerShell Script Adapter -->
-  <xs:complexType name="powershell">
+  <!-- Shell Script Adapter -->
+  <xs:complexType name="shell">
     <xs:complexContent>
       <xs:extension base="tc:adapterBase">
         <!-- Attribute "scriptdir" is the scripts' location. -->
@@ -103,16 +103,6 @@
         <!-- Attribute "assembly" is deprecated, please DO NOT use this attribute. -->
         <xs:attribute name="assembly" type="xs:string" use="optional"/>
         <xs:attribute name="disablevalidation" type="xs:boolean" use="optional"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <!-- PowerShell Wrapper Adapter -->
-  <xs:complexType name="pswrapper">
-    <xs:complexContent>
-      <xs:extension base="tc:adapterBase">
-        <!-- Attribute "scriptdir" is the scripts' location. -->
-        <xs:attribute name="scriptfile" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

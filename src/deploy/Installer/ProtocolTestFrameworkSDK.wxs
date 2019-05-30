@@ -19,34 +19,33 @@
       xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Fragment Id="PTF">
 
-    <!-- WixVSExtension properties for visual studio directories -->
-    <PropertyRef Id="VS2017_ROOT_FOLDER" />
-    <PropertyRef Id="VS2017_SCHEMAS_DIR" />
-  
     <!-- Program Menu -->
     <DirectoryRef Id="ProgramMenuFolder">
       <Directory Id="PTF_ProgramsMenuFolder" Name="Protocol Test Framework" />
     </DirectoryRef>
 
-    <DirectoryRef Id="TARGETDIR">
+    <DirectoryRef Id="VS2017SEARCH">
       <!-- visual studio schemas -->
-      <Directory Id="VS2017_SCHEMAS_DIR" />
+      <Directory Id="VS2017XML" Name="Xml" >
+        <Directory Id="VS2017SCHEMAS" Name="Schemas">
+        </Directory>
+      </Directory>
     </DirectoryRef>
 
     <!-- If Visual Studio is not installed, then do not install HtmlLogger. -->
     <DirectoryRef Id ="VS2017_HtmlTestLogger_InstallLocation">
       <Component Id="VS2017_HtmlTestLogger.dll" Guid="817DF6E7-6169-4A10-AF67-A064CDBB38E5" Feature="PTF_All">
-        <Condition>VS2017_ROOT_FOLDER</Condition>
+        <Condition>VSTEST2017</Condition>
         <File Id="VS2017_HtmlTestLogger.dll"
               Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.Html.TestLogger.dll" />
       </Component>
       <Component Id="VS2017_HtmlTestLogger.pdb" Guid="D2869602-1C51-48D5-A81C-91B0332F00C7" Feature="PTF_All">
-        <Condition>VS2017_ROOT_FOLDER</Condition>
+        <Condition>VSTEST2017</Condition>
         <File Id="VS2017_HtmlTestLogger.pdb"
               Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.Html.TestLogger.pdb" />
       </Component>
     </DirectoryRef>
-    
+
     <!-- PTF Bin -->
     <DirectoryRef Id="Bin_DIR">
 
@@ -98,12 +97,12 @@
         <File Id="TestConfig.xsd"
               Source="$(var.PTF_SRC_ROOT)\testtools\config\TestConfig.xsd" />
       </Component>
-    
-    <!-- ETW Manifest -->
+
+      <!-- ETW Manifest -->
       <Component Id="TestSuiteProvider.man" Guid="0D1C33F2-F997-44AF-BCE0-77782A187CD8" Feature="PTF_All">
         <File Id="TestSuiteProvider.man" Source="$(var.PTF_SRC_ROOT)\TestTools.ExtendedLogging\TestSuiteProvider.man" >
-      <util:EventManifest MessageFile="[#Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS]" ResourceFile="[#Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS]"></util:EventManifest>
-    </File>
+          <util:EventManifest MessageFile="[#Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS]" ResourceFile="[#Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS]"></util:EventManifest>
+        </File>
       </Component>
     </DirectoryRef>
 
@@ -165,7 +164,7 @@
               Source="$(var.SRCDIR_VS)\xmldocs\Microsoft.Protocols.TestTools.VSTS.xml" />
       </Component>
 
-     <!-- Microsoft.Protocols.TestTools.ExtendedLogging -->
+      <!-- Microsoft.Protocols.TestTools.ExtendedLogging -->
       <Component Id="Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS" Guid="7385F618-DCC8-4341-9ACF-4BE715B86F78" Feature="PTF_All">
         <File Id="Microsoft.Protocols.TestTools.ExtendedLogging.dll_VS"
               Source="$(var.SRCDIR_VS)\Microsoft.Protocols.TestTools.ExtendedLogging.dll" />
@@ -231,10 +230,10 @@
         <File Id="LICENSE.txt" Source="$(var.PTF_SRC_ROOT)..\LICENSE.txt" />
       </Component>
     </DirectoryRef>
-	
+
     <!-- PTF Shortcut -->
     <DirectoryRef Id="PTF_ProgramsMenuFolder">
-     <!-- for PTF User Guide -->
+      <!-- for PTF User Guide -->
       <Component Id="PTF_User_Guide_Shortcut" Guid="E360B475-A8F0-4FA6-96A1-A410DA9BAF73" Feature="PTF_All">
         <Shortcut Id="PTF_User_Guide_Shortcut"
                   Name="PTF User Guide"
@@ -250,15 +249,15 @@
                        KeyPath="yes"/>
       </Component>
     </DirectoryRef>
-  
+
     <!-- ptf testconfig schema for VS 2017 -->
-    <DirectoryRef Id="VS2017_SCHEMAS_DIR">
+    <DirectoryRef Id="VS2017SCHEMAS">
       <Component Id="VS2017_TestConfig.xsd" Guid="{edb0f822-6334-432c-b39e-42633d491b90}" Feature="PTF_All">
         <File Id="VS2017_TestConfig.xsd" Vital="yes"
               Source="$(var.PTF_SRC_ROOT)\testtools\config\TestConfig.xsd" />
-        <Condition>VS2017_ROOT_FOLDER</Condition>
+        <Condition>VS2017SEARCH</Condition>
       </Component>
-    </DirectoryRef> 
+    </DirectoryRef>
 
     <Feature Id="PTF_All"
          Title="Protocol Test Framework"
