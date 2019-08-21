@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
@@ -105,6 +106,7 @@ namespace Microsoft.Protocols.TestTools
 
                 case TestMessageLevel.Error:
                     break;
+
                 default:
                     break;
             }
@@ -115,64 +117,26 @@ namespace Microsoft.Protocols.TestTools
         /// </summary>
         private void TestResultHandler(object sender, TestResultEventArgs e)
         {
-            if (e.Result.Outcome.ToString() == "NotFound")
+            if (e.Result.Outcome == TestOutcome.NotFound)
             {
                 return;
             }
-            string caseName = !string.IsNullOrEmpty(e.Result.DisplayName) ? e.Result.DisplayName : e.Result.TestCase.FullyQualifiedName;
-            int dot = caseName.LastIndexOf('.');
 
-            if (-1 != dot)
-                caseName = caseName.Substring(dot + 1);
+            DataType.TestCaseDetail caseDetail = ConvertToTestCase(e.Result);
 
-            string txtFileName = Path.Combine(txtResultFolderPath, e.Result.StartTime.ToLocalTime().ToString("yyyy-MM-dd-HH-mm-ss") + "_"
-                + (e.Result.Outcome == TestOutcome.Skipped ? "Inconclusive" : e.Result.Outcome.ToString()) + "_" + caseName + ".txt");
-            StringBuilder sb = new StringBuilder();
+            // Generate txt log file
+            string txtFileName = Path.Combine(
+                txtResultFolderPath,
+                string.Format("{0}_{1}_{2}.txt",
+                              caseDetail.StartTime.ToLocalTime().ToString("yyyy-MM-dd-HH-mm-ss"),
+                              caseDetail.Result,
+                              caseDetail.Name)
+            );
+            File.WriteAllText(txtFileName, ConstructCaseTxtReport(caseDetail));
 
-            if (DateTimeOffset.Compare(testRunStartTime, e.Result.StartTime.ToLocalTime()) > 0)
-                testRunStartTime = e.Result.StartTime.ToLocalTime();
-            if (DateTimeOffset.Compare(testRunEndTime, e.Result.EndTime.ToLocalTime()) < 0)
-                testRunEndTime = e.Result.EndTime.ToLocalTime();
-            try
-            {
-                sb.AppendLine(caseName);
-                sb.AppendLine("Start Time: " + e.Result.StartTime.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss"));
-                sb.AppendLine("End Time: " + e.Result.EndTime.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss"));
-                sb.AppendLine("Result: " + (e.Result.Outcome == TestOutcome.Skipped ? "Inconclusive" : e.Result.Outcome.ToString()));
-                sb.AppendLine(e.Result.TestCase.Source);
-                if (!String.IsNullOrEmpty(e.Result.ErrorStackTrace))
-                {
-                    sb.AppendLine("===========ErrorStackTrace===========");
-                    sb.AppendLine(e.Result.ErrorStackTrace);
-                }
-                if (!String.IsNullOrEmpty(e.Result.ErrorMessage))
-                {
-                    sb.AppendLine("===========ErrorMessage==============");
-                    sb.AppendLine(e.Result.ErrorMessage);
-                }
-
-                foreach (TestResultMessage m in e.Result.Messages)
-                {
-                    if (m.Category == TestResultMessage.StandardOutCategory && !String.IsNullOrEmpty(m.Text))
-                    {
-                        sb.AppendLine("===========StandardOut===============");
-                        sb.AppendLine(m.Text);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                sb.AppendLine("Exception: " + ex.Message);
-            }
-            finally
-            {
-                // Generate txt log file
-                File.WriteAllText(txtFileName, sb.ToString());
-
-                // Generate html log file
-                string htmlFileName = Path.Combine(htmlResultFolderPath, caseName + ".html");
-                File.WriteAllText(htmlFileName, ConstructCaseHtml(txtFileName, caseName));
-            }
+            // Generate html log file
+            string htmlFileName = Path.Combine(htmlResultFolderPath, $"{caseDetail.Name}.html");
+            File.WriteAllText(htmlFileName, ConstructCaseHtml(caseDetail));
         }
 
         /// <summary>
@@ -227,14 +191,117 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
+        /// Convert a vstest TestResult object to TestCaseDetail
+        /// </summary>
+        private DataType.TestCaseDetail ConvertToTestCase(TestResult result)
+        {
+            var eolSeparators = new char[] { '\r', '\n' };
+            string caseName = !string.IsNullOrEmpty(result.DisplayName) ? result.DisplayName : result.TestCase.FullyQualifiedName.Split('.').Last();
+            string outcome = result.Outcome == TestOutcome.Skipped ? "Inconclusive" : result.Outcome.ToString();
+
+            var ret = new DataType.TestCaseDetail(caseName, result.StartTime, result.EndTime, outcome, result.TestCase.Source);
+
+            if (!String.IsNullOrEmpty(result.ErrorStackTrace))
+            {
+                ret.ErrorStackTrace.AddRange(result.ErrorStackTrace.Split(eolSeparators, StringSplitOptions.RemoveEmptyEntries));
+            }
+
+            if (!String.IsNullOrEmpty(result.ErrorMessage))
+            {
+                ret.ErrorMessage.AddRange(result.ErrorMessage.Split(eolSeparators, StringSplitOptions.RemoveEmptyEntries));
+            }
+
+            var stdout = new List<string>();
+            foreach (TestResultMessage m in result.Messages)
+            {
+                if (m.Category == TestResultMessage.StandardOutCategory && !String.IsNullOrEmpty(m.Text))
+                {
+                    stdout.AddRange(m.Text.Split(eolSeparators, StringSplitOptions.RemoveEmptyEntries));
+                }
+            }
+            foreach (string line in stdout)
+            {
+                string pattern = @"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3} \[(\w+)\] ";
+                Regex r = new Regex(pattern, RegexOptions.IgnoreCase);
+
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    string type = m.Groups[1].Value;
+                    ret.StandardOut.Add(new DataType.StandardOutDetail()
+                    {
+                        Content = line,
+                        Type = type
+                    });
+                }
+                else
+                {
+                    // There must be at least one record in the list.
+                    // Just to make the logger robust, let's do a check here.
+                    // (But it won't happen)
+                    int stdoutCount = ret.StandardOut.Count;
+                    if (stdoutCount == 0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        var lastOutput = ret.StandardOut[stdoutCount - 1];
+                        lastOutput.Content = lastOutput.Content + '\n' + line;
+                    }
+                }
+            }
+
+            ret.StandardOutTypes = ret.StandardOut.Select(output => output.Type).Distinct().ToList();
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Inserts the corresponding script to the template html and generates the [testcase].html 
+        /// </summary>
+        private string ConstructCaseTxtReport(DataType.TestCaseDetail caseDetail)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (DateTimeOffset.Compare(testRunStartTime, caseDetail.StartTime.ToLocalTime()) > 0)
+                testRunStartTime = caseDetail.StartTime.ToLocalTime();
+            if (DateTimeOffset.Compare(testRunEndTime, caseDetail.EndTime.ToLocalTime()) < 0)
+                testRunEndTime = caseDetail.EndTime.ToLocalTime();
+
+            sb.AppendLine(caseDetail.Name);
+            sb.AppendLine("Start Time: " + caseDetail.StartTime.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss"));
+            sb.AppendLine("End Time: " + caseDetail.EndTime.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss"));
+            sb.AppendLine("Result: " + caseDetail.Result);
+            sb.AppendLine(caseDetail.Source);
+            if (caseDetail.ErrorStackTrace.Count() > 0)
+            {
+                sb.AppendLine("===========ErrorStackTrace===========");
+                caseDetail.ErrorStackTrace.ForEach(line => sb.AppendLine(line));
+            }
+            if (caseDetail.ErrorMessage.Count() > 0)
+            {
+                sb.AppendLine("===========ErrorMessage==============");
+                caseDetail.ErrorMessage.ForEach(line => sb.AppendLine(line));
+            }
+            if (caseDetail.StandardOut.Count() > 0)
+            {
+                sb.AppendLine("===========StandardOut===============");
+                caseDetail.StandardOut.ForEach(stdout => sb.AppendLine(stdout.Content));
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// Constructs detailObj used in each [caseName].html
         /// </summary>
-        private string ConstructDetailObj(string txtFileName)
+        private string ConstructDetailObj(DataType.TestCaseDetail caseDetail)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine();
             sb.Append("var detailObj=");
-            sb.Append(txtToJSON.ConstructCaseDetail(txtFileName, captureFolderPath));
+            sb.Append(txtToJSON.ConstructCaseDetail(caseDetail, captureFolderPath));
             sb.AppendLine(";");
 
             return sb.ToString();
@@ -257,13 +324,13 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Inserts the corresponding script to the template html and generates the [testcase].html 
         /// </summary>
-        private string ConstructCaseHtml(string txtFileName, string caseName)
+        private string ConstructCaseHtml(DataType.TestCaseDetail caseDetail)
         {
             // Insert script to the template html (testcase.html)
             StringBuilder sb = new StringBuilder();
-            sb.Append(ConstructDetailObj(txtFileName));
+            sb.Append(ConstructDetailObj(caseDetail));
             sb.AppendLine("var titleObj = document.getElementById(\"right_sidebar_case_title\");");
-            sb.Append(string.Format("CreateText(titleObj, \"{0}\");", caseName));
+            sb.Append(string.Format("CreateText(titleObj, \"{0}\");", caseDetail.Name));
 
             return InsertScriptToTemplate(Properties.Resources.testcase, sb.ToString());
         }

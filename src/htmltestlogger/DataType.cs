@@ -90,17 +90,22 @@ namespace Microsoft.Protocols.TestTools
             /// <summary>
             /// The start time of the test case
             /// </summary>
-            public string StartTime;
+            public DateTimeOffset StartTime;
 
             /// <summary>
             /// The end time of the test case
             /// </summary>
-            public string EndTime;
+            public DateTimeOffset EndTime;
 
             /// <summary>
             /// The result of the test case
             /// </summary>
             public string Result;
+
+            /// <summary>
+            /// The source assembly of the test case
+            /// </summary>
+            public string Source;
 
             /// <summary>
             /// The ErrorStackTrace log of the test case
@@ -131,15 +136,17 @@ namespace Microsoft.Protocols.TestTools
             /// Set default value
             /// </summary>
             /// <param name="name">Test case name</param>
-            /// <param name="startTime">The start time to run test case</param>
-            /// <param name="endTime">The end time to run test case</param>
-            /// <param name="result">The result to run the test case</param>
-            public TestCaseDetail(string name, string startTime, string endTime, string result)
+            /// <param name="startTime">Start time of the test case</param>
+            /// <param name="endTime">End time of the test case</param>
+            /// <param name="result">Result of the test case</param>
+            /// <param name="source">Assembly of the test case</param>
+            public TestCaseDetail(string name, DateTimeOffset startTime, DateTimeOffset endTime, string result, string source)
             {
                 this.Name = name;
                 this.StartTime = startTime;
                 this.EndTime = endTime;
                 this.Result = result;
+                this.Source = source;
                 this.ErrorStackTrace = new List<string>();
                 this.ErrorMessage = new List<string>();
                 this.StandardOut = new List<StandardOutDetail>();
