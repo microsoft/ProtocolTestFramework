@@ -6,10 +6,10 @@
 set currentPath=%~dp0
 set PTFTEST_Root=%currentPath%..\..\
 
-call "%PTFTEST_Root%src\common\setVsPath.cmd"
+call "%PTFTEST_Root%src\common\setVsTestPath.cmd"
 if ErrorLevel 1 (
 	exit /b 1
 )
 
 :: Does not run Interactive adapter cases in automation test
-%vspath%..\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe "TestProperties\bin\Debug\TestProperties.dll" "TestChecker\bin\Debug\TestChecker.dll" "TestLogging\bin\Debug\TestLogging.dll" "TestRequirementCapture\bin\Debug\TestRequirementCapture.dll" "TestAdapter\bin\Debug\TestAdapter.dll" /TestCaseFilter:"Name!=InteractiveAdapterAbort&Name!=InteractiveAdapterReturnInt&Name!=InteractiveAdapterReturnString" /Settings:Local.testsettings /Logger:trx
+%vstest% "TestProperties\bin\Debug\TestProperties.dll" "TestChecker\bin\Debug\TestChecker.dll" "TestLogging\bin\Debug\TestLogging.dll" "TestRequirementCapture\bin\Debug\TestRequirementCapture.dll" "TestAdapter\bin\Debug\TestAdapter.dll" /TestCaseFilter:"Name!=InteractiveAdapterAbort&Name!=InteractiveAdapterReturnInt&Name!=InteractiveAdapterReturnString" /Settings:Local.testsettings /Logger:trx
