@@ -1,28 +1,32 @@
 :: Copyright (c) Microsoft. All rights reserved.
 :: Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+::Get the root path of Visual Studio installation folder and set it to vspath.
+
 @echo off
 
-:: Find installed path of Visual Studio 2017
-set _currentPath=%~dp0
-call "%_currentPath%setVs2017Path.cmd"
-if ErrorLevel 1 (
-    exit /b 1
+set vswhere=
+
+for /d %%i in ("%ProgramFiles(x86)%","%ProgramFiles%") do (
+	if exist "%%~i\Microsoft Visual Studio\Installer\vswhere.exe" (
+		set "vswhere=%%~i\Microsoft Visual Studio\Installer\vswhere.exe"
+		break
+	)
 )
 
-:: Set VS150COMNTOOLS
-if exist "%vs2017path%\Common7\Tools\" (
-    set VS150COMNTOOLS="%vs2017path%\Common7\Tools\"
+if [vswhere] equ [] (
+	echo Error: please make sure you have installed Visual Studio 2017 or later.
+	exit /b 1
 )
 
-:: Set vspath
-if defined VS150COMNTOOLS (
-    set vspath=%VS150COMNTOOLS%
-    goto end
-) else (
-    echo Error: Please install visual studio 2017.
-    exit /b 1
+set vspath=
+
+for /f "usebackq tokens=1*" %%i in (`"%vswhere%"`) do (
+	if %%i equ installationPath: (
+		set vspath=%%j
+		exit /b 0
+	)
 )
 
-:end
-exit /b 0
+echo Error: please make sure you have installed Visual Studio 2017 or later.
+exit /b 1

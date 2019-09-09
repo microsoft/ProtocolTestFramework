@@ -24,7 +24,14 @@
       <Directory Id="PTF_ProgramsMenuFolder" Name="Protocol Test Framework" />
     </DirectoryRef>
 
-    <DirectoryRef Id="VS2017SEARCH">
+    <DirectoryRef Id="VS2019_ROOT_FOLDER">
+      <!-- visual studio schemas -->
+      <Directory Id="VS2019XML" Name="Xml" >
+        <Directory Id="VS2019SCHEMAS" Name="Schemas">
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+    <DirectoryRef Id="VS2017_ROOT_FOLDER">
       <!-- visual studio schemas -->
       <Directory Id="VS2017XML" Name="Xml" >
         <Directory Id="VS2017SCHEMAS" Name="Schemas">
@@ -33,6 +40,18 @@
     </DirectoryRef>
 
     <!-- If Visual Studio is not installed, then do not install HtmlLogger. -->
+    <DirectoryRef Id ="VS2019_HtmlTestLogger_InstallLocation">
+      <Component Id="VS2019_HtmlTestLogger.dll" Guid="0AAE6391-FE90-444B-8072-46B49FE25F3C" Feature="PTF_All">
+        <Condition>VSTEST2019</Condition>
+        <File Id="VS2019_HtmlTestLogger.dll"
+              Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.Html.TestLogger.dll" />
+      </Component>
+      <Component Id="VS2019_HtmlTestLogger.pdb" Guid="D3364382-01A5-47F7-97CD-FC53EDCB7124" Feature="PTF_All">
+        <Condition>VSTEST2019</Condition>
+        <File Id="VS2019_HtmlTestLogger.pdb"
+              Source="$(var.SRCDIR)\HtmlTestLogger\Microsoft.Protocols.TestTools.Html.TestLogger.pdb" />
+      </Component>
+    </DirectoryRef>
     <DirectoryRef Id ="VS2017_HtmlTestLogger_InstallLocation">
       <Component Id="VS2017_HtmlTestLogger.dll" Guid="817DF6E7-6169-4A10-AF67-A064CDBB38E5" Feature="PTF_All">
         <Condition>VSTEST2017</Condition>
@@ -250,12 +269,19 @@
       </Component>
     </DirectoryRef>
 
-    <!-- ptf testconfig schema for VS 2017 -->
+    <!-- ptf testconfig schema for VS 2017 and 2019 -->
+    <DirectoryRef Id="VS2019SCHEMAS">
+      <Component Id="VS2019_TestConfig.xsd" Guid="{9D552581-B43B-4794-B3B2-2E02F96B9198}" Feature="PTF_All">
+        <File Id="VS2019_TestConfig.xsd" Vital="yes"
+              Source="$(var.PTF_SRC_ROOT)\testtools\config\TestConfig.xsd" />
+        <Condition>VSTEST2019</Condition>
+      </Component>
+    </DirectoryRef>
     <DirectoryRef Id="VS2017SCHEMAS">
       <Component Id="VS2017_TestConfig.xsd" Guid="{edb0f822-6334-432c-b39e-42633d491b90}" Feature="PTF_All">
         <File Id="VS2017_TestConfig.xsd" Vital="yes"
               Source="$(var.PTF_SRC_ROOT)\testtools\config\TestConfig.xsd" />
-        <Condition>VS2017SEARCH</Condition>
+        <Condition>VSTEST2017</Condition>
       </Component>
     </DirectoryRef>
 

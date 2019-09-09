@@ -61,77 +61,13 @@ namespace Microsoft.Protocols.TestTools
         /// </summary>
         /// <param name="txtfile">The path to the log txt file which contains the detail log</param>
         /// <returns>Returns the log information</returns>
-        public string ConstructCaseDetail(string txtfile, string captureFolder)
+        public string ConstructCaseDetail(DataType.TestCaseDetail caseDetail, string captureFolder)
         {
-            FileStream fs = new FileStream(txtfile, FileMode.Open);
-            string type = ""; // Help judge whether the line is the end of the file, help distinguish file content
-            StreamReader sr = new StreamReader(fs);
-            string line;
-            string content = "";
-            string standardOutType = "";
-            DataType.TestCaseDetail caseDetail = new DataType.TestCaseDetail(sr.ReadLine(), sr.ReadLine(), sr.ReadLine(), sr.ReadLine());
-            DataType.StandardOutDetail stdDetail;
-            string dllFile = sr.ReadLine();
+            string dllFile = caseDetail.Source;
             if (!dllFiles.Contains(dllFile))
             {
                 dllFiles.Add(dllFile);
             }
-            while ((line = sr.ReadLine()) != null)
-            {
-                if (line == "") //Rule out blank line
-                    continue;
-
-                if (line.StartsWith("==========="))
-                {
-                    type = line.Replace("=", "");
-                    continue;
-                }
-
-                LogType eType = (LogType)Enum.Parse(typeof(LogType), type);
-                switch (eType)
-                {
-                    case LogType.ErrorStackTrace:
-                        caseDetail.ErrorStackTrace.Add(line);
-                        break;
-                    case LogType.ErrorMessage:
-                        caseDetail.ErrorMessage.Add(line);
-                        break;
-                    case LogType.StandardOut:
-                        int begin = line.IndexOf('[');
-                        int end = line.IndexOf(']');
-
-                        if (begin != -1 && end != -1)
-                        {
-                            if (standardOutType != "")
-                            {
-                                stdDetail = new DataType.StandardOutDetail()
-                                {
-                                    Content = content,
-                                    Type = standardOutType
-                                };
-                                caseDetail.StandardOut.Add(stdDetail);
-                            }
-                            if (end > begin && end < line.Length)
-                            {
-                                standardOutType = line.Substring(begin + 1, end - begin - 1);
-                                if (!caseDetail.StandardOutTypes.Contains(standardOutType))
-                                    caseDetail.StandardOutTypes.Add(standardOutType);
-                            }
-                            content = line;
-                        }
-                        else
-                            content += line;
-                        break;
-                    default: break;
-                }
-            }
-            stdDetail = new DataType.StandardOutDetail()
-            {
-                Content = content,
-                Type = standardOutType
-            };
-            fs.Close();
-            caseDetail.StandardOut.Add(stdDetail);
 
             caseDetail.CapturePath = CopyCaptureAndReturnPath(caseDetail.Name, captureFolder);
 

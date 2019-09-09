@@ -55,37 +55,32 @@
                   Property="DOTNET471_NOT_INSTALLED_WARNING_TEXT"
                   Value="• .NET Framework 4.7.1 targeting pack&#xA;" />
 
-    <!-- Visual Studio 2017 dependency check-->
-    <Property Id="VS2017SEARCH">
-      <RegistrySearch Id="Vs2017Search64"
-                      Root="HKLM"
-                      Key="SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7"
-                      Name="15.0"
-                      Type="raw"
-                      Win64="yes" />
-      <RegistrySearch Id="Vs2017Search"
-                      Root="HKLM"
-                      Key="SOFTWARE\Microsoft\VisualStudio\SxS\VS7"
-                      Name="15.0"
-                      Type="raw" />
-    </Property>
-
-    <Property Id="VSTEST2017">
-      <DirectorySearch Id="Vs2017VsTestSearch" Path="[VS2017SEARCH]\Common7\IDE\CommonExtensions\Microsoft\TestWindow" Depth="1">
-        <FileSearch Name="vstest.console.exe"
-                    Languages="0" />
+    <!-- Visual Studio dependency check-->
+    <PropertyRef Id="VS2017_ROOT_FOLDER" />
+    <PropertyRef Id="VS2019_ROOT_FOLDER" />
+    <Property Id="VSTEST2019">
+      <DirectorySearch Id="Vs2019VsTestSearch" Path="[VS2019_ROOT_FOLDER]\Common7\IDE\CommonExtensions\Microsoft\TestWindow\">
+        <FileSearch Name="vstest.console.exe" />
       </DirectorySearch>
     </Property>
+    <Property Id="VSTEST2017">
+      <DirectorySearch Id="Vs2017VsTestSearch" Path="[VS2017_ROOT_FOLDER]\Common7\IDE\CommonExtensions\Microsoft\TestWindow\">
+        <FileSearch Name="vstest.console.exe" />
+      </DirectorySearch>
+    </Property>
+    <SetProperty Id="VSInstalled" After="AppSearch" Value="1">
+      <![CDATA[VSTEST2017 OR VSTEST2019]]>
+    </SetProperty>
 
     <InstallUISequence>
       <Custom Action="SET_VSTEST_AGENT_OR_VS_NOT_INSTALLED_WARNING_TEXT_2017ORHigher" After="AppSearch">
-        <![CDATA[NOT VSTEST2017]]>
+        <![CDATA[NOT VSInstalled]]>
       </Custom>
     </InstallUISequence>
 
     <CustomAction Id="SET_VSTEST_AGENT_OR_VS_NOT_INSTALLED_WARNING_TEXT_2017ORHigher"
                   Property="VSTEST_AGENT_NOT_INSTALLED_WARNING_TEXT"
-                  Value="• Microsoft Visual Studio 2017 or Agents for Visual Studio 2017&#xA;" />
+                  Value="• Microsoft Visual Studio 2017 or higher&#xA;" />
 
     <!-- Spec Explorer dependency check-->
     <Property Id="SPEC_EXPLORER_INSTALLED">
@@ -106,7 +101,18 @@
 
     <!-- Directory Structure -->
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="VS2017SEARCH">
+      <Directory Id="VS2019_ROOT_FOLDER">
+        <Directory Id="VS2019_Common7" Name="Common7">
+          <Directory Id="VS2019_IDE" Name="IDE">
+            <Directory Id="VS2019_Extensions" Name="Extensions">
+              <Directory Id="VS2019_TestPlatform" Name="TestPlatform">
+                <Directory Id="VS2019_HtmlTestLogger_InstallLocation" Name="Extensions" />
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="VS2017_ROOT_FOLDER">
         <Directory Id="VS2017_Common7" Name="Common7">
           <Directory Id="VS2017_IDE" Name="IDE">
             <Directory Id="VS2017_Extensions" Name="Extensions">
@@ -225,9 +231,9 @@
 
       <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
       <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="PrivacyDlg" Order="2">NOT Installed</Publish>
-      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1"><![CDATA[DOTNET471 AND VSTEST2017 AND SPEC_EXPLORER_INSTALLED]]></Publish>
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1"><![CDATA[DOTNET471 AND VSInstalled AND SPEC_EXPLORER_INSTALLED]]></Publish>
       <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="DependencyCheckWarningDlg" Order="2">
-        <![CDATA[(NOT DOTNET471) OR (NOT VSTEST2017) OR (NOT SPEC_EXPLORER_INSTALLED)]]>
+        <![CDATA[(NOT DOTNET471) OR (NOT VSInstalled) OR (NOT SPEC_EXPLORER_INSTALLED)]]>
       </Publish>
       <Publish Dialog="DependencyCheckWarningDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg">1</Publish>
       <Publish Dialog="DependencyCheckWarningDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
