@@ -30,17 +30,6 @@ namespace Microsoft.Protocols.TestTools
         private static ConfigurationReader reader;
 
         /// <summary>
-        /// Gets the configuration XML file schema short name.
-        /// </summary>
-        private static string SchemaFileShortName
-        {
-            get
-            {
-                return "TestConfig.xsd";
-            }
-        }
-
-        /// <summary>
         /// Gets the configuration data.
         /// </summary>
         /// <param name="testDeploymentDirectory">Test development directory</param>
@@ -79,16 +68,7 @@ namespace Microsoft.Protocols.TestTools
                     testSuiteName + ".ptfconfig", testDeploymentDirectory));
             }
 
-            string schema = GetTestSuiteDeployConfigFileName(testDeploymentDirectory, SchemaFileShortName);
-
-            // If TestConfig.xsd cannot be found in deployment directory, then try to load it from the installation directory.
-            if (schema == null)
-            {
-                // Finds the schema file which is used to validate the config files.
-                schema = GetInstallationConfigFileName(SchemaFileShortName);
-
-            }
-            reader = new ConfigurationReader(configFileFullnames, schema);
+            reader = new ConfigurationReader(configFileFullnames);
 
             return reader;
         }

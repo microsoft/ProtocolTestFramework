@@ -41,6 +41,17 @@ namespace Microsoft.Protocols.TestTools
 
         private static bool isParsed;
 
+        /// <summary>
+        /// Gets the configuration XML file schema short name.
+        /// </summary>
+        private static string SchemaFile
+        {
+            get
+            {
+                return "TestConfig.xsd";
+            }
+        }
+
         // Gets the default configuration namespace.
         public static string DefaultNamespace
         {
@@ -83,7 +94,7 @@ namespace Microsoft.Protocols.TestTools
         { }
         //The static field need to reset when the reader is created.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1805:DoNotInitializeUnnecessarily")]
-        internal ConfigurationReader(string[] configFileNames, string schemaFileName)
+        internal ConfigurationReader(string[] configFileNames)
         {
             if (configFileNames == null)
             {
@@ -99,7 +110,7 @@ namespace Microsoft.Protocols.TestTools
             {
                 isParsed = false;
             }
-            SetProperXmlSchemaSet(schemaFileName);
+            SetXmlSchemaSet();
 
             if (!ValidateConfigFiles(new string[] { configFileNames[0] }, true) ||
                 !ValidateConfigFiles(configFileNames, false))
@@ -896,21 +907,18 @@ namespace Microsoft.Protocols.TestTools
         private string invalidFilename;
         private XmlSchemaSet schemaSet;
 
-        private void SetProperXmlSchemaSet(string schemaFileName)
+        private void SetXmlSchemaSet()
         {
             // Create a schema cache.
             schemaSet = new XmlSchemaSet();
-            if (schemaFileName == null)
-            {
 
-                throw new NotImplementedException("resource file is currently not supported");
-                //TextReader tr = new StringReader(PTFConfig.TestConfig);
-                //schemaSet.Add(null, XmlReader.Create(tr, new XmlReaderSettings() { XmlResolver = null }));
-            }
-            else
-            {
-                schemaSet.Add(null, schemaFileName);
-            }
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string project = assembly.GetName().Name;
+            string folder = "Resources.Schema";
+            Stream stream = assembly.GetManifestResourceStream($"{project}.{folder}.{SchemaFile}");
+
+            XmlSchema schema = XmlSchema.Read(stream, null);
+            schemaSet.Add(schema);
         }
 
         private bool ValidateXmlDocument(XmlDocument xmldoc)
