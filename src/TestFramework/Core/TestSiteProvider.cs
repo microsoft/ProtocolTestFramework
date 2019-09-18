@@ -37,7 +37,7 @@ namespace Microsoft.Protocols.TestTools
                 throw new ArgumentNullException("context", "Test context cannot be null.");
             }
 
-            Initialize(config, context.TestDeploymentDir, testSuiteName, testAssemblyName);
+            Initialize(config, context.TestAssemblyDir, context.PtfconfigDir, testSuiteName, testAssemblyName);
         }
 
         /// <summary>
@@ -47,24 +47,31 @@ namespace Microsoft.Protocols.TestTools
         /// will be reused.
         /// </summary>
         /// <param name="config">Configuration data from ptfconfig</param>
-        /// <param name="configPath"></param>
+        /// <param name="testAssemblyPath"></param>
+        /// <param name="ptfconfigPath"></param>
         /// <param name="testSuiteName"></param>
         /// <param name="testAssemblyName">Test assembly name</param>
         public static void Initialize(
-            IConfigurationData config, string configPath, string testSuiteName, string testAssemblyName)
+            IConfigurationData config, string testAssemblyPath, string ptfconfigPath, string testSuiteName, string testAssemblyName)
         {
-            if (string.IsNullOrEmpty(configPath))
+            if (string.IsNullOrEmpty(testAssemblyPath))
             {
-                throw new ArgumentException("configPath cannot be null or empty.", "configPath");
+                throw new ArgumentException("testAssemblyPath cannot be null or empty.", "testAssemblyPath");
+            }
+
+            if (string.IsNullOrEmpty(ptfconfigPath))
+            {
+                throw new ArgumentException("ptfconfigPath cannot be null or empty.", "ptfconfigPath");
             }
 
 
-            InitializeTestSite(config, configPath, testSuiteName, PtfTestOutcome.Unknown, testAssemblyName);
+            InitializeTestSite(config, testAssemblyPath, ptfconfigPath, testSuiteName, PtfTestOutcome.Unknown, testAssemblyName);
         }
 
         private static void InitializeTestSite(
             IConfigurationData config,
-            string configPath,
+            string testAssemblyPath,
+            string ptfconfigPath,
             string testSuiteName,
             PtfTestOutcome currentTestOutCome,
             string testAssemblyName)
@@ -81,7 +88,7 @@ namespace Microsoft.Protocols.TestTools
 
             if (!testSites.ContainsKey(testSuiteName))
             {
-                DefaultTestSite testSite = new DefaultTestSite(config, configPath, testSuiteName, testAssemblyName);
+                DefaultTestSite testSite = new DefaultTestSite(config, testAssemblyPath, ptfconfigPath, testSuiteName, testAssemblyName);
 
                 testSites.Add(testSuiteName, testSite);
             }

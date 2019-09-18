@@ -43,7 +43,9 @@ namespace Microsoft.Protocols.TestTools
         //Default protocol short name
         private string defaultProtocolDocShortName;
 
-        private string deploymentDirectory;
+        private string testAssemblyDirectory;
+
+        private string ptfconfigDirectory;
 
         private string testAssemblyName;
 
@@ -89,15 +91,17 @@ namespace Microsoft.Protocols.TestTools
         /// All checkers, loggers and adapter types are initialized in this constructor.
         /// </summary>
         /// <param name="config">Configuration data from ptfconfig</param>
-        /// <param name="testDeploymentDirectory">The path of test suites deployment directory.</param>
+        /// <param name="testAssemblyDirectory">The path of test assembly directory.</param>
+        /// <param name="ptfconfigDirectory">The path of ptfconfig directory.</param>
         /// <param name="testSuiteName">The name of the test suite. The test site uses this name to find configuration files.</param>
         /// <param name="testAssemblyName">The test assembly name</param>
-        public DefaultTestSite(IConfigurationData config, string testDeploymentDirectory, string testSuiteName, string testAssemblyName)
+        public DefaultTestSite(IConfigurationData config, string testAssemblyDirectory, string ptfconfigDirectory, string testSuiteName, string testAssemblyName)
         {
             this.testSuiteName = testSuiteName;
             this.testAssemblyName = testAssemblyName;
 
-            deploymentDirectory = testDeploymentDirectory;
+            this.testAssemblyDirectory = testAssemblyDirectory;
+            this.ptfconfigDirectory = ptfconfigDirectory;
 
             // initialize event table
             eventTable = new Dictionary<string, EventHandler<TestStartFinishEventArgs>>();
@@ -325,7 +329,7 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
-        /// Implements <see cref="ITestSite.GetAdapter"/>.
+        /// Implements <see cref="ITestSite.GetAdapter"/>
         /// </summary>
         /// <remarks>
         /// This method calls the <see cref="ITestSite.GetAdapter"/> method.
@@ -373,7 +377,7 @@ namespace Microsoft.Protocols.TestTools
                     }
                     else
                     {
-                        Type adapterImplType = TestToolHelpers.ResolveTypeFromAssemblies(adapterTypeName, deploymentDirectory);
+                        Type adapterImplType = TestToolHelpers.ResolveTypeFromAssemblies(adapterTypeName, testAssemblyDirectory);
                         if (adapterImplType == null)
                             throw new InvalidOperationException(
                                 String.Format("Can't find assembly \"{0}\"", adapterTypeName));

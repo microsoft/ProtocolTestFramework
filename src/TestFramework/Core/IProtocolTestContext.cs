@@ -59,17 +59,22 @@ namespace Microsoft.Protocols.TestTools
     public interface IProtocolTestContext
     {
         /// <summary>
-        /// Gets and sets test deployment directory.
+        /// Gets test assembly directory.
         /// </summary>
-        string TestDeploymentDir { get; }
+        string TestAssemblyDir { get; }
 
         /// <summary>
-        /// Gets and sets test case run outcome.
+        /// Gets ptfconfig directory.
+        /// </summary>
+        string PtfconfigDir { get; }
+
+        /// <summary>
+        /// Gets test case run outcome.
         /// </summary>
         PtfTestOutcome TestOutcome { get; }
 
         /// <summary>
-        /// Gets and sets running test method name.
+        /// Gets running test method name.
         /// </summary>
         string TestMethodName { get; }
     }

@@ -238,14 +238,11 @@ namespace Microsoft.Protocols.TestTools
 
             if (null == manager.GetTestSite(staticTestSuiteName))
             {
+                VstsTestContext vstsTestContext = new VstsTestContext(testContext);
+                IConfigurationData config = ConfigurationDataProvider.GetConfigurationData(
+                    vstsTestContext.PtfconfigDir, testSuiteName);
+
                 string testAssemblyName;
-                IConfigurationData config = null;
-
-                string assemblyPath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
-                string testDeploymentDir = Path.GetDirectoryName(assemblyPath);
-
-                config = ConfigurationDataProvider.GetConfigurationData(
-                    testDeploymentDir, testSuiteName);
 
                 if (isUseDefaultSuiteName)
                 {
@@ -257,7 +254,7 @@ namespace Microsoft.Protocols.TestTools
                     testAssemblyName = Assembly.GetCallingAssembly().GetName().Name;
                 }
 
-                manager.Initialize(config, new VstsTestContext(testContext), testSuiteName, testAssemblyName);
+                manager.Initialize(config, vstsTestContext, testSuiteName, testAssemblyName);
 
                 baseTestSite = manager.GetTestSite(testSuiteName);
 

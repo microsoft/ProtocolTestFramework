@@ -13,27 +13,42 @@ namespace Microsoft.Protocols.TestTools
     class VstsTestContext:IProtocolTestContext
     {
         TestContext context;
-
+        string testAssemblyDir;
 
         public VstsTestContext(TestContext context)
         {
             this.context = context;
+
+            string assemblyPath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+            this.testAssemblyDir = Path.GetDirectoryName(assemblyPath);
         }
 
         #region IProtocolTestContext Members
 
-        public string  TestDeploymentDir
+        public string TestAssemblyDir
         {
             get
             {
-                string assemblyPath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
-                string testDeploymentDir = Path.GetDirectoryName(assemblyPath);
-
-                return testDeploymentDir;
+                return testAssemblyDir;
             }
         }
 
-        public PtfTestOutcome  TestOutcome
+        public string PtfconfigDir
+        {
+            get
+            {
+                if (context.Properties.ContainsKey("PtfconfigDirectory"))
+                {
+                    return (string)context.Properties["PtfconfigDirectory"];
+                }
+                else
+                {
+                    return testAssemblyDir;
+                }
+            }
+        }
+
+        public PtfTestOutcome TestOutcome
         {
             get
             {
@@ -47,7 +62,7 @@ namespace Microsoft.Protocols.TestTools
             }
         }
 
-        public string  TestMethodName
+        public string TestMethodName
         {
             get
             {
@@ -101,10 +116,8 @@ namespace Microsoft.Protocols.TestTools
             }
 
             return pto;
-
         }
 
-
         #endregion
-}
+    }
 }

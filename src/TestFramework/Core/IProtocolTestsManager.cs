@@ -40,12 +40,14 @@ namespace Microsoft.Protocols.TestTools
         /// Initializes PTF test site before all tests run.
         /// </summary>
         /// <param name="config">PTF configuration data</param>
-        /// <param name="configPath">Ptfconfig deployment path</param>
+        /// <param name="testAssemblyPath">Test assembly path</param>
+        /// <param name="ptfconfigPath">Ptfconfig path</param>
         /// <param name="testSuiteName">Test suite name</param>
         /// <param name="testAssemblyName">Test assembly name</param>
         void Initialize(
             IConfigurationData config,
-            string configPath,
+            string testAssemblyPath,
+            string ptfconfigPath,
             string testSuiteName,
             string testAssemblyName);
 

@@ -20,11 +20,12 @@ namespace Microsoft.Protocols.TestTools
 
         public void Initialize(
             IConfigurationData config,
-            string configPath,
+            string testAssemblyPath,
+            string ptfconfigPath,
             string testSuiteName,
             string testAssemblyName)
         {
-            TestSiteProvider.Initialize(config, configPath, testSuiteName, testAssemblyName);
+            TestSiteProvider.Initialize(config, testAssemblyPath, ptfconfigPath, testSuiteName, testAssemblyName);
         }
 
         public ITestSite GetTestSite(string testSuiteName)
