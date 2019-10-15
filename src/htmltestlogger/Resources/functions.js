@@ -306,7 +306,7 @@ function ShowSummary()
 
     var tbody = document.getElementById("tableid");
     var newrow = tbody.insertRow(-1);
-    
+
     CreateText(newrow.insertCell(0), totalCount);
     CreateText(newrow.insertCell(1), passedCount);
     CreateText(newrow.insertCell(2), failedCount);
@@ -489,12 +489,12 @@ function ShowDetail(caseDetail, logTypes)
                 {
                     if (detailObj[caseDetail][j]['Type'].toLowerCase().indexOf('succee') != -1
                         || detailObj[caseDetail][j]['Type'].toLowerCase().indexOf('passed') != -1)
-                        html += "<p style=\"background-color:rgb(0,255,0)\">" + detailObj[caseDetail][j]['Content'];
+                        html += "<p style=\"background-color:rgb(0,255,0)\">" + escapeHtml(detailObj[caseDetail][j]['Content']);
                     else if (detailObj[caseDetail][j]['Type'] == 'TestStep')
-                        html += "<p style=\"background-color:rgb(0,255,255)\">" + detailObj[caseDetail][j]['Content'];
+                        html += "<p style=\"background-color:rgb(0,255,255)\">" + escapeHtml(detailObj[caseDetail][j]['Content']);
                     else if (detailObj[caseDetail][j]['Type'].toLowerCase().indexOf('failed') != -1)
-                        html += "<p style=\"background-color:red;color:white\">" + detailObj[caseDetail][j]['Content'];
-                    else html += "<p>" + detailObj[caseDetail][j]['Content'];
+                        html += "<p style=\"background-color:red;color:white\">" + escapeHtml(detailObj[caseDetail][j]['Content']);
+                    else html += "<p>" + escapeHtml(detailObj[caseDetail][j]['Content']);
                 }
             }
             html += html == "" ? "" : "</p>";
@@ -507,7 +507,7 @@ function ShowDetail(caseDetail, logTypes)
             var html = '';
             len = detailObj[caseDetail].length;
             for (var j = 0; j < len; j++)
-                html += "<p>" + detailObj[caseDetail][j];
+                html += "<p>" + escapeHtml(detailObj[caseDetail][j]);
             html += html == "" ? "" : "</p>";
             document.getElementById("ttrace").style.display = html == "" ? 'none' : '';
             document.getElementById("AfterErrorStackTrace").style.display = html == "" ? 'none' : '';
@@ -517,7 +517,7 @@ function ShowDetail(caseDetail, logTypes)
             var html = '';
             len = detailObj[caseDetail].length;
             for (var j = 0; j < len; j++)
-                html += "<p>" + detailObj[caseDetail][j];
+                html += "<p>" + escapeHtml(detailObj[caseDetail][j]);
             html += html == "" ? "" : "</p>";
             document.getElementById("tmsg").style.display = html == "" ? 'none' : '';
             document.getElementById("AfterErrorMessage").style.display = html == "" ? 'none' : '';
@@ -660,3 +660,13 @@ function FilterLog(obj)
     }
     ShowDetail('StandardOut', logTypes);
 }
+
+// Escape html special characters
+function escapeHtml(text) {
+    return text
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
