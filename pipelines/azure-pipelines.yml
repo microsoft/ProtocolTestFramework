@@ -13,4 +13,4 @@ jobs:
     - task: BatchScript@1
       displayName: 'Build ProtocolTestFramework'
       inputs:
-        filename: '$(targetRepo.dir)/src/build.cmd'
+        filename: 'src/build.cmd'
