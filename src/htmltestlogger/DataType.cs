@@ -3,9 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -108,6 +105,16 @@ namespace Microsoft.Protocols.TestTools
             public string Source;
 
             /// <summary>
+            /// The test class of the test case
+            /// </summary>
+            public string ClassType;
+
+            /// <summary>
+            /// The Categories of the test case
+            /// </summary>
+            public List<string> Categories;
+
+            /// <summary>
             /// The ErrorStackTrace log of the test case
             /// </summary>
             public List<string> ErrorStackTrace;
@@ -140,13 +147,17 @@ namespace Microsoft.Protocols.TestTools
             /// <param name="endTime">End time of the test case</param>
             /// <param name="result">Result of the test case</param>
             /// <param name="source">Assembly of the test case</param>
-            public TestCaseDetail(string name, DateTimeOffset startTime, DateTimeOffset endTime, string result, string source)
+            /// <param name="classType">Class of the test case</param>
+            /// <param name="categories">Categories of the test case</param>
+            public TestCaseDetail(string name, DateTimeOffset startTime, DateTimeOffset endTime, string result, string source, string classType, List<string> categories)
             {
                 this.Name = name;
                 this.StartTime = startTime;
                 this.EndTime = endTime;
                 this.Result = result;
                 this.Source = source;
+                this.ClassType = classType;
+                this.Categories = categories;
                 this.ErrorStackTrace = new List<string>();
                 this.ErrorMessage = new List<string>();
                 this.StandardOut = new List<StandardOutDetail>();
