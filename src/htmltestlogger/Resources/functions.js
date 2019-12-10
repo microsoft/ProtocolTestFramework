@@ -302,7 +302,7 @@ function ShowSummary()
     var passedCount = listObj.TestCases.filter(function (tc) { return tc.Result === "Passed" }).length;
     var failedCount = listObj.TestCases.filter(function (tc) { return tc.Result === "Failed" }).length;
     var inconclusiveCount = listObj.TestCases.filter(function (tc) { return tc.Result === "Inconclusive" }).length;
-    var passRate = (totalCount === 0 ? 0 : passedCount / totalCount).toFixed(2);
+    var passRate = (totalCount === 0 ? 0 : passedCount / totalCount * 100).toFixed(2);
 
     var tbody = document.getElementById("tableid");
     var newrow = tbody.insertRow(-1);
