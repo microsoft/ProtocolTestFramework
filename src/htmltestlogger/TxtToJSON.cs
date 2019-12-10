@@ -21,14 +21,6 @@ namespace Microsoft.Protocols.TestTools
         // Initialize the maximum length of JSON output to 32M
         private JavaScriptSerializer serializer = new JavaScriptSerializer() { MaxJsonLength = 32 * 1024 * 1024 };
 
-        private enum LogType
-        {
-            None = -1,
-            ErrorStackTrace = 1,
-            ErrorMessage = 2,
-            StandardOut = 3
-        };
-
         /// <summary>
         /// Translates List<DataType.TestCase> to DataType.TestCasesSummary string
         /// </summary>
@@ -60,35 +52,6 @@ namespace Microsoft.Protocols.TestTools
             caseDetail.CapturePath = CopyCaptureAndReturnPath(caseDetail.Name, captureFolder);
 
             return (serializer.Serialize(caseDetail));
-        }
-
-        /// <summary>
-        /// Gets the statistical information
-        /// </summary>
-        /// <param name="totalCasesNum">The number of total cases</param>
-        /// <param name="passedNum">The number of passed cases</param>
-        /// <param name="failedNum">The number of failed cases</param>
-        /// <param name="testRunStartTime">The start time of the run</param>
-        /// <param name="testRunEndTime">The end time of the run</param>
-        /// <returns>Return statistical information about this test</returns>
-        public string SummaryTable(long totalCasesNum,
-                               long passedNum,
-                               long failedNum,
-                               DateTimeOffset testRunStartTime,
-                               DateTimeOffset testRunEndTime)
-        {
-            DataType.RunSummary sry = new DataType.RunSummary()
-            {
-                TotalCount = totalCasesNum,
-                FailedCount = failedNum,
-                PassedCount = passedNum,
-                InconclusiveCount = totalCasesNum - passedNum - failedNum,
-                PassRate = totalCasesNum == 0 ? 0 : (float)passedNum * 100 / totalCasesNum,
-                StartTime = testRunStartTime.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss"),
-                EndTime = testRunEndTime.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss"),
-                Duration = testRunEndTime.Subtract(testRunStartTime).ToString(@"hh\:mm\:ss")
-            };
-            return (serializer.Serialize(sry));
         }
 
         /// <summary>

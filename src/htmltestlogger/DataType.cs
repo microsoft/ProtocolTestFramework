@@ -165,51 +165,5 @@ namespace Microsoft.Protocols.TestTools
                 this.CapturePath = null;
             }
         }
-
-        /// <summary>
-        /// Represents the summary for all test cases
-        /// </summary>
-        public class RunSummary
-        {
-            /// <summary>
-            /// The number of total test cases
-            /// </summary>
-            public long TotalCount;
-
-            /// <summary>
-            /// The number of passed test cases
-            /// </summary>
-            public long PassedCount;
-
-            /// <summary>
-            /// The number of failed test cases
-            /// </summary>
-            public long FailedCount;
-
-            /// <summary>
-            /// The number of inconclusive test cases
-            /// </summary>
-            public long InconclusiveCount;
-
-            /// <summary>
-            /// The pass rate of this run
-            /// </summary>
-            public float PassRate;
-
-            /// <summary>
-            /// The start time of this run
-            /// </summary>
-            public string StartTime;
-
-            /// <summary>
-            /// The end time to of this run
-            /// </summary>
-            public string EndTime;
-
-            /// <summary>
-            /// The duration of this run
-            /// </summary>
-            public string Duration;
-        }
     }
 }
