@@ -2,13 +2,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.Win32;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -29,9 +28,11 @@ namespace Microsoft.Protocols.TestTools
         private DateTimeOffset testRunEndTime = DateTimeOffset.MinValue.ToLocalTime(); //The end time of the test run
         private TxtToJSON txtToJSON = new TxtToJSON();
 
+        private ConcurrentDictionary<string, DataType.TestCaseDetail> results = new ConcurrentDictionary<string, DataType.TestCaseDetail>(); //All the test results
+
+        private const string categoryPropertyKey = "MSTestDiscoverer.TestCategory";
         private const string scriptNode = "<script language=\"javascript\" type=\"text/javascript\">";
         private const string jsFileName_Functions = "functions.js";
-        private const string jsFileName_Jquery = "jquery-1.11.0.min.js";
         private const string indexHtmlName = "index.html";
         private const string txtResultFolderName = "Txt";
         private const string htmlResultFolderName = "Html";
@@ -123,6 +124,7 @@ namespace Microsoft.Protocols.TestTools
             }
 
             DataType.TestCaseDetail caseDetail = ConvertToTestCase(e.Result);
+            results.TryAdd(caseDetail.Name, caseDetail);
 
             // Generate txt log file
             string txtFileName = Path.Combine(
@@ -196,10 +198,13 @@ namespace Microsoft.Protocols.TestTools
         private DataType.TestCaseDetail ConvertToTestCase(TestResult result)
         {
             var eolSeparators = new char[] { '\r', '\n' };
-            string caseName = !string.IsNullOrEmpty(result.DisplayName) ? result.DisplayName : result.TestCase.FullyQualifiedName.Split('.').Last();
-            string outcome = result.Outcome == TestOutcome.Skipped ? "Inconclusive" : result.Outcome.ToString();
 
-            var ret = new DataType.TestCaseDetail(caseName, result.StartTime, result.EndTime, outcome, result.TestCase.Source);
+            string caseName = !string.IsNullOrEmpty(result.TestCase.DisplayName) ? result.TestCase.DisplayName : result.TestCase.FullyQualifiedName.Split('.').Last();
+            string outcome = result.Outcome == TestOutcome.Skipped ? "Inconclusive" : result.Outcome.ToString();
+            string classType = result.TestCase.FullyQualifiedName.Split('.').Reverse().ElementAtOrDefault(1);
+            List<string> testCategories = GetCustomPropertyValueFromTestCase(result.TestCase, categoryPropertyKey);
+
+            var ret = new DataType.TestCaseDetail(caseName, result.StartTime, result.EndTime, outcome, result.TestCase.Source, classType, testCategories);
 
             if (!String.IsNullOrEmpty(result.ErrorStackTrace))
             {
@@ -255,6 +260,32 @@ namespace Microsoft.Protocols.TestTools
             ret.StandardOutTypes = ret.StandardOut.Select(output => output.Type).Distinct().ToList();
 
             return ret;
+        }
+
+        /// <summary>
+        ///  Get Custom property values from test cases.
+        /// </summary>
+        /// <param name="testCase">TestCase object extracted from the TestResult</param>
+        /// <param name="categoryID">Property Name from the list of properties in TestCase</param>
+        /// <returns> list of properties</returns>
+        public List<string> GetCustomPropertyValueFromTestCase(TestCase testCase, string categoryID)
+        {
+            var customProperty = testCase.Properties.FirstOrDefault(t => t.Id.Equals(categoryID));
+
+            if (customProperty != null)
+            {
+                var cateogryValues = (string[])testCase.GetPropertyValue(customProperty);
+                if (cateogryValues != null)
+                {
+                    return cateogryValues.ToList();
+                }
+                else
+                {
+                    return Enumerable.Empty<String>().ToList();
+                }
+            }
+
+            return Enumerable.Empty<String>().ToList();
         }
 
         /// <summary>
@@ -314,10 +345,8 @@ namespace Microsoft.Protocols.TestTools
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine();
-            sb.AppendLine("var listObj = " + txtToJSON.TestCasesString(txtResultFolderPath, captureFolderPath) + ";");
+            sb.AppendLine("var listObj = " + txtToJSON.TestCasesString(txtResultFolderPath, captureFolderPath, results) + ";");
 
-            // Clean the temp file
-            File.Delete(txtToJSON.CaseCategoryFile);
             return sb.ToString();
         }
 

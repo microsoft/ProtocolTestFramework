@@ -2,12 +2,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Xml;
 
@@ -18,33 +17,20 @@ namespace Microsoft.Protocols.TestTools
     /// </summary>
     public class TxtToJSON
     {
-        // The path to category.js which stores the map between case name and category
-        public string CaseCategoryFile = Path.Combine(Directory.GetCurrentDirectory(), "category.js");
-        // Path list to Binary files of the test cases
-        private static List<string> dllFiles = new List<string>();
-        // Stores the map between case name and class
-        private Dictionary<string, string> caseClass = new Dictionary<string, string>();
         // Auxiliary variable to save information as JSON
         // Initialize the maximum length of JSON output to 32M
         private JavaScriptSerializer serializer = new JavaScriptSerializer() { MaxJsonLength = 32 * 1024 * 1024 };
-
-        private enum LogType
-        {
-            None = -1,
-            ErrorStackTrace = 1,
-            ErrorMessage = 2,
-            StandardOut = 3
-        };
 
         /// <summary>
         /// Translates List<DataType.TestCase> to DataType.TestCasesSummary string
         /// </summary>
         /// <param name="resultFolder">Test result folder, in which log is stored as txt</param>
         /// <param name="captureFolder">The path to the capture files need to be placed</param>
+        /// <param name="results">The dictionary containing all the test case results</param>
         /// <returns>Returns detailed test cases information</returns>
-        public string TestCasesString(string resultFolder, string captureFolder)
+        public string TestCasesString(string resultFolder, string captureFolder, ConcurrentDictionary<string, DataType.TestCaseDetail> results)
         {
-            List<DataType.TestCase> testCaseList = GetTestCaseList(resultFolder, captureFolder);
+            List<DataType.TestCase> testCaseList = GetTestCaseList(resultFolder, captureFolder, results);
             DataType.TestCasesSummary rs = new DataType.TestCasesSummary()
             {
                 TestCases = testCaseList,
@@ -63,133 +49,9 @@ namespace Microsoft.Protocols.TestTools
         /// <returns>Returns the log information</returns>
         public string ConstructCaseDetail(DataType.TestCaseDetail caseDetail, string captureFolder)
         {
-            string dllFile = caseDetail.Source;
-            if (!dllFiles.Contains(dllFile))
-            {
-                dllFiles.Add(dllFile);
-            }
-
             caseDetail.CapturePath = CopyCaptureAndReturnPath(caseDetail.Name, captureFolder);
 
             return (serializer.Serialize(caseDetail));
-        }
-
-        /// <summary>
-        /// Gets the statistical information
-        /// </summary>
-        /// <param name="totalCasesNum">The number of total cases</param>
-        /// <param name="passedNum">The number of passed cases</param>
-        /// <param name="failedNum">The number of failed cases</param>
-        /// <param name="testRunStartTime">The start time of the run</param>
-        /// <param name="testRunEndTime">The end time of the run</param>
-        /// <returns>Return statistical information about this test</returns>
-        public string SummaryTable(long totalCasesNum,
-                               long passedNum,
-                               long failedNum,
-                               DateTimeOffset testRunStartTime,
-                               DateTimeOffset testRunEndTime)
-        {
-            DataType.RunSummary sry = new DataType.RunSummary()
-            {
-                TotalCount = totalCasesNum,
-                FailedCount = failedNum,
-                PassedCount = passedNum,
-                InconclusiveCount = totalCasesNum - passedNum - failedNum,
-                PassRate = totalCasesNum == 0 ? 0 : (float)passedNum * 100 / totalCasesNum,
-                StartTime = testRunStartTime.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss"),
-                EndTime = testRunEndTime.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss"),
-                Duration = testRunEndTime.Subtract(testRunStartTime).ToString(@"hh\:mm\:ss")
-            };
-            return (serializer.Serialize(sry));
-        }
-
-        /// <summary>
-        /// Generates all test cases categories js file
-        /// </summary>
-        private void GenerateCaseCategoryFile()
-        {
-            Dictionary<string, List<string>> testCases = GetTestCaseCategories();
-            string sTestCases = serializer.Serialize(testCases);
-            File.WriteAllText(CaseCategoryFile, sTestCases);
-        }
-
-        /// <summary>
-        /// Gets test case categories by analyzing the test dll files
-        /// </summary>
-        /// <returns>Returns case name(key) and categories(value)</returns>
-        private Dictionary<string, List<string>> GetTestCaseCategories()
-        {
-            Dictionary<string, List<string>> testCases = new Dictionary<string, List<string>>();
-            DirectoryInfo info = new DirectoryInfo(Directory.GetCurrentDirectory());
-            bool existBatch = false;
-            if (info.FullName.EndsWith("Batch"))
-                existBatch = true;
-
-            string fullPath = existBatch ? info.Parent.FullName : info.FullName;
-            foreach (string dllPath in dllFiles)
-            {
-                string dllFile = dllPath;
-                if (string.IsNullOrEmpty(dllFile))
-                {
-                    continue;
-                }
-                if (dllPath.StartsWith(".."))
-                {
-                    dllFile = dllPath.Substring(3);
-                    dllFile = Path.Combine(fullPath, dllFile);
-                }
-                try
-                {
-                    Assembly assembly = Assembly.LoadFrom(dllFile);
-                    Type[] types = assembly.GetTypes();
-                    foreach (Type type in types)
-                    {
-                        //search for class, out interfaces and other type
-                        if (!type.IsClass)
-                        {
-                            continue;
-                        }
-
-                        MethodInfo[] methods = type.GetMethods();
-
-                        foreach (MethodInfo method in methods)
-                        {
-                            //methods loop, search for methods with TestMethodAttribute
-                            object[] objs = method.GetCustomAttributes(false);
-                            foreach (object obj in objs)
-                            {
-                                //TestMethods
-                                if (obj.GetType().Name != "TestMethodAttribute" || testCases.ContainsKey(method.Name))
-                                {
-                                    continue;
-                                }
-                                //GetCategory
-                                List<string> categories = new List<string>();
-                                foreach (object attribute in objs)
-                                {
-                                    //record TestCategories
-                                    if (attribute.GetType().Name == "TestCategoryAttribute")
-                                    {
-                                        PropertyInfo property = attribute.GetType().GetProperty("TestCategories");
-                                        object category = property.GetValue(attribute, null);
-                                        foreach (string str in (System.Collections.ObjectModel.ReadOnlyCollection<string>)category)
-                                        {
-                                            categories.Add(str);
-                                        }
-                                    }
-                                }
-                                testCases.Add(method.Name, categories);
-                                caseClass.Add(method.Name, type.Name);
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    System.Console.WriteLine("skip {0}", dllFile);
-                }
-            }
-            return testCases;
         }
 
         /// <summary>
@@ -197,25 +59,19 @@ namespace Microsoft.Protocols.TestTools
         /// </summary>
         /// <param name="resultFolder">The path to the result folder</param>
         /// <param name="captureFolder">The path to the capture folder</param>
+        /// <param name="results">The dictionary containing all the test case results</param>
         /// <returns>Returns the test case list with basic information</returns>
-        private List<DataType.TestCase> GetTestCaseList(string resultFolder, string captureFolder)
+        private List<DataType.TestCase> GetTestCaseList(string resultFolder, string captureFolder, ConcurrentDictionary<string, DataType.TestCaseDetail> results)
         {
             Dictionary<string, DataType.TestCase> testCases = new Dictionary<string, DataType.TestCase>();
 
-            if (!File.Exists(CaseCategoryFile))
-            {
-                GenerateCaseCategoryFile();
-            }
-
-            string sJSON = File.ReadAllText(CaseCategoryFile);
-            Dictionary<string, List<string>> testCaseToCategory = serializer.Deserialize<Dictionary<string, List<string>>>(sJSON);
-            string[] txtfiles = Directory.GetFiles(resultFolder)
-                                    .Select(file => Path.GetFileNameWithoutExtension(file)).ToArray();
+            var txtfiles = Directory.GetFiles(resultFolder)
+                                    .Select(file => Path.GetFileNameWithoutExtension(file));
 
             // File name structure is {datetime}_{result}_{casename}.
             // So order them by name, they are also ordered by execution time.
             // Using casename as the key of dictionary, the new record will overwrite the old one.
-            txtfiles = txtfiles.OrderBy(i => i).ToArray();
+            txtfiles = txtfiles.OrderBy(i => i);
             foreach (var file in txtfiles)
             {
                 string caseName = file;
@@ -228,8 +84,8 @@ namespace Microsoft.Protocols.TestTools
                 {
                     Name = caseName,
                     Result = caseStatus,
-                    ClassType = caseClass.ContainsKey(caseName) ? caseClass[caseName] : null,
-                    Category = testCaseToCategory.ContainsKey(caseName) ? testCaseToCategory[caseName] : null,
+                    ClassType = results.ContainsKey(caseName) ? results[caseName].ClassType : null,
+                    Category = results.ContainsKey(caseName) ? results[caseName].Categories : new List<string>(),
                 };
                 testCases[caseName] = tc; // overwrite the same case if any
             }
