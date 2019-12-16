@@ -37,7 +37,7 @@ namespace Microsoft.Protocols.TestTools
         {
             get
             {
-                if (context.Properties.ContainsKey("PtfconfigDirectory"))
+                if (context.Properties.Contains("PtfconfigDirectory"))
                 {
                     return (string)context.Properties["PtfconfigDirectory"];
                 }
