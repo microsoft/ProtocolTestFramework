@@ -27,6 +27,9 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
 
         [MethodHelp("The relevant Powershell script does not exist")]
         void ScriptNotExisted();
+
+        [MethodHelp("Powershell script will call another script and return a string.")]
+        string NestedCall(string str);
     }
 
     /// <summary>
@@ -103,6 +106,16 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
         public void PowershellAdapterScriptNotExisted()
         {
             powershellAdapter.ScriptNotExisted();
+        }
+
+        [TestMethod]
+        [TestCategory("TestAdapter")]
+        public void PowershellAdapterNestedCall()
+        {
+            BaseTestSite.Assert.AreEqual(
+                "PTF",
+                powershellAdapter.NestedCall("PTF"),
+                "Powershell adapter should return PTF");
         }
         #endregion
     }

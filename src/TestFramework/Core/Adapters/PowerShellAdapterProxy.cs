@@ -190,7 +190,7 @@ namespace Microsoft.Protocols.TestTools
         {
             string dir = scriptDirectory;
 
-            string foundFile = Path.Combine(dir, methodname + ".ps1");
+            string foundFile = Path.GetFullPath(Path.Combine(dir, methodname + ".ps1"));
             if (File.Exists(foundFile))
             {
                 return foundFile;
@@ -319,6 +319,8 @@ namespace Microsoft.Protocols.TestTools
             pipeline.Commands.AddScript(scriptContent);
 
             SessionStateProxy sessionStateProxy = runspace.SessionStateProxy;
+            //set current location to the folder containing the script
+            sessionStateProxy.Path.SetLocation(Path.GetDirectoryName(path));
             //set variables which can be used in PowerShell script
             SetPTFVariables(sessionStateProxy);
 
