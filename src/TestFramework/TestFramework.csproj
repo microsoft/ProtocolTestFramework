@@ -4,10 +4,24 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>Microsoft.Protocols.TestTools</AssemblyName>
     <RootNamespace>Microsoft.Protocols.TestTools</RootNamespace>
+    <PackageId>ProtocolTestFramework</PackageId>
+    <Version>2.0.0-preview</Version>
+    <Authors>Microsoft</Authors>
+    <Company>Microsoft</Company>
+    <Description>The Protocol Test Framework (PTF) is designed to support Microsoft Protocol Test Suites for both Windows and Office Protocol Interoperability testing.</Description>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/microsoft/ProtocolTestFramework</PackageProjectUrl>
+    <PackageTags>TestFramework;Testing;Protocol Test</PackageTags>
+    <RepositoryUrl>https://github.com/microsoft/ProtocolTestFramework.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\Schema\TestConfig.xsd" />
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
