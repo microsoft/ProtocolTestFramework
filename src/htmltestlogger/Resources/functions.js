@@ -360,9 +360,9 @@ function MulselShow()
     confirmdiv.align = "right";
     confirminput.type = "button"
     confirminput.style.width = "auto";
-    confirminput.style.height = "18px";
+    confirminput.style.height = "auto";
     confirminput.value = "OK";
-    confirminput.style.fontSize = '12px';
+    confirminput.style.fontSize = '0.75rem';
     confirminput.onclick = function () { FilterLog(this); }
     confirmdiv.appendChild(confirminput);
     typesdiv.appendChild(confirmdiv);
