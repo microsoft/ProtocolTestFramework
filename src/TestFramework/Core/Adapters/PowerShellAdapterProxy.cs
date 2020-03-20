@@ -2,16 +2,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Data;
 using System.Reflection;
-using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Microsoft.Win32;
 using System.Management.Automation.Runspaces;
 using System.Management.Automation;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -316,6 +313,13 @@ namespace Microsoft.Protocols.TestTools
 
             //call runspace.CreatePipeline to create an instance of Pipeline
             Pipeline pipeline = runspace.CreatePipeline();
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                //set execution policy for Windows in order to load and run local script files
+                pipeline.Commands.AddScript("Set-ExecutionPolicy -Scope Process RemoteSigned");
+            }
+
             pipeline.Commands.AddScript(scriptContent);
 
             SessionStateProxy sessionStateProxy = runspace.SessionStateProxy;
