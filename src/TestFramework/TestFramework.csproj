@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -17,26 +17,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Schema\TestConfig.xsd" />
     <None Include="..\..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+    <None Include="build\**\*.*">
+      <Pack>True</Pack>
+      <PackagePath>build</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Schema\TestConfig.xsd" />
+    <None Remove="Resources\site.ptfconfig" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Schema\TestConfig.xsd" />
+    <EmbeddedResource Include="Resources\site.ptfconfig" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="*.ptfconfig">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -48,7 +48,18 @@ namespace Microsoft.Protocols.TestTools
         {
             get
             {
-                return "TestConfig.xsd";
+                return "Resources.Schema.TestConfig.xsd";
+            }
+        }
+
+        /// <summary>
+        /// Gets the default ptfconfig file short name.
+        /// </summary>
+        private static string DefaultPtfConfig
+        {
+            get
+            {
+                return "Resources.site.ptfconfig";
             }
         }
 
@@ -112,8 +123,8 @@ namespace Microsoft.Protocols.TestTools
             }
             SetXmlSchemaSet();
 
-            if (!ValidateConfigFiles(new string[] { configFileNames[0] }, true) ||
-                !ValidateConfigFiles(configFileNames, false))
+            if (!ValidateDefaultConfig() ||
+                !ValidateConfigFiles(configFileNames))
             {
                 throw new XmlException(
                     String.Format("Validating configuration {0} failed: {1}",
@@ -452,6 +463,18 @@ namespace Microsoft.Protocols.TestTools
         #region private helper methods
 
         /// <summary>
+        /// Get stream from a bundled resource
+        /// </summary>
+        /// <param name="path">dot separated path of the resource file</param>
+        private Stream GetBundledResource(string path)
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string project = assembly.GetName().Name;
+            Stream stream = assembly.GetManifestResourceStream($"{project}.{path}");
+            return stream;
+        }
+
+        /// <summary>
         /// Merges doc into docBase
         /// </summary>
         /// <param name="docBase"></param>
@@ -522,22 +545,25 @@ namespace Microsoft.Protocols.TestTools
         {
             try
             {
-                if (configFileNames == null || configFileNames.Length < 2)
+                if (configFileNames == null || configFileNames.Length == 0)
                 {
-                    throw new ArgumentException("At least two PTF config files should be passed in.");
+                    throw new ArgumentException("At least one PTF config file should be passed in.");
                 }
 
                 Logging.ApplicationLog.TraceLog("Try to load " + configFileNames.Length + " config files.");
 
                 XmlDocument docBase = new XmlDocument();
                 docBase.XmlResolver = null;
-                Logging.ApplicationLog.TraceLog("Loading configFileNames[0] :" + configFileNames[0]);
-                docBase.Load(XmlReader.Create(configFileNames[0], new XmlReaderSettings() { XmlResolver = null }));
+
+                // Load site.ptfconfig
+                Logging.ApplicationLog.TraceLog("Loading " + DefaultPtfConfig);
+                Stream sitePtfconfigStream = GetBundledResource(DefaultPtfConfig);
+                docBase.Load(XmlReader.Create(sitePtfconfigStream, new XmlReaderSettings() { XmlResolver = null }));
 
                 Stack<XmlDocument> xmlDocs = new Stack<XmlDocument>();
                 Stack<string> xmlDocsName = new Stack<string>();
                 Stack<string> configFiles = new Stack<string>();
-                for (int n = 1; n < configFileNames.Length; n++)
+                for (int n = 0; n < configFileNames.Length; n++)
                 {
                     if (configFileNames[n] != null) configFiles.Push(configFileNames[n]);
                 }
@@ -568,7 +594,7 @@ namespace Microsoft.Protocols.TestTools
                         {
                             FileInfo fi = new FileInfo(fileName);
                             string path = Path.Combine(fi.DirectoryName, nod.Attributes["name"].Value);
-                            if (!ValidateConfigFiles(new string[] { path }, false))
+                            if (!ValidateConfigFiles(new string[] { path }))
                             {
                                 throw new XmlException(
                                     String.Format("Validating configuration {0} failed: {1}",
@@ -912,12 +938,8 @@ namespace Microsoft.Protocols.TestTools
             // Create a schema cache.
             schemaSet = new XmlSchemaSet();
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string project = assembly.GetName().Name;
-            string folder = "Resources.Schema";
-            Stream stream = assembly.GetManifestResourceStream($"{project}.{folder}.{SchemaFile}");
-
-            XmlSchema schema = XmlSchema.Read(stream, null);
+            Stream schemaStream = GetBundledResource(SchemaFile);
+            XmlSchema schema = XmlSchema.Read(schemaStream, null);
             schemaSet.Add(schema);
         }
 
@@ -935,7 +957,22 @@ namespace Microsoft.Protocols.TestTools
 
             return true;
         }
-        private bool ValidateConfigFiles(string[] configFilenames, bool processIdentityConstraints)
+
+        private bool ValidateDefaultConfig()
+        {
+            validateResult = true;
+
+            Stream sitePtfconfigStream = GetBundledResource(DefaultPtfConfig);
+
+            if (!ValidateConfigFile(sitePtfconfigStream, true))
+            {
+                invalidFilename = DefaultPtfConfig;
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidateConfigFiles(string[] configFilenames)
         {
             validateResult = true;
 
@@ -944,33 +981,43 @@ namespace Microsoft.Protocols.TestTools
                 if (filename == null)
                     continue;
 
-                using (XmlTextReader xmlReader = new XmlTextReader(filename) { DtdProcessing = DtdProcessing.Prohibit })
+                using (FileStream fs = File.Open(filename, FileMode.Open))
                 {
-                    // Create XML settings.
-                    XmlReaderSettings settings = new XmlReaderSettings();
-                    settings.DtdProcessing = DtdProcessing.Prohibit;
-                    settings.XmlResolver = null;
-                    if (!processIdentityConstraints)
-                        settings.ValidationFlags &= ~XmlSchemaValidationFlags.ProcessIdentityConstraints;
-                    settings.ValidationType = ValidationType.Schema;
-                    settings.Schemas = schemaSet;
-                    settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
-
-                    using (XmlReader reader = XmlReader.Create(xmlReader, settings))
+                    if (!ValidateConfigFile(fs, false))
                     {
-                        //Read and validate the XML data.
-                        while (reader.Read() && validateResult) ;
+                        invalidFilename = filename;
+                        return false;
                     }
-                }
-                if (!validateResult)
-                {
-                    // Validation failed return false;
-                    invalidFilename = filename;
-                    return false;
                 }
             }
             // All files are valid.
             return true;
+        }
+
+        private bool ValidateConfigFile(Stream input, bool processIdentityConstraints)
+        {
+            validateResult = true;
+
+            using (XmlTextReader xmlReader = new XmlTextReader(input) { DtdProcessing = DtdProcessing.Prohibit })
+            {
+                // Create XML settings.
+                XmlReaderSettings settings = new XmlReaderSettings();
+                settings.DtdProcessing = DtdProcessing.Prohibit;
+                settings.XmlResolver = null;
+                if (!processIdentityConstraints)
+                    settings.ValidationFlags &= ~XmlSchemaValidationFlags.ProcessIdentityConstraints;
+                settings.ValidationType = ValidationType.Schema;
+                settings.Schemas = schemaSet;
+                settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+
+                using (XmlReader reader = XmlReader.Create(xmlReader, settings))
+                {
+                    //Read and validate the XML data.
+                    while (reader.Read() && validateResult) ;
+                }
+            }
+
+            return validateResult;
         }
 
         private void ValidationCallBack(object sender, ValidationEventArgs args)

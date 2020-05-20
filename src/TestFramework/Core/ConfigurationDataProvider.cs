@@ -43,12 +43,6 @@ namespace Microsoft.Protocols.TestTools
                 configFileFullnames[i] = GetTestSuitePtfconfigFileName(ptfconfigDirectory, configFiles[i]);
             }
 
-            //site.ptfconfig is required.
-            if (configFileFullnames[0] == null)
-            {
-                throw new InvalidOperationException("Cannot find site.ptfconfig. Please make sure it is placed in PTF installation directory.");
-            }
-
             //<TestSuiteName>.ptfconfig is required.
             if (!File.Exists(Path.Combine(ptfconfigDirectory, String.Format("{0}.ptfconfig", testSuiteName))))
             {
@@ -71,7 +65,6 @@ namespace Microsoft.Protocols.TestTools
         {
             return new string[]
             {
-                "site.ptfconfig",
                 testSuiteName + ".ptfconfig",
                 testSuiteName + ".deployment.ptfconfig"
             };
