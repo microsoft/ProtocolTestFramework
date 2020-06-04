@@ -359,8 +359,9 @@ namespace Microsoft.Protocols.TestTools
             // Create proxy for PowerShell script type adapter
             if (adapterConfig is PowerShellAdapterConfig)
             {
+                string scriptDir = Path.Combine(ptfconfigDirectory, ((PowerShellAdapterConfig)adapterConfig).ScriptDir);
                 adapter = PowerShellAdapterProxy.Wrap<T>(
-                    ((PowerShellAdapterConfig)adapterConfig).ScriptDir,
+                    scriptDir,
                     adapterType);
             }
 
