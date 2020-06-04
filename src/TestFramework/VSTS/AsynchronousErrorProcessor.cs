@@ -186,7 +186,12 @@ namespace Microsoft.Protocols.TestTools
                 if (errors.Count > 0 &&
                     Thread.CurrentThread != mainThread)
                 {
-                    Thread.CurrentThread.Abort();
+                    // Create an exception object which is of the same type as the exception created by checkers,
+                    // and append the stack trace string to the error message.
+                    Type type = errors[0].exception.GetType();
+                    string message = GenerateBypassedErrorMessage();
+                    object exception = Activator.CreateInstance(type, message);
+                    throw (Exception)exception;
                 }
             }
         }
