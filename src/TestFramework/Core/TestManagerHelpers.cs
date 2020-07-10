@@ -3,7 +3,11 @@
 
 using Microsoft.Protocols.TestTools.Messages;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -104,6 +108,52 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
+        /// Asserts two values are equal.
+        /// </summary>
+        /// <typeparam name="T">Type of values.</typeparam>
+        /// <param name="manager">The test manager.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <param name="context">The description of the context under which both values are compared.</param>
+        public static void AssertAreEqual<T>(IProtocolTestsManager manager, IList<T> expected, IList<T> actual, string context)
+        {
+            bool listEqual = false;
+            if (expected != null && actual != null)
+            {
+                listEqual = expected.All(actual.Contains) && expected.Count == actual.Count;
+            }
+            else if (expected == null && actual == null)
+            {
+                listEqual = true;
+            }
+
+            StringBuilder expectedDescribeBuilder = new StringBuilder();
+            foreach (var item in expected)
+            {
+                expectedDescribeBuilder.AppendFormat("{0},", MessageRuntimeHelper.Describe<object>(item));
+            }
+
+            StringBuilder actualDescribeBuilder = new StringBuilder();
+            foreach (var item in actual)
+            {
+                actualDescribeBuilder.AppendFormat("{0},", MessageRuntimeHelper.Describe<object>(item));
+            }
+            if (expectedDescribeBuilder.Length > 0)
+            {
+                expectedDescribeBuilder.Remove(expectedDescribeBuilder.Length - 1, 1);
+            }
+            if (actualDescribeBuilder.Length > 0)
+            {
+                actualDescribeBuilder.Remove(actualDescribeBuilder.Length - 1, 1);
+            }
+
+            manager.Assert(
+                listEqual,
+                string.Format("expected \'{0}\', actual \'{1}\' ({2})", expectedDescribeBuilder.ToString(), actualDescribeBuilder.ToString(), context)
+                );
+        }
+
+        /// <summary>
         /// Asserts a variable's equality to a value or bind the variable to a value if it hasn't been bound yet.
         /// </summary>
         /// <typeparam name="T">Type of the variable and value.</typeparam>
@@ -160,11 +210,21 @@ namespace Microsoft.Protocols.TestTools
         /// <param name="manager">The test manager.</param>
         /// <param name="actual">The value under check.</param>
         /// <param name="context">The context under which the value is checked.</param>
-        public static void AssertNotNull(ITestLog manager, object actual, string context)
+        public static void AssertNotNull(IProtocolTestsManager manager, object actual, string context)
         {
             manager.Assert(actual != null, string.Format("expected non-null value ({0})", context));
         }
 
+        /// <summary>
+        /// Describes a (possibly symbolic) value.
+        /// </summary>
+        /// <typeparam name="T">type</typeparam>
+        /// <param name="value">(possibly symbolic) value</param>
+        /// <returns>description</returns>
+        public static string Describe<T>(T value)
+        {
+            return MessageRuntimeHelper.Describe(value);
+        }
         #endregion
     }
 }

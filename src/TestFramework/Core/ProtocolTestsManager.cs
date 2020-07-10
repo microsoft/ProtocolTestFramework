@@ -402,7 +402,7 @@ namespace Microsoft.Protocols.TestTools
                     if (te.Kind == TransactionEventKind.VariableBound)
                         te.variable.InternalUnbind();
             }
-            transactionEvents.Clear();
+            
             transactionEvents = null;
         }
 
@@ -568,13 +568,15 @@ namespace Microsoft.Protocols.TestTools
             index = 0;
             foreach (V expectedObject in expected)
             {
-                if (CompareAction(availableObject, expectedObject))
+                if (!CompareAction(availableObject, expectedObject))
                 {
                     diagnosis.AppendLine(String.Format("  {0}. {1} is not matching", index + 1, expectedObject.ToString()));
                 }
                 else
                 {
-                    MessageRuntimeHelper.Describe(diagnosis);
+                    List<TransactionEvent> t = failedTransactions[index++];
+                    diagnosis.AppendLine(String.Format("  {0}. outputs do not match", index + 1));
+                    Describe(diagnosis, "    ", t);
                 }
                 index++;
             }
