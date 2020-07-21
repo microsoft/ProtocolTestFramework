@@ -76,6 +76,13 @@ namespace Microsoft.Protocols.TestTools
         T GetAdapter<T>() where T : IAdapter;
 
         /// <summary>
+        /// Returns an adapter implementation for the given adapter interface type.
+        /// </summary>
+        /// <typeparam name="adapterType">The adapter interface type.</typeparam>
+        /// <returns>An adapter of the given type.</returns>
+        IAdapter GetAdapter(Type adapterType);
+
+        /// <summary>
         /// Reports the error message to Tcm.
         /// This method is obsolete.
         /// </summary>

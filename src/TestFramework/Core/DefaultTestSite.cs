@@ -332,7 +332,9 @@ namespace Microsoft.Protocols.TestTools
         /// Implements <see cref="ITestSite.GetAdapter"/>
         /// </summary>
         /// <remarks>
-        /// This method calls the <see cref="ITestSite.GetAdapter"/> method.
+        /// For script and interactive adapter, test site provides the default implementations in PTF.
+        /// For managed adapter, test site provides the class instances according to the configuration, and if no class type is defined, it returns null.
+        /// The <see cref="IAdapter.Initialize"/> method is automatically called before the instances is returned.
         /// </remarks>
         /// <typeparam name="T">The type of the adapter.</typeparam>
         /// <returns>An adapter instance of the given type.</returns>
@@ -425,6 +427,26 @@ namespace Microsoft.Protocols.TestTools
             adapter.Initialize(this);
 
             return adapter;
+        }
+
+        /// <summary>
+        /// Implements <see cref="ITestSite.GetAdapter"/>. 
+        /// </summary>
+        /// <remarks>
+        /// This method calls the <see cref="ITestSite.GetAdapter"/> method.
+        /// </remarks>
+        /// <param name="adapterType">The adapter interface type.</param>
+        /// <returns>An adapter instance of the given type.</returns>
+        public virtual IAdapter GetAdapter(Type adapterType)
+        {
+            // Get the generic method `GetAdapter`
+            MethodInfo getAdapterMethod = GetType()
+                                            .GetMethod("GetAdapter", new Type[0])
+                                            .MakeGenericMethod(new Type[] { adapterType });
+
+            // Invoke the method
+            object adapter = getAdapterMethod.Invoke(this, new object[] {});
+            return (IAdapter)adapter;
         }
 
         /// <summary>
