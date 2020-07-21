@@ -44,9 +44,6 @@ namespace Microsoft.Protocols.TestTools
         /// </summary>
         protected TestClassBase()
         {
-
-            IProtocolTestsManager manager = ProtocolTestsManagerFactory.TestsManager;
-
             if (!suiteNameCache.ContainsKey(this.GetType()))
             {
                 suiteNameCache[this.GetType()] = staticTestSuiteName;
@@ -54,8 +51,8 @@ namespace Microsoft.Protocols.TestTools
 
             //switch test site while test running
             testSuiteName = suiteNameCache[this.GetType()];
-            testSite = manager.GetTestSite(testSuiteName);
-            ptfTestNotify = manager.GetProtocolTestNotify(testSuiteName);
+            testSite = ProtocolTestsManager.GetTestSite(testSuiteName);
+            ptfTestNotify = ProtocolTestsManager.GetProtocolTestNotify(testSuiteName);
         }
 
         /// <summary>
@@ -234,9 +231,8 @@ namespace Microsoft.Protocols.TestTools
             }
             classCount++;
             staticTestSuiteName = testSuiteName;
-            IProtocolTestsManager manager = ProtocolTestsManagerFactory.TestsManager;
 
-            if (null == manager.GetTestSite(staticTestSuiteName))
+            if (null == ProtocolTestsManager.GetTestSite(staticTestSuiteName))
             {
                 VstsTestContext vstsTestContext = new VstsTestContext(testContext);
                 IConfigurationData config = ConfigurationDataProvider.GetConfigurationData(
@@ -254,18 +250,18 @@ namespace Microsoft.Protocols.TestTools
                     testAssemblyName = Assembly.GetCallingAssembly().GetName().Name;
                 }
 
-                manager.Initialize(config, vstsTestContext, testSuiteName, testAssemblyName);
+                ProtocolTestsManager.Initialize(config, vstsTestContext, testSuiteName, testAssemblyName);
 
-                baseTestSite = manager.GetTestSite(testSuiteName);
+                baseTestSite = ProtocolTestsManager.GetTestSite(testSuiteName);
 
-                ITestSite site = manager.GetTestSite(testSuiteName);
+                ITestSite site = ProtocolTestsManager.GetTestSite(testSuiteName);
 
                 //registry all checkers
                 RegisterChecker(site);
             }
             else
             {
-                baseTestSite = manager.GetTestSite(testSuiteName);
+                baseTestSite = ProtocolTestsManager.GetTestSite(testSuiteName);
             }
 
 
@@ -293,7 +289,7 @@ namespace Microsoft.Protocols.TestTools
 
                 baseTestSite.Log.Add(LogEntryKind.Comment, "Actual time taken for the test suite execution (in seconds) is: " + actualExecutionTime);
 
-                ProtocolTestsManagerFactory.TestsManager.TestsRunCleanup();
+                ProtocolTestsManager.TestsRunCleanup();
             }
         }
 
