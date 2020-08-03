@@ -981,7 +981,7 @@ namespace Microsoft.Protocols.TestTools
                 if (filename == null)
                     continue;
 
-                using (FileStream fs = File.Open(filename, FileMode.Open))
+                using (FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     if (!ValidateConfigFile(fs, false))
                     {
