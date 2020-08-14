@@ -156,11 +156,22 @@ namespace Microsoft.Protocols.TestTools
         #endregion
     }
 
+    /// <summary>
+    /// A class which is used as proxy for constructing IAdapter using managed code
+    /// and executing methods in IAdapter.
+    /// </summary>
     public class ManagedAdapterProxy : AdapterProxyBase
     {
         private ManagedAdapterBase instance;
         private Type trueType;
 
+        /// <summary>
+        /// Create an instance of the managed adapter.
+        /// </summary>
+        /// <typeparam name="T">The type of the adapter.</typeparam>
+        /// <param name="adapterType">The type of the implementation.</param>
+        /// <param name="typeToProxy">The type of the adapter.</param>
+        /// <returns>The managed adapter</returns>
         public static T Wrap<T>(Type adapterType, Type typeToProxy) where T : IAdapter
         {
             object proxy = Create<T, ManagedAdapterProxy>();
@@ -198,7 +209,8 @@ namespace Microsoft.Protocols.TestTools
         /// This method can be overridden by extenders to do special initialization code.
         /// It calls base class's Initialize method to ensure the test site is initialized.
         /// </summary>
-        /// <param name="methodCall"></param>
+        /// <param name="targetMethod"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
         protected override object Initialize(MethodInfo targetMethod, object[] args)
         {
@@ -232,7 +244,7 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by extenders to do special processing of TestSite getter.
         /// </summary>
-        /// <param name="methodCall"></param>
+        /// <param name="targetMethod"></param>
         /// <returns></returns>
         protected override object GetSite(MethodInfo targetMethod)
         {
@@ -242,7 +254,7 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by extenders to do special processing of Reset.
         /// </summary>
-        /// <param name="methodCall"></param>
+        /// <param name="targetMethod"></param>
         /// <returns></returns>
         protected override object Reset(MethodInfo targetMethod)
         {
@@ -272,7 +284,7 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by extenders to do special processing of Dispose.
         /// </summary>
-        /// <param name="methodCall"></param>
+        /// <param name="targetMethod"></param>
         /// <returns></returns>
         protected override object Dispose(MethodInfo targetMethod)
         {
@@ -290,8 +302,9 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Proxy method for substitution of executing methods in adapter interface.
         /// </summary>
-        /// <param name="methodCall">The IMethodCallMessage containing method invoking data.</param>
-        /// <returns>The IMessage containing method return data.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <param name="args">The arguments the caller passed to the method.</param>
+        /// <returns>The return value of the ExecuteMethod implementation.</returns>
         protected override object ExecuteMethod(MethodInfo targetMethod, object[] args)
         {
             object retVal = null;

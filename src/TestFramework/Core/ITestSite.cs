@@ -78,7 +78,7 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Returns an adapter implementation for the given adapter interface type.
         /// </summary>
-        /// <typeparam name="adapterType">The adapter interface type.</typeparam>
+        /// <param name="adapterType">The adapter interface type.</param>
         /// <returns>An adapter of the given type.</returns>
         IAdapter GetAdapter(Type adapterType);
 

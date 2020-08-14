@@ -428,7 +428,8 @@ namespace Microsoft.Protocols.TestTools
         /// Initializes the test suite
         /// </summary>
         /// <param name="config">Configure data</param>
-        /// <param name="configPath">Configure File Path</param>
+        /// <param name="testAssemblyPath">Assembly folder Path</param>
+        /// <param name="ptfconfigPath">Ptfconfig file folder Path</param>
         /// <param name="testSuiteName">TestSuite name</param>
         /// <param name="testAssemblyName">Assembley name</param>
         public static void Initialize(

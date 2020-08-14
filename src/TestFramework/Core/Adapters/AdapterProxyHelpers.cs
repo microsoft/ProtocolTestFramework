@@ -13,7 +13,7 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Gets the help attribute content for the calling method.
         /// </summary>
-        /// <param name="methodCall">The method call message from the adapter proxy.</param>
+        /// <param name="targetMethod">The method from the adapter proxy.</param>
         /// <returns>The help message content.</returns>
         internal static string GetHelpMessage(MethodInfo targetMethod)
         {

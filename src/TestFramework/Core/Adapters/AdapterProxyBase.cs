@@ -41,6 +41,11 @@ namespace Microsoft.Protocols.TestTools
         /// </summary>
         protected ITestSite TestSite;
 
+        /// <summary>
+        /// For derived class to set the proxyType variable.
+        /// </summary>
+        /// <param name="proxy">The proxy instance.</param>
+        /// <param name="typeToProxy">The adapter type.</param>
         protected static void SetParameters(AdapterProxyBase proxy, Type typeToProxy)
         {
             proxy.proxyType = typeToProxy;
@@ -58,8 +63,9 @@ namespace Microsoft.Protocols.TestTools
         /// Implements Invoke method of DispatchProxy. Delegates standard adapter methods to the equivalent proxy methods,
         /// and delegates all other invocations to abstract invoke method.
         /// </summary>
-        /// <param name="msg">An IMessage that contains a IDictionary of information about the method call. </param>
-        /// <returns>The message returned by the delegated method, containing the return value and any out or ref parameter.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <param name="args">The arguments the caller passed to the method.</param>
+        /// <returns>The object to return to the caller, or null for void methods.</returns>
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             if (targetMethod == null)
@@ -88,8 +94,9 @@ namespace Microsoft.Protocols.TestTools
         /// To be implemented by derived classes to realize invocation of methods
         /// which are not from the IAdapter interface.
         /// </summary>
-        /// <param name="methodCall">An IMessage that contains a IDictionary of information about the method call.</param>
-        /// <returns>The message returned by the Invoke implementation.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <param name="args">The arguments the caller passed to the method.</param>
+        /// <returns>The return value of the ExecuteMethod implementation.</returns>
         protected abstract object ExecuteMethod(MethodInfo targetMethod, object[] args);
 
         /// <summary>
@@ -100,8 +107,9 @@ namespace Microsoft.Protocols.TestTools
         /// <remarks >
         /// This method will be called automatically by <see cref="ITestSite.GetAdapter"/>. User needs not call it directly.
         /// </remarks>
-        /// <param name="methodCall">An IMessage that contains a IDictionary of information about the method call.</param>
-        /// <returns>The message returned by the Initialize implementation.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <param name="args">The arguments the caller passed to the method.</param>
+        /// <returns>The return value of the Initialize implementation.</returns>
         protected virtual object Initialize(MethodInfo targetMethod, object[] args)
         {
             TestSite = (ITestSite)args[0];
@@ -111,8 +119,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by derived classes to do special processing of TestSite getter.
         /// </summary>
-        /// <param name="methodCall">An IMessage that contains a IDictionary of information about the method call.</param>
-        /// <returns>The message returned by the GetSite implementation.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <returns>The return value of the GetSite implementation.</returns>
         protected virtual object GetSite(MethodInfo targetMethod)
         {
            return TestSite;
@@ -121,8 +129,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by derived classes to do special processing of Reset.
         /// </summary>
-        /// <param name="methodCall">An IMessage that contains a IDictionary of information about the method call.</param>
-        /// <returns>The message returned by the Reset implementation.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <returns>The return value of the Reset implementation.</returns>
         protected virtual object Reset(MethodInfo targetMethod)
         {
             return null;
@@ -131,8 +139,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by derived classes to do special processing of Dispose.
         /// </summary>
-        /// <param name="methodCall">An IMessage that contains a IDictionary of information about the method call.</param>
-        /// <returns>The message returned by the Dispose implementation.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <returns>The return value of the Dispose implementation.</returns>
         protected virtual object Dispose(MethodInfo targetMethod)
         {
             return null;
@@ -141,8 +149,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by derived classes to do special processing of GetHashCode.
         /// </summary>
-        /// <param name="methodCall">An IMessage that contains a IDictionary of information about the method call.</param>
-        /// <returns>The message returned by the Dispose implementation.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <returns>The return value of the Dispose implementation.</returns>
         protected virtual object GetHashCode(MethodInfo targetMethod)
         {
            return GetHashCode();

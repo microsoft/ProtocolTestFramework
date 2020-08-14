@@ -20,6 +20,13 @@ namespace Microsoft.Protocols.TestTools
     {
         private string scriptDirectory;
 
+        /// <summary>
+        /// Create an instance of the powershell adapter.
+        /// </summary>
+        /// <typeparam name="T">The type of the adapter.</typeparam>
+        /// <param name="scriptDirectory">The folder containing the script files.</param>
+        /// <param name="typeToProxy">The type of the adapter.</param>
+        /// <returns>The powershell adapter</returns>
         public static T Wrap<T>(string scriptDirectory, Type typeToProxy) where T : IAdapter
         {
             object proxy = Create<T, PowerShellAdapterProxy>();
@@ -35,7 +42,8 @@ namespace Microsoft.Protocols.TestTools
         /// Can be overridden by extenders to do special initialization code.
         /// Call base to ensure the test site is initialized.
         /// </summary>
-        /// <param name="mcall"></param>
+        /// <param name="targetMethod"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
         protected override object Initialize(MethodInfo targetMethod, object[] args)
         {
@@ -46,7 +54,7 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by extenders to do special processing of Reset.
         /// </summary>
-        /// <param name="mcall"></param>
+        /// <param name="targetMethod"></param>
         /// <returns></returns>
         protected override object Reset(MethodInfo targetMethod)
         {
@@ -56,8 +64,9 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Proxy method for substitution of executing methods in adapter interface.
         /// </summary>
-        /// <param name="mcall">The IMethodCallMessage containing method invoking data.</param>
-        /// <returns>The IMessage containing method return data.</returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <param name="args">The arguments the caller passed to the method.</param>
+        /// <returns>The return value of the ExecuteMethod implementation.</returns>
         protected override object ExecuteMethod(MethodInfo targetMethod, object[] args)
         {
             //get help message from attribute
@@ -138,9 +147,9 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Proxy method for substitution of executing Initialize/Reset methods in adapter interface.
         /// </summary>
-        /// <param name="mcall">The IMethodCallMessage containing method invoking data.</param>
+        /// <param name="targetMethod">The method the caller invoked.</param>
         /// <param name="helpMessage">The help message from the attribute</param>
-        /// <returns>Always void.</returns>
+        /// <returns>Always null.</returns>
         private object ExecuteMethodCompact(MethodInfo targetMethod, string helpMessage)
         {
             string path = LookupScript(targetMethod.Name);
@@ -295,7 +304,9 @@ namespace Microsoft.Protocols.TestTools
         /// Invokde script by given file path and arguments.
         /// </summary>
         /// <param name="path">The file path to the cmd script.</param>
-        /// <param name="arguments">The argument to be passed to the script.</param>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <param name="args">The argument to be passed to the script.</param>
+        /// <param name="helpMessage">The help message from the attribute.</param>
         /// <returns>The return value of script executation.</returns>
         private PSParameterBuilder InvokeScript(string path, MethodInfo targetMethod, object[] args, string helpMessage)
         {
@@ -413,7 +424,7 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Constructor of the PowerShell parameter builder class.
         /// </summary>
-        /// <param name="methodCall">Method call message</param>
+        /// <param name="methodInfo">Method call message</param>
         public PSParameterBuilder(
             MethodInfo methodInfo)
         {
@@ -488,8 +499,9 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Sets all parameters/properties as variables.
         /// </summary>
-        /// <param name="setVariable">SessionStateProxy.SetVariable method</param>
-        /// <param name="proxyInstance">SessionStateProxy instance</param>
+        /// <param name="proxy">SessionStateProxy instance.</param>
+        /// <param name="args">The argument to be passed to the script.</param>
+        /// <param name="helpMessage">he help message from the attribute.</param>
         internal void SetAllParametersAsVariables(SessionStateProxy proxy, object[] args, string helpMessage)
         {
             //set help message as variable
@@ -527,10 +539,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Gets all the out/ref parameter values.
         /// </summary>
-        /// <param name="sessionStateProxy">Type of SessionStateProxy</param>
+        /// <param name="proxy">SessionStateProxy instance</param>
         /// <param name="paramsLength">Length of parameters</param>
-        /// <param name="proxyInstance">SessionStateProxy instance</param>
-        /// <param name="sysMgmtAutoAssembly">System management automation assembly</param>
         internal void GetAllOutParameterValues(SessionStateProxy proxy, int paramsLength)
         {
             if (paramsLength > 0)
@@ -566,7 +576,6 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// A helper method which resolve psobject to real object.
         /// </summary>
-        /// <param name="sysMgmtAutoAssembly">System management automation assembly</param>
         /// <param name="psObjectInstance">psobject instance</param>
         /// <returns>Returns the real object</returns>
         internal static object ResolveObjectFromPSObject(object psObjectInstance)
