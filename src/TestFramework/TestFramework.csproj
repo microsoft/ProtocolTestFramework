@@ -15,13 +15,14 @@
     <PackageTags>TestFramework Testing ProtocolTest</PackageTags>
     <RepositoryUrl>https://github.com/microsoft/ProtocolTestFramework.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageIconUrl>https://go.microsoft.com/fwlink/?LinkID=288859</PackageIconUrl>
+    <PackageIcon>packageIcon.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="build\**\*.*" Pack="True" PackagePath="\build" />
+    <None Include="Resources\packageIcon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
