@@ -78,19 +78,19 @@ After the build succeeds, ProtocolTestFrameworkInstaller.msi should be generated
 
 ## Samples
 
-You can find samples of how to develop a protocol test suite using PTF [here](https://github.com/Microsoft/ProtocolTestFramework/tree/master/samples).
+You can find samples of how to develop a protocol test suite using PTF [here](./samples).
 
 ## Documentation
 
-* [User Guide](https://github.com/Microsoft/ProtocolTestFramework/tree/master/docs/) describes the features of PTF, and how to use them to develop a new protocol test suite.
+* [User Guide](./docs/) describes the features of PTF, and how to use them to develop a new protocol test suite.
 
 ## Contribute
 
-You can find contributing guide [here](https://github.com/Microsoft/ProtocolTestFramework/blob/master/CONTRIBUTING.md).
+You can find contributing guide [here](./CONTRIBUTING.md).
 
 ## License
 
-PTF is under the [MIT license](https://github.com/Microsoft/ProtocolTestFramework/blob/master/LICENSE.txt).
+PTF is under the [MIT license](./LICENSE.txt).
 
 ## Microsoft Open Source Code of Conduct
 
