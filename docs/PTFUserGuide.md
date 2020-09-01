@@ -21,10 +21,7 @@ Refer to Creating a Test Suite Manually included as a simple test suite example.
     * [Extensive Logging Support](#4.4)
     * [Checkers](#4.5)
     * [Requirement Tracing](#4.6)
-    * [Reporting Tool](#4.7)
-    * [Auto Generate Test Report](#4.8)
-    * [Automatic Network Capturing](#4.9)
-    * [Display Expected/Actual runtime of testsuite](#4.10)
+    * [Display Expected/Actual runtime of testsuite](#4.7)
 * [Creating a Protocol Test Suite Manually](#5)
     * [Create a Hello World Unit Test Project](#5.1)
     * [Using Adapters](#5.2)
@@ -38,7 +35,7 @@ Refer to Creating a Test Suite Manually included as a simple test suite example.
 
 * SUT: system under test
     * Computer that is intended to be tested
-* Test Driver Computer running Windows 8.1/Windows Server 2012 R2 or later
+* Test Driver Computer running Windows(Windows 8.1/Windows Server 2012 R2 or later), Linux or macOS
 
 ## Network Infrastructure
 * A test network is required to connect the test computer systems
@@ -123,11 +120,12 @@ You can use the following name to access the properties in test suites:
 Example:
 
 ```
-<Group name="PTF">
-    <Group name="NetworkCapture">
-        <Property name="Enabled" value="true" />
-        <Property name="CaptureFileFolder" value="C:\test" />
-    </Group>
+<Group name="Common">
+    <Property name="Timeout" value="8">
+        <Description>
+            Timeout in seconds for SMB2 connection over transport
+        </Description>
+    </Property>
 </Group>
 ```
 
@@ -141,104 +139,13 @@ ITestSite is disposed in the TestClassBase.Cleanup method call. The user must ca
 
 The configuration allows an adapter to be created in various ways:
 
-* Interactive adapter
-
-    The Interactive adapter pops up a dialog-box to perform manual operations each time one of its methods is called. The dialog-box includes the method name, help text, input parameters, output parameters, and result. Users can confirm the completion of the manual operation by clicking the "Continue" button. If users can’t finish the operation for some reason, they can click the "Abort" button to terminate the test. In this case, the test will be treated as "Inconclusive".
-
 * PowerShell adapter
 
     PowerShell adapter maps interface methods to PowerShell scripts. Users are able to pass objects between their managed test code and PowerShell scripts directly. This avoids the parameter and return value parsing issue.
 
-* Shell adapter
-
-    The Shell adapter, which leverages Windows Subsystem for Linux (WSL), allows users to map interface methods to shell scripts and use the scripts to perform operations during the test. Users must specify the location of the scripts and have a .sh script with a name corresponding to each API call in the test suit. When the API is called, the script will be invoked and its stdout and stderr are recorded in the test log as LogEntryType.Comment.
-
 * Managed adapter
 
     The managed adapter allows users to use managed code to implement the interface methods.
-
-### Interactive Adapter
-
-User can configure an interactive adapter by defining an adapter as "interactive" in the PTF configuration files. The PTF will create a pop-up dialog box with the following: method name, help text, input parameters, output parameters and return value when one of the adapter's methods is called. Interactive adapters are used when the only way to configure a server is to manually go to the server and configure it. The pop-up dialog will provide the necessary information to configure the server and pass any relevant values back to the test suite. 
-
-__Benefits__
-
-Users don't need to write any extra code to run the test case in an interactive mode. They only need to define interfaces. The interactive adapter of PTF takes care of the UI logic.
-
-__Limitation__
-
-Users are required to implement an extra method `Parse(String)` for their complex class if the class contains an actions with "out parameters".
-
-__Usage__
-
-The interactive adapter can be defined in the configuration like the following line:
-
-```
-<Adapter xsi:type="interactive" name="IAdapterInterfaceName" />
-```
-
-* The element name must be "Adapter"
-* The interactive "Adapter" element must contain only two attributes:
-    * "xsi:type": The value of this attribute must be "interactive".
-    * "name": The value of this attribute is the name of the adapter interface which will be bound to the interactive adapter proxy.
-
-__Parameters__
-
-The user should override `ToString()` of the custom type to provide detailed information of each object, and interactive adapter would call ToString() automatically to show the string in the pop-up dialog box
-
-If the interactive adapter's method is invoked, a dialog box will be opened as shown in the following figure.
-
-![](images/EnumReturnValue.png "EnumReturnValue")
-
-* The help text is displayed in a read-only text box. 
-* The action parameters (input parameters) are displayed in a read-only data grid control.
-* The action results (output parameters) are displayed in a data grid control whose value column can be edited by the user. The user's input data will be assigned to the parameters. The return value is put at the first row, and it will be separated with other output parameters by a line of bold border.
-* If the action results(output parameters) are enums you can choose a value from the dropdown list.
-* User's error result message can be input in a text box.
-* The "Continue" button is used to confirm that the manual action has been done successfully.
-* The "Abort" button is used to report that errors were encountered during the action. The test case will be aborted.
-
-__Help Text__
-
-The help text is used to instruct user to perform corresponding manual actions related to the calling method. The help text is defined using the MethodHelp attribute before the adapter method. 
-
-The following is a method declaration with a help text.
-
-```
-[MethodHelp("Return 0 for successful or non-zero error code.")]
-int Setup(string message);
-```
-
-__Output Parameters__
-
-* The return value is treated just the same as output parameters
-* Output parameter data types, other than `String`, must have a static `Parse(String)` method which is used to convert from String types. If any exception occurs or parsing fails, a `FormatException` will be raised. A complex data type can be declared as the following example:
-
-```
-public class MyUri : System.Uri
-{
-    private MyUri(String Uri) : base (Uri) {}
-    static public MyUri Parse(String theUri) {return new MyUri(theUri); }
-}
-```
-
-* The interactive adapter proxy will check if the output parameters contain the "Parse" method. If not, a FormatException will be raised.
-* A user can input the values for the out parameters or return value.
-* The input values are converted by the corresponding "Parse" method and assigned to the parameters.
-
-__Default Value__
-
-The DefaultValue attribute is used to set the default values in the text boxes of the output parameters and return value. The default value of the return value is specified by putting a DefaultValue attribute before the method. The default value of output parameters are specified by putting a DefaultValue attribute before each parameter.
-```
-[MethodHelp("Return 0 for successful setup or non-zero error code.")]
-[DefaultValue("0")]
-int Hello(
-    string message,
-    [DefaultValue("Enter a Value")]out int outPara
-    );
-```
-
-![](images/hello.png "hello")
 
 ### PowerShell Adapter
 
@@ -305,81 +212,6 @@ public void TestPowerShellAdapter()
 }
 ```
 
-### Shell Adapter
-
-Shell Adapter leverages bash in Windows Subsystem for Linux (WSL) to run shell scripts. Users can bind their adapter interfaces to a shell adapter by defining them as "shell" in the PTF configuration files. The implementation will run the corresponding shell script file when one of the adapter's methods is called.
-
-__Benefits__
-
-Shell adapters are easy to use. For example, they are suitable for service setup/shutdown jobs. Users can write a Stop.sh to login a Linux machine via SSH and stop a service.
-
-__Limitation__
-
-1. WSL must be running on Windows 10 version 1607 (the Anniversary update) or later.
-2. Do not encode the shell script using UTF-8 with Byte Order Mark.
-
-__Usage__
-
-Configure `<Adapters>` section of the ptfconfig file:
-
-```
-<Adapter xsi:type="shell" name="IMyScriptAdapter" scriptdir=".\" />
-```
-   
-Subsequently, users can invoke `IMyScriptAdapter.AMethod(parameters)`. PTF will look up a script named `AMethod.sh` in the scriptdir directory and execute it with the parameters.
-
-__Parameters__
-
-PTF invokes a shell script using the following parameters:
-
- __Parameter name__ | __Value__
- -------------------|----------
-$1                  |First input parameter.
-$2                  |Second input parameter.
-...                 |
-
-__Return values__
-
-To pass a return value back to PTF, print the return value at the last line of stdout.
-
-To pass an exception message back to PTF, print the message to stderr and exit the script with a non-zero exit code.
-
-```
-echo "<failure message>" >&2
-exit 1
-```
-
-Provide the `ToString()` method and the `Parse()` method in a custom type to pass custom type values as parameters to script adapter, e.g.:
-
-```
-static public String ToString()
-static public CustomType.Parse(String str)
-```
-
-__Exception__
-
-If the shell script execution fails, PTF will raise an `InvalidOperationException`.
-
-If the shell script file is not found, PTF will raise an `AssertInconclusiveException`.
-
-__PTF Properties__
-
-PTF properties are provided to shell adapters by environment variables with PTFProp_ as prefix, and dot in property name replaced by underline(_).
-For example, if a user has the following configuration in the PTFconfig
-
-```
-<Properties>
-    <Property name="ServerName" value="MS-Server" />
-    <Property name="SSH.Port" value="4242" />
-</Properties>
-```
-
-To initiate an SSH connection to the server. You can use the following command in shell script.
-
-```
-ssh -p $PTFProp_SSH_Port $PTFProp_ServerName
-```
-
 ## <a name="4.4"> Extensive Logging Support 
 
 PTF provides problem-oriented logging capabilities (begin/end test group, verification pass/failure, requirement capture, debugging). Most of the logging is done automatically so that the test suite developer does not have to write them manually.
@@ -393,7 +225,7 @@ Note: If the user wants to log EnterMethod and ExitMethod, user should log Enter
 
 ### File Logging
 
-File logging provides a way for PTF users to log necessary messages to files. PTF provides two logging file formats, plain text and XML. The plain text format is suitable for viewing the log file using text editors. The XML format is for analysing the test log using tools, such as the Reporting Tool.
+File logging provides a way for PTF users to log necessary messages to files. PTF provides two logging file formats, plain text and XML. The plain text format is suitable for viewing the log file using text editors. The XML format is for analysing the test log using tools.
 
 __Usage__
 
@@ -426,33 +258,6 @@ For example:
 ```
 [TestLogging_SinkID1]2014-02-11 11_25_04_063 xmllog.xml
 ```
-
-### Beacon logging
-
-Beacon logging provides a way for PTF users to log necessary log messages as network packets. A user can define a beacon logging sink in the PTF Config file which is similar with other log sinks, and then the log messages are sent to the UDP broadcast address using port 58727. 
-
-__Benefits__
-
-Beacon logging provides a way to do post-processing analysis of potentially huge network captures generated during protocol test suite execution by inserting necessary logging messages in test suite network traffic. 
-
-__Usage__
-
-1. Define beacon logging sink by inserting the following line into the <Sinks> section of PTF config:
-
-        <Sink id="Beacon" type="Microsoft.Protocols.TestTools.Logging.BeaconLogSink"/>
-
-2. Specify beacon logging server name. (Optional, if it is not specified, the messages are sent to the broadcast address.)
-
-        <Property name="BeaconLogTargetServer" value="servername" />
-
-3. Enable it by specifying a set of log entries associated with it.
-
-        <Rule kind="CheckFailed" sink="Beacon"/>
-        <Rule kind="Comment" sink="Beacon"/>
-        <Rule kind="Debug" sink="Beacon"/>
-        <Rule kind="Checkpoint" sink="Beacon"/>
-
-4. You can capture the Beacon log message using network capture tools. For example, in Microsoft Network Monitor, the Beacon log messages are shown as TSAP packets. 
 
 ### Console Logging
 
@@ -511,38 +316,6 @@ __Usage__
     </Profile>
 </Profiles>
 ```
-
-### Event Tracing for Windows(ETW) Logging
-
-The Event Tracing for Window(ETW) logging sink can log test suite logs and test messages to an ETW provider. A user can capture these ETW logs using captures tools, such as the Microsoft Message Analyzer. If the test suite logs the test message to the ETW provider, you may need a parser to parse the test messages. Please refer to the test suite user guide for more detail.
-
-__Benefit__
-
-* Mix test suite log message with network message.
-* Dump the encrypted message from test suite.
-* You can leverage some advanced features of the Microsoft Message Analyzer to view the test results:
-    * Grouping log messages by test case.
-    * Highlight important messages using color rule of the Microsoft Message Analyzer.
-    
-
-__Usage__
-
-* Associate log entries with the ETW sink:
-
-```
-<Rule kind="CheckSucceeded" sink="Etw" delete="false" />
-<Rule kind="TestPassed" sink="Etw" delete="false" />
-<Rule kind="TestFailed" sink="Etw" delete="false" /> 
-<Rule kind="Comment" sink="Etw" delete="false"/>
-```
-* To view the ETW logging messages, you can capture these messages from Protocol-Test-Suite provider using an ETW capture tool.
-
-    Example:
-
-    Capture test suite log using the Microsoft Message Analyzer.
-    
-    ![](images/TraceScenarioConfiguration.png "Trace Scenario Configuration")
-
 
 ### Creating custom log sinks
 
@@ -701,94 +474,8 @@ Do not have any leading zeroes in requirement ID. (For example, "MS-XXX_R01" wil
 
 
 
-## <a name="4.7">  Reporting Tool 
 
-The Reporting Tool is a utility to generate a report from PTF test log and requirements table files. It reads XML format log files and requirements tables, and then generates a friendly report. Before using, the user can change the IE setting to allow the active content automatically.
-
-Step:
-
-Open __IExplorer->Tools->Internet Options->Advanced__
-
-Then, select __"Allow active content to run in files on My Computer"__ in Security block.
-
-Or user can unblock the active content manually when opening the report html.
-
-The following is the usage of the Reporting Tool:
-
-```
-ReportingTool /log:<xml log> /table:<requirements table> [/out:report.html] [/replace]
-ReportingTool /log:<xml log>[ <xml log>....] /table:<requirements table>[ <requirements table>...] [/out:outputdir] [/replace]
-```
-
-Note: The Reporting Tool reserves `/` and `-` to mark switches, so parameters cannot start with `/` or `-`.
-
-```
-Options:
-
-/help    Print this help message. Short form is '/?'.
-/out     Specifies the report output file name. Short form is '/o:'.
-/log     Specifies the test log filename. Short form is '/l:'.
-/table   Specifies the requirement table filename. Short form is '/t:'.
-/replace Specifies the new output report file will replace the old one.Short form is '/r'.
-
-Arguments:
-<xml log>           Filename of PTF test log in XML format.
-<requirement table> Filename of requirements table, XML format document of protocols.
-```
-
-Multiple file arguments of the same type may be provided.
-
-
-## <a name="4.8"> Auto Generate Test Report 
-
-The Auto Generate Test Report feature makes it convenient for users to automatically generate a test report after all tests are run. The user needs to add the configurations in the PTF config file in order to use this feature.  Requirement specification should be deployed in the test run configuration if the user wants to use relative path.
-
-The report html will automatically display after all test cases run.
-
-```
-<TestReport autoGenerate="true">
-    <RequirementFile location=".\req.xml" />
-    <LogFile sink="XmlLogSink" />
-    <Report autoDisplay="true" directory=".\" name="report.html"/>
-</TestReport>
-```
-
-Note:
-
-* Report node is optional, default report will be generated in default test deployment directory with default file name.
-* Sink attribute must be an existing XML sink defined in the <Sinks\> tag.
-
-
-## <a name="4.9"> Automatic Network Capturing 
-
-__Note:__ This feature is only available on Windows 8.1 or Windows Server 2012 R2.
-
-Protocol Test Framework provides a simple way to capture network traffic case-by-case automatically. 
-
-Network traffic is captured using netsh.exe and logman.exe. The messages are save as ETL files. Administrator privilege is required for capturing network traffic. 
-
-__Usage__
-
-Configure the following properties in PTFConfig file:
-
-```
-    <Group name="PTF">
-      <Group name="NetworkCapture">
-         <Property name="Enabled" value="true" />
-         <Property name="CaptureFileFolder" value="C:\test" />
-         <Property name="StopRunningOnError" value="false" />
-      </Group>
-    </Group>
-```
-
-__Enabled:__ If it is true, the auto-capture feature is enabled.
-
-__CaptureFileFolder:__ The path to put the capture files. Existing file will be overwritten.
-
-__StopRunningOnError:__ If it is true, the test case will fail when error happens in running network capture commands; otherwise, ignore the error.
-
-
-## <a name="4.10"> Display Expected/Actual runtime of testsuite 
+## <a name="4.7"> Display Expected/Actual runtime of testsuite 
 
 This feature enables a user to display expected/actual runtime of the test suite on the console.
 
@@ -813,7 +500,7 @@ The overall steps for creating a protocol test suite using PTF are as follows:
 * Create a Unit Test Project
 * Create a PTF configuration file
 * Create a test class
-*Deploy the files
+* Deploy the files
 
 In the following sections, we will go through each of these steps in detail.
 
@@ -827,8 +514,13 @@ The PTF project is hosted in the Unit Test Project. To create a PTF project:
 * Create a new project in Visual Studio.
 * Use Unit Test Project template in the Test category of Visual C#.
 * Add references to the PTF assemblies Microsoft.Protocols.TestTools.
-    * Right click "References" from Solution Explorer and choose "Add Reference…".
-    * Select `Microsoft.Protocols.TestTools` and`Microsoft.Protocols.TestTools.VSTS`.
+    There're two ways to add PTF reference
+    * Install PTF by NuGet Package Manager
+        * Open the project/solution in Visual Studio, and open the console using the Tools > NuGet Package Manager > Package Manager Console command
+        * Run the install command: Install-Package Microsoft.Protocols.TestTools -Version 2.0.0
+    * Manual add Microsoft.Protocols.TestTools.dll
+        * Right click "References" from Solution Explorer and choose "Add Reference…".
+        * Select `Microsoft.Protocols.TestTools`.
 * Delete automatically generated file `UnitTest1.cs`.
 
 ### Create PTF configuration file
@@ -934,24 +626,6 @@ namespace HelloWorld
 }
 ```
 
-### Create test settings file
-
-The test settings file contains settings of running the test suite. It is required for running PTF based test suite. Below are the steps of creating a test settings file.
-
-* Right click the solution in the Solution Explorer.
-* Choose Add > New Item.
-* Select Test Settings in the Test Settings category and click Add button.
-* Check Enable deployment in the Deployment page.
-* Click Add File… and add the helloworld.ptfconfig. (You need to choose "All files" for the file type in the File dialog.)
-* Click Close to close the Test Settings dialog.
-
-### Select the test settings file
-
-In Visual Studio 2017, you need to select the test settings file manually. Otherwise, test cases will fail with the error message "Cannot get the test site…".
-
-* Open the menu item: Test > Test Settings > Select Test Settings file.
-* Open the test settings file created in the previous step.
-
 
 ## <a name="5.2"> Using Adapters 
 
@@ -967,7 +641,7 @@ In subsequent sections, we will walk through each of these steps in detail.
 
 ### Create adapter interfaces
 
-Following the previous example, we now add the addition operation into IOperation adapter which does the actual computation operation (which could be distributed, in native code, etc.).  We use a script adapter to "Setup the environment" and use an interactive adapter to do the "Clean up".
+Following the previous example, we now add the addition operation into IOperation adapter which does the actual computation operation (which could be distributed, in native code, etc.).  We use a script adapter to "Setup the environment"
 
 Creates a C# file – Adapters.cs as follows:
 
@@ -995,15 +669,6 @@ namespace HelloWorld
     {
         int ComputeAddition(int x, int y);
     }
-
-    /// <summary>
-    /// Example of ServerControl clean up adapter.
-    /// </summary> 
-    public interface ICleanup : IAdapter
-    {
-        [MethodHelp("Follow the instructions in message to cleanup the server.  Enter 0 for successful return or non zero error code.")]
-        int Cleanup(string message);
-    }
 }
 ```
 
@@ -1015,9 +680,6 @@ Copy the previous helloworld.ptfconfig file and add the following <adapters\> ta
     <Adapter xsi:type="script" name="ISetup" scriptdir="."/>
     <!-- Abstract actions (protocol adapters) are not typically changed, but this one could be -->
     <Adapter xsi:type="managed" name="IOperation" adaptertype="HelloWorld.OperationAdapter"/>
-
-    <!-- Interactive adapter declaration. -->
-    <Adapter xsi:type="interactive" name="ICleanup"/>
   </Adapters>
 ```
 
