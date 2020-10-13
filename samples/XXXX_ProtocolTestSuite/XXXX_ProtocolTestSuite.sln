@@ -1,14 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XXXX_TestSuite", "XXXX_TestSuite\XXXX_TestSuite.csproj", "{3AE5AA9B-2A5B-442F-AF5C-B0450126590D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XXXX_Adapter", "XXXX_Adapter\XXXX_Adapter.csproj", "{EE588106-E147-45A2-A16F-732547DB0060}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9F92954A-E424-4D9C-B1A4-5B4CA736F29A}"
-	ProjectSection(SolutionItems) = preProject
-		ServerLocalTestRun.testrunconfig = ServerLocalTestRun.testrunconfig
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,5 +26,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0BD576E4-13AE-447D-A69B-6E84E71F5AF1}
 	EndGlobalSection
 EndGlobal

@@ -12,7 +12,7 @@
     
     <!-- The type of IXXXX_SUTControlAdapter could be either powershell or interactive. -->
     <!-- If its type is powershell, the scripts will be called automatically when executing test cases. -->
-    <Adapter xsi:type="powershell" name="IXXXX_SUTControlAdapter" scriptdir=".\" />
+    <Adapter xsi:type="powershell" name="IXXXX_SUTControlAdapter" scriptdir=".\XXXX_SUTControlAdapter" />
     <!-- If its type is interactive, then the user should do it manually following the help text. -->
     <!--<Adapter xsi:type="interactive" name="IXXXX_SUTControlAdapter"/>-->
 
@@ -38,23 +38,6 @@
         <Rule kind="TestFailed" sink="Console" delete="false"/>
         <Rule kind="TestInconclusive" sink="Console" delete="false"/>
         <Rule kind="TestPassed" sink="Console" delete="false"/>
-
-        <!-- Show for ETW -->
-        <!--The Event Tracing for Window (ETW) logging sink can log test suite logs to an ETW provider. 
-          A user can capture these ETW logs using captures tools, such as the Microsoft Message Analyzer. 
-          Details see PTFUserGuide.-->
-        <Rule kind="TestStep" sink="Etw" delete="false"/>
-        <Rule kind="Checkpoint" sink="Etw" delete="false"/>
-        <Rule kind="CheckSucceeded" sink="Etw" delete="false"/>
-        <Rule kind="CheckFailed" sink="Etw" delete="false"/>
-        <Rule kind="CheckInconclusive" sink="Etw" delete="false"/>
-        <Rule kind="Comment" sink="Etw" delete="false"/>
-        <Rule kind="Warning" sink="Etw" delete="false"/>
-        <Rule kind="Debug" sink="Etw" delete="false"/>
-        <Rule kind="TestFailed" sink="Etw" delete="false"/>
-        <Rule kind="TestInconclusive" sink="Etw" delete="false"/>
-        <Rule kind="TestPassed" sink="Etw" delete="false"/>
-        
       </Profile>
     </Profiles>
   </TestLog>
