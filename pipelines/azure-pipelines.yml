@@ -1,3 +1,8 @@
+trigger: none 
+
+variables:
+  - group: Build Variables
+
 jobs:
 - job:
   displayName: DotNetCore Build
@@ -9,17 +14,17 @@ jobs:
 
   steps:
   - task: DotNetCoreCLI@2
-      displayName: Restore
-      inputs:
+    displayName: Restore
+    inputs:
       command: restore
       projects: src/TestFramework/TestFramework.csproj
 
   - task: DotNetCoreCLI@2
-      displayName: Pack
-      inputs:
+    displayName: Pack
+    inputs:
       command: pack
       packagesToPack: src/TestFramework/TestFramework.csproj
       configuration: '$(build.configuration)'
 
   - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact'
+    displayName: 'Publish Artifact'
