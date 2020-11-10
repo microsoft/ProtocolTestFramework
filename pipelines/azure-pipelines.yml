@@ -5,7 +5,7 @@ variables:
 
 jobs:
 - job:
-  displayName: DotNetCore Build
+  displayName: Publish NuGet package
   pool: 
     vmImage: windows-2019
   workspace:
