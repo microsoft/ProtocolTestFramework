@@ -1,0 +1,22 @@
+pool:
+  name: Azure Pipelines
+#Your build pipeline references the ‘build.configuration’ variable, which you’ve selected to be settable at queue time. 
+#Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. 
+#See https://go.microsoft.com/fwlink/?linkid=865971
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: src/TestFramework/TestFramework.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: Pack
+  inputs:
+    command: pack
+    packagesToPack: src/TestFramework/TestFramework.csproj
+    configuration: '$(build.configuration)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
