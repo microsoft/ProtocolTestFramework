@@ -236,6 +236,12 @@ namespace Microsoft.Protocols.TestTools
                 string psdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
                 adapter = new PowerShellAdapterConfig(adapterName, psdir);
             }
+            // Create proxy for Shell script type adapter
+            else if (type.Equals("shell", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string scriptdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
+                adapter = new ShellAdapterConfig(adapterName, scriptdir);
+            }
             // Create instance for dot net type adapter.
             else if (type.Equals("managed", StringComparison.CurrentCultureIgnoreCase))
             {

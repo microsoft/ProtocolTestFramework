@@ -367,6 +367,15 @@ namespace Microsoft.Protocols.TestTools
                     adapterType);
             }
 
+            // Create proxy for Shell script type adapter
+            else if (adapterConfig is ShellAdapterConfig)
+            {
+                string scriptDir = ((ShellAdapterConfig)adapterConfig).ScriptDir;
+                adapter = ShellAdapterProxy.Wrap<T>(
+                    scriptDir,
+                    adapterType);
+            }
+
             // Create instance for dot net type adapter.
             if (adapterConfig is ManagedAdapterConfig)
             {

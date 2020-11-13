@@ -143,6 +143,10 @@ The configuration allows an adapter to be created in various ways:
 
     PowerShell adapter maps interface methods to PowerShell scripts. Users are able to pass objects between their managed test code and PowerShell scripts directly. This avoids the parameter and return value parsing issue.
 
+* Shell adapter
+
+    The Shell adapter, which leverages Windows Subsystem for Linux (WSL), allows users to map interface methods to shell scripts and use the scripts to perform operations during the test. Users must specify the location of the scripts and have a .sh script with a name corresponding to each API call in the test suit. When the API is called, the script will be invoked and its stdout and stderr are recorded in the test log as LogEntryType.Comment.
+
 * Managed adapter
 
     The managed adapter allows users to use managed code to implement the interface methods.
@@ -210,6 +214,81 @@ public void TestPowerShellAdapter()
   int r = sampleAdapter.AMethod("This is parameter1.", 2);
   BaseTestSite.Assert.AreEqual<int>(0, r, "Verify the return value.");
 }
+```
+
+### Shell Adapter
+
+Shell Adapter leverages bash in Windows Subsystem for Linux (WSL) to run shell scripts. Users can bind their adapter interfaces to a shell adapter by defining them as "shell" in the PTF configuration files. The implementation will run the corresponding shell script file when one of the adapter's methods is called.
+
+__Benefits__
+
+Shell adapters are easy to use. For example, they are suitable for service setup/shutdown jobs. Users can write a Stop.sh to login a Linux machine via SSH and stop a service.
+
+__Limitation__
+
+1. WSL must be running on Windows 10 version 1607 (the Anniversary update) or later.
+2. Do not encode the shell script using UTF-8 with Byte Order Mark.
+
+__Usage__
+
+Configure `<Adapters>` section of the ptfconfig file:
+
+```
+<Adapter xsi:type="shell" name="IMyScriptAdapter" scriptdir=".\" />
+```
+   
+Subsequently, users can invoke `IMyScriptAdapter.AMethod(parameters)`. PTF will look up a script named `AMethod.sh` in the scriptdir directory and execute it with the parameters.
+
+__Parameters__
+
+PTF invokes a shell script using the following parameters:
+
+ __Parameter name__ | __Value__
+ -------------------|----------
+$1                  |First input parameter.
+$2                  |Second input parameter.
+...                 |
+
+__Return values__
+
+To pass a return value back to PTF, print the return value at the last line of stdout.
+
+To pass an exception message back to PTF, print the message to stderr and exit the script with a non-zero exit code.
+
+```
+echo "<failure message>" >&2
+exit 1
+```
+
+Provide the `ToString()` method and the `Parse()` method in a custom type to pass custom type values as parameters to script adapter, e.g.:
+
+```
+static public String ToString()
+static public CustomType.Parse(String str)
+```
+
+__Exception__
+
+If the shell script execution fails, PTF will raise an `InvalidOperationException`.
+
+If the shell script file is not found, PTF will raise an `AssertInconclusiveException`.
+
+__PTF Properties__
+
+PTF properties are provided to shell adapters by environment variables with PTFProp_ as prefix, and dot in property name replaced by underline(_).
+For example, if a user has the following configuration in the PTFconfig
+
+```
+<Properties>
+    <Property name="ServerName" value="MS-Server" />
+    <Property name="SSH.Port" value="4242" />
+</Properties>
+```
+
+To initiate an SSH connection to the server. You can use the following command in shell script.
+
+```
+ssh -p $PTFProp_SSH_Port $PTFProp_ServerName
 ```
 
 ## <a name="4.4"> Extensive Logging Support 

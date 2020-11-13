@@ -209,9 +209,9 @@ namespace Microsoft.Protocols.TestTools
         /// This method can be overridden by extenders to do special initialization code.
         /// It calls base class's Initialize method to ensure the test site is initialized.
         /// </summary>
-        /// <param name="targetMethod"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <param name="args">The arguments the caller passed to the method.</param>
+        /// <returns>The return value of the Initialize implementation.</returns>
         protected override object Initialize(MethodInfo targetMethod, object[] args)
         {
             base.Initialize(targetMethod, args);
@@ -244,8 +244,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by extenders to do special processing of TestSite getter.
         /// </summary>
-        /// <param name="targetMethod"></param>
-        /// <returns></returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <returns>The return value of the GetSite implementation.</returns>
         protected override object GetSite(MethodInfo targetMethod)
         {
            return base.GetSite(targetMethod);
@@ -254,8 +254,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by extenders to do special processing of Reset.
         /// </summary>
-        /// <param name="targetMethod"></param>
-        /// <returns></returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <returns>The return value of the Reset implementation.</returns>
         protected override object Reset(MethodInfo targetMethod)
         {
             TestSite.Log.Add(LogEntryKind.EnterAdapter,
@@ -284,8 +284,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by extenders to do special processing of Dispose.
         /// </summary>
-        /// <param name="targetMethod"></param>
-        /// <returns></returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <returns>The return value of the Dispose implementation.</returns>
         protected override object Dispose(MethodInfo targetMethod)
         {
             try

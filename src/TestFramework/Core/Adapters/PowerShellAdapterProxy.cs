@@ -42,9 +42,9 @@ namespace Microsoft.Protocols.TestTools
         /// Can be overridden by extenders to do special initialization code.
         /// Call base to ensure the test site is initialized.
         /// </summary>
-        /// <param name="targetMethod"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <param name="args">The arguments the caller passed to the method.</param>
+        /// <returns>The return value of the Initialize implementation.</returns>
         protected override object Initialize(MethodInfo targetMethod, object[] args)
         {
             base.Initialize(targetMethod, args);
@@ -54,8 +54,8 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Can be overridden by extenders to do special processing of Reset.
         /// </summary>
-        /// <param name="targetMethod"></param>
-        /// <returns></returns>
+        /// <param name="targetMethod">The method the caller invoked.</param>
+        /// <returns>The return value of the Reset implementation.</returns>
         protected override object Reset(MethodInfo targetMethod)
         {
             return this.ExecuteMethod(targetMethod, null);

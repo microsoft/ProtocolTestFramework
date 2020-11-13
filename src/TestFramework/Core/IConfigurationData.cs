@@ -136,6 +136,34 @@ namespace Microsoft.Protocols.TestTools
     }
 
     /// <summary>
+    /// An abstract class which stores Shell script adapter information
+    /// </summary>
+    [Serializable]
+    public class ShellAdapterConfig : AdapterConfig
+    {
+        private string scriptDir;
+
+        /// <summary>
+        /// Constructs a Shell adapter instance
+        /// </summary>
+        /// <param name="name">Adapter name</param>
+        /// <param name="scriptDir">The directory name of the Shell scripts path</param>
+        public ShellAdapterConfig(string name, string scriptDir)
+            : base(name)
+        {
+            this.scriptDir = scriptDir;
+        }
+
+        /// <summary>
+        /// Gets the directory name of the Shell script path
+        /// </summary>
+        public string ScriptDir
+        {
+            get { return this.scriptDir; }
+        }
+    }
+
+    /// <summary>
     /// An abstract class which stores log sink config information
     /// </summary>
     [Serializable]
