@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+	<metadata>
+		<id>Microsoft.Protocols.TestTools</id>
+		<version>2.1.0</version>
+		<title>Protocol Test Framework</title>
+		<authors>Microsoft</authors>
+		<owners>Microsoft</owners>
+		<icon>packageIcon.png</icon>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<license type="file">LICENSE.txt</license>
+		<projectUrl>https://github.com/microsoft/ProtocolTestFramewor</projectUrl>
+		<description>The Protocol Test Framework (PTF) is designed to support Microsoft Protocol Test Suites for both Windows and Office Protocol Interoperability testing.</description>
+		<copyright>© Microsoft Corporation. All rights reserved.</copyright>
+		<tags>TestFramework Testing ProtocolTest</tags>
+		<dependencies>
+			<group targetFramework="net5.0">
+				<dependency id="MSTest.TestFramework" version="2.1.0" exclude="Build,Analyzers" />
+				<dependency id="Microsoft.PowerShell.SDK" version="7.0.0" exclude="Build,Analyzers" />
+			</group>
+		</dependencies>
+		<contentFiles>
+			<files include="**" buildAction="None" copyToOutput="true" flatten="false" />
+		</contentFiles>
+	</metadata>
+	<files>
+		<file src="Resources\packageIcon.png" target="" />
+		<file src="..\..\LICENSE.txt" target="" />
+		<file src="Microsoft.Protocols.TestTools.dll" target="lib\net5.0" />
+		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net5.0" />
+		<file src="Resources\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json" target="contentFiles\any\any" />
+	</files>
+</package>

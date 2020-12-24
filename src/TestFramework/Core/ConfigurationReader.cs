@@ -230,8 +230,14 @@ namespace Microsoft.Protocols.TestTools
                                                     DefaultSchemaInstance
                                                     );
 
+            // Create proxy for default type adapter.
+            if (type.Equals("interactive", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string adapterTypeName = this.TryGetAdapterAttribute(adapterName, "adaptertype", "");
+                adapter = new InteractiveAdapterConfig(adapterName, adapterTypeName);
+            }
             // Create proxy for PowerShell script type adapter
-            if (type.Equals("powershell", StringComparison.CurrentCultureIgnoreCase))
+            else if (type.Equals("powershell", StringComparison.CurrentCultureIgnoreCase))
             {
                 string psdir = this.GetAdapterAttribute(adapterName, "scriptdir", "");
                 adapter = new PowerShellAdapterConfig(adapterName, psdir);

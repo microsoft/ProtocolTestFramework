@@ -44,6 +44,15 @@
     </xs:complexContent>
   </xs:complexType>
 
+	<!-- Interactive Adapter -->
+	<xs:complexType name="interactive">
+		<xs:complexContent>
+			<xs:extension base="tc:adapterBase" >
+				<xs:attribute name="adaptertype" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
   <!-- Shell Script Adapter -->
   <xs:complexType name="shell">
     <xs:complexContent>

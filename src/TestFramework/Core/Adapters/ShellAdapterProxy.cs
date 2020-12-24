@@ -345,9 +345,13 @@ namespace Microsoft.Protocols.TestTools
         private List<OutArgs> outArgs = new List<OutArgs>(); // out-arg names
         private Type retValType; // The return value type
         private List<Type> inArgTypes = new List<Type>(); // in-arg types
+        private List<Type> outArgTypes = new List<Type>(); // out-arg types
         private DataTable inArgDataTable; // in-arg data table
+        private DataTable outArgDataTable; // out-arg data table
         private bool hasReturnVal;
         private bool hasInArg;
+        private bool hasOutArg;
+        private int[] outArgIndexes;
 
         # region Resulting properties
         /// <summary>
@@ -367,11 +371,27 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
+        /// The types of the out-arguments.
+        /// </summary>
+        public List<Type> OutArgTypes
+        {
+            get { return outArgTypes; }
+        }
+
+        /// <summary>
         /// The data table presenting the in-arguments.
         /// </summary>
         public DataTable InArgDataTable
         {
             get { return inArgDataTable; }
+        }
+
+        /// <summary>
+        /// The data table presenting the out-arguments.
+        /// </summary>
+        public DataTable OutArgDataTable
+        {
+            get { return outArgDataTable; }
         }
 
         /// <summary>
@@ -388,6 +408,22 @@ namespace Microsoft.Protocols.TestTools
         public bool HasInArg
         {
             get { return hasInArg; }
+        }
+
+        /// <summary>
+        /// Indicates if the method has out-arguments
+        /// </summary>
+        public bool HasOutArg
+        {
+            get { return hasOutArg; }
+        }
+
+        /// <summary>
+        /// Indicates the out argument positions in the passed-in parameters.
+        /// </summary>
+        public int[] OutArgIndexes
+        {
+            get { return outArgIndexes; }
         }
         #endregion
 
@@ -446,10 +482,14 @@ namespace Microsoft.Protocols.TestTools
                     var outArg = new OutArgs(pi.Name, null, pi.ParameterType);
                     outArg.DefaultValue = (defaultValue.Length > 0) ? defaultValue[0].DefaultValue : null;
                     outArgs.Add(outArg);
+                    outArgTypes.Add(pi.ParameterType);
+                    hasOutArg = true;
                     oais.Add(i);
                 }
                 i++; // arg position.
             }
+
+            outArgIndexes = oais.ToArray();
 
             // return value
             if (methodInfo.ReturnType != typeof(void))
@@ -495,6 +535,23 @@ namespace Microsoft.Protocols.TestTools
             }
 
             inArgDataTable = dt;
+
+            // Create the output parameter DataTable and bind to the DataGridView
+            dt = NewDataTable();
+
+            dt.Columns[0].ReadOnly = true;
+
+            foreach (var outArg in outArgs)
+            {
+                dr = dt.NewRow();
+                // Set names in the first column
+                dr[0] = outArg.Name;
+                dr[1] = outArg.DefaultValue;
+                dr[2] = outArg.Type;
+                dt.Rows.Add(dr);
+            }
+
+            outArgDataTable = dt;
         }
 
         private static DataTable NewDataTable()
@@ -532,5 +589,4 @@ namespace Microsoft.Protocols.TestTools
                 );
         }
     }
-
 }

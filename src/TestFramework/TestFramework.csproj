@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <PackageId>Microsoft.Protocols.TestTools</PackageId>
     <AssemblyName>Microsoft.Protocols.TestTools</AssemblyName>
     <RootNamespace>Microsoft.Protocols.TestTools</RootNamespace>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <Authors>Microsoft</Authors>
     <Company>Microsoft</Company>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
@@ -17,17 +17,27 @@
     <RepositoryType>git</RepositoryType>
     <PackageIcon>packageIcon.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
     <None Include="build\**\*.*" Pack="True" PackagePath="\build" />
-    <None Include="Resources\packageIcon.png" Pack="True" PackagePath="\" />
+    <None Include="Resources\packageIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Resources\Schema\TestConfig.xsd" />
     <None Remove="Resources\site.ptfconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +48,19 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TestFramework.AdapterConsole\TestFramework.AdapterConsole.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\packageIcon.png" Pack="True" PackagePath="\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFramework.nuspec">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

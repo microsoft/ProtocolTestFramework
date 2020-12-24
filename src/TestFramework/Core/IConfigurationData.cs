@@ -108,6 +108,24 @@ namespace Microsoft.Protocols.TestTools
     }
 
     /// <summary>
+    /// An abstract class which stores interactive adapter information
+    /// </summary>
+    [Serializable]
+    public class InteractiveAdapterConfig : AdapterConfig
+    {
+        /// <summary>
+        /// Constructs an interactive adapter instance
+        /// </summary>
+        /// <param name="name">Adapter name</param>
+        /// <param name="adapterType">Adapter implementation class name</param>
+        public InteractiveAdapterConfig(string name, string adapterType)
+            : base(name)
+        {
+
+        }
+    }
+
+    /// <summary>
     /// An abstract class which stores PowerShell script adapter information
     /// </summary>
     [Serializable]

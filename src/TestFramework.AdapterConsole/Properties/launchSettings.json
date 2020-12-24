@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "TestFramework.AdapterConsole": {
+      "commandName": "Project"
+    }
+  }
+}
