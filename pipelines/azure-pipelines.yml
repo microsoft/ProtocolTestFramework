@@ -6,8 +6,6 @@ variables:
 jobs:
 - job:
   displayName: Publish NuGet package
-  pool: 
-    vmImage: windows-2019
   workspace:
     clean: false
   timeoutInMinutes: 0
