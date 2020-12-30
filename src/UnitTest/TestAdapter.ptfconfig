@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <TestSite xmlns="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig.xsd">
 
   <Properties>
 
     <!-- Test suite properties which value not changed when running in different test environments -->
     <Property name="FeatureName" value="PTF:Adapter" />
+
+    <!-- Properties used in testing Tcp adapter -->
+    <Property name="MyTcpAdapter.hostname" value="127.0.0.1" />
+    <Property name="MyTcpAdapter.port" value="8000" />
   </Properties>
   <Adapters>
     <Adapter xsi:type="managed" name="IManagedAdapter" adaptertype="Microsoft.Protocols.TestTools.UnitTest.TestAdapter.ManagedAdapter"/>
+    <Adapter xsi:type="shell" name="IShellAdapter" scriptdir=".\Shell\"/>
     <Adapter xsi:type="powershell" name="IPowershellAdapter" scriptdir=".\PowerShell\"/>
+    <Adapter xsi:type="interactive" name="IInteractiveAdapter"/>
   </Adapters>
   <!-- The default profile name.  Provide maximum logging. -->
   <TestLog defaultprofile="Verbose">

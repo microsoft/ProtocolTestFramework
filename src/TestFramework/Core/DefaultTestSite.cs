@@ -358,11 +358,24 @@ namespace Microsoft.Protocols.TestTools
             // Get target adapter type.
             AdapterConfig adapterConfig = this.configData.GetAdapterConfig(adapterType.Name);
 
+            if (adapterConfig is InteractiveAdapterConfig)
+            {
+                adapter = InteractiveAdapterProxy.Wrap<T>(adapterType);
+            }
             // Create proxy for PowerShell script type adapter
-            if (adapterConfig is PowerShellAdapterConfig)
+            else if (adapterConfig is PowerShellAdapterConfig)
             {
                 string scriptDir = Path.Combine(ptfconfigDirectory, ((PowerShellAdapterConfig)adapterConfig).ScriptDir);
                 adapter = PowerShellAdapterProxy.Wrap<T>(
+                    scriptDir,
+                    adapterType);
+            }
+
+            // Create proxy for Shell script type adapter
+            else if (adapterConfig is ShellAdapterConfig)
+            {
+                string scriptDir = ((ShellAdapterConfig)adapterConfig).ScriptDir;
+                adapter = ShellAdapterProxy.Wrap<T>(
                     scriptDir,
                     adapterType);
             }

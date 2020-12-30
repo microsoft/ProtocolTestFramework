@@ -93,6 +93,17 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
 
         [TestMethod]
         [TestCategory("TestAdapter")]
+        public void PowershellAdpaterReturnContainingSpecialCharaters()
+        {
+            string str = "It's great!!";
+            BaseTestSite.Assert.AreEqual(
+                str,
+                powershellAdapter.ReturnString(str),
+                "Shell adapter should return " + str);
+        }
+
+        [TestMethod]
+        [TestCategory("TestAdapter")]
         public void PowershellAdapterReturnBool()
         {
             BaseTestSite.Assert.IsTrue(

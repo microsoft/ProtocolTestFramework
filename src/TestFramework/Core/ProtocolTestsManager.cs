@@ -571,15 +571,15 @@ namespace Microsoft.Protocols.TestTools
             {
                 if (!CompareAction(availableObject, expectedObject))
                 {
-                    diagnosis.AppendLine(String.Format("  {0}. {1} is not matching", index + 1, expectedObject.ToString()));
+                    diagnosis.AppendLine(String.Format("{0} is not matching", expectedObject.ToString()));
                 }
                 else
                 {
-                    List<TransactionEvent> t = failedTransactions[index++];
+                    List<TransactionEvent> t = failedTransactions[index];
                     diagnosis.AppendLine(String.Format("  {0}. outputs do not match", index + 1));
                     Describe(diagnosis, "    ", t);
+                    index++;
                 }
-                index++;
             }
             InternalAssert(false, String.Format("expected matching event, found '{0}'. Diagnosis:\r\n{1}", availableObject.ToString(), diagnosis.ToString()));
             return -1;
