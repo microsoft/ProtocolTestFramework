@@ -31,10 +31,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Remove="build\Microsoft.Protocols.TestTools.targets" />
     <None Remove="Resources\Schema\TestConfig.xsd" />
     <None Remove="Resources\site.ptfconfig" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="build\Microsoft.Protocols.TestTools.targets">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

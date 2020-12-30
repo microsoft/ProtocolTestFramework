@@ -81,12 +81,34 @@ namespace Microsoft.Protocols.TestTools.AdapterConsole
             }
         }
 
+        public static object GetYesNoFromConsole(string prompt)
+        {
+            var originalColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            string keyValue = ConsoleHelper.ReadFromConsole(prompt);
+            if(string.IsNullOrEmpty(keyValue) || keyValue.ToLower().Equals("yes") || keyValue.ToLower().Equals("y"))
+            {
+                return 1;
+            }
+            else if(keyValue.ToLower().Equals("no") || keyValue.ToLower().Equals("n"))
+            {
+                return 0;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Your input value is invalid. Please enter [Y] to continue or [N] to abort.");
+                Console.ForegroundColor = originalColor;
+                return GetYesNoFromConsole(prompt);
+            }
+        }
+
         public static object GetValueFromConsole(string prompt, Type type)
         {
-            string keyVaule = ConsoleHelper.ReadFromConsole(prompt);
+            string keyValue = ConsoleHelper.ReadFromConsole(prompt);
             try
             {
-                return ConsoleHelper.ParseResult(type, keyVaule);
+                return ConsoleHelper.ParseResult(type, keyValue);
             }
             catch (FormatException)
             {

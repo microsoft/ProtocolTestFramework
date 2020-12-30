@@ -22,7 +22,7 @@ namespace Microsoft.Protocols.TestTools.AdapterConsole
 
                 if (arg.ReturnParam != null)
                 {
-                    result.ReturnValue =""+ ConsoleHelper.GetValueFromConsole(arg.ReturnParam.Title, Type.GetType(arg.ReturnParam.Type));
+                    result.ReturnValue =""+ ConsoleHelper.GetYesNoFromConsole(arg.ReturnParam.Title);
                 }
 
                 if (arg.OutParams != null && arg.OutParams.Count > 0)

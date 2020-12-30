@@ -4,11 +4,5 @@
 		<None Update="$(MSBuildProjectDirectory)\*.ptfconfig">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<Content Include="$(MSBuildThisFileDirectory)\..\Microsoft.Protocols.TestTools.AdapterConsole.dll">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)\..\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
 	</ItemGroup>
 </Project>

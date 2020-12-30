@@ -60,7 +60,8 @@ namespace Microsoft.Protocols.TestTools
                         retVal = consoleAdapter.ProcessArguments();
                         if (retVal == 0) // Abort case.
                         {
-                            TestSite.Assume.Fail(msg);
+                            TestSite.Log.Add(LogEntryKind.Warning, "Case manually aborted.");
+                            TestSite.Assert.Fail(msg);
                         }
                     }
                 }

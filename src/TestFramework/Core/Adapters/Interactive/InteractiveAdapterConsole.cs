@@ -169,7 +169,7 @@ namespace Microsoft.Protocols.TestTools
                     Content = "" + builder.OutArgDataTable.Rows[firstOutArgIndex][0],
                     ParameterIndex = 0,
                     ParameterName = "" + builder.OutArgDataTable.Rows[firstOutArgIndex][0],
-                    Title = "Please enter non-zero value when you're ready to perform interactive action",
+                    Title = "Please enter [Y] when you're ready to perform interactive action or enter [N] to abort the case.",
                     Type = builder.RetValType.ToString(),
                 };
 
