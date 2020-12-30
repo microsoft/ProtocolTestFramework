@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Data;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -210,7 +211,7 @@ namespace Microsoft.Protocols.TestTools
             }
         }
 
-       private string BuildScriptArguments()
+        private string BuildScriptArguments()
         {
             StringBuilder arguments = new StringBuilder();
             arguments.Append(BuildInArguments());
@@ -253,24 +254,32 @@ namespace Microsoft.Protocols.TestTools
             {
                 using (Process proc = new Process())
                 {
+                    // For Linux/macOS, use the shell on current system
                     string wslPath = "/bin/bash";
-                    string winDir = Environment.GetEnvironmentVariable("WINDIR");
-                    if(!string.IsNullOrEmpty(winDir))
-                    {
-                        if (Environment.Is64BitProcess)
-                        {
-                            wslPath = string.Format(@"{0}\System32\bash.exe", winDir);
-                        }
-                        else
-                        {
-                            wslPath = string.Format(@"{0}\Sysnative\bash.exe", winDir);
-                        }
 
-                        if (!File.Exists(wslPath))
+                    // Detect current OS
+                    bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+                    if (isWindows)
+                    {
+                        // For Windows, WSL is needed
+                        string winDir = Environment.GetEnvironmentVariable("WINDIR");
+                        if (!string.IsNullOrEmpty(winDir))
                         {
-                            TestSite.Assume.Fail("Windows Subsystem for Linux (WSL) is not installed.");
+                            if (Environment.Is64BitProcess)
+                            {
+                                wslPath = string.Format(@"{0}\System32\bash.exe", winDir);
+                            }
+                            else
+                            {
+                                wslPath = string.Format(@"{0}\Sysnative\bash.exe", winDir);
+                            }
+
+                            if (!File.Exists(wslPath))
+                            {
+                                TestSite.Assume.Fail("Windows Subsystem for Linux (WSL) is not installed.");
+                            }
                         }
-                    }                   
+                    }
 
                     proc.StartInfo.FileName = wslPath;
                     proc.StartInfo.Arguments = String.Format("{0} {1}", path, arguments);
