@@ -13,6 +13,12 @@
 		<description>The Protocol Test Framework (PTF) is designed to support Microsoft Protocol Test Suites for both Windows and Office Protocol Interoperability testing.</description>
 		<copyright>© Microsoft Corporation. All rights reserved.</copyright>
 		<tags>TestFramework Testing ProtocolTest</tags>
+		<releaseNotes>
+			1. The PTF now supports Interactive Adapter and Shell Adapter.
+			2. Logging is improved.
+			3. The new PTF is migrated from .NET Core 3.1 to .NET 5
+		</releaseNotes>
+		<repository type="git" url="https://github.com/microsoft/ProtocolTestFramework" />
 		<dependencies>
 			<group targetFramework="net5.0">
 				<dependency id="MSTest.TestFramework" version="2.1.0" exclude="Build,Analyzers" />
