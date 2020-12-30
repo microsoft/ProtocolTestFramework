@@ -11,18 +11,18 @@ jobs:
   timeoutInMinutes: 0
 
   steps:
-  - task: DotNetCoreCLI@2
-    displayName: Restore
+  - task: PowerShell@2
+    displayName: 'Build and Pack PTF'
     inputs:
-      command: restore
-      projects: src/TestFramework/TestFramework.csproj
+      targetType: filePath
+      filePath: ./src/build.ps1
 
-  - task: DotNetCoreCLI@2
-    displayName: Pack
+  - task: CopyFiles@2
+    displayName: 'Copy nupkg to $(Build.ArtifactStagingDirectory)'
     inputs:
-      command: pack
-      packagesToPack: src/TestFramework/TestFramework.csproj
-      configuration: '$(build.configuration)'
+      SourceFolder: src/drop
+      Contents: '*.nupkg'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
