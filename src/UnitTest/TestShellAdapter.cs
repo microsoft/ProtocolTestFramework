@@ -20,7 +20,7 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
         void ThrowException(string exceptionMessage);
 
         [MethodHelp("Shell script will return an integer.")]
-        int ReturnInt(int number);
+        int ReturnInt(int number, out string name);
 
         [MethodHelp("Shell script will return a string.")]
         string ReturnString(string str);
@@ -92,9 +92,10 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
         public void ShellAdapterReturnInt()
         {
             int num = 42;
+            string name = string.Empty;
             BaseTestSite.Assert.AreEqual(
                 num,
-                shellAdapter.ReturnInt(num),
+                shellAdapter.ReturnInt(num, out name),
                 "Shell adapter should return " + num);
         }
 

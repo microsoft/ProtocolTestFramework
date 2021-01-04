@@ -13,7 +13,7 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
     public interface IInteractiveAdapter : IAdapter
     {
         [MethodHelp("Check interactive adapter return value, expected input value is 1.")]
-        int ReturnInt(int number);
+        int ReturnInt(int number, out string name);
     }
 
     /// <summary>
@@ -51,9 +51,11 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
         [TestCategory("TestAdapter")]
         public void InteractiveAdapterReturnInt()
         {
+            string outStr = string.Empty;
+            int outValue = interactiveAdapter.ReturnInt(0, out outStr);
             BaseTestSite.Assert.AreEqual(
                 1,
-                interactiveAdapter.ReturnInt(0),
+                outValue,
                 "Interactive adapter should return 1");
         }
 
