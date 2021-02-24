@@ -7,7 +7,7 @@ It implements the fundamentals to support Protocol Test Suite, including logging
 
 PTF is based on .NET Core and support cross-platform. It runs on Windows, macOS and multiple distributions of Linux.
 You should install the software listed below based on your testing purpose, including their own dependencies.
-1. [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+1. [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
 
 ## Build
 

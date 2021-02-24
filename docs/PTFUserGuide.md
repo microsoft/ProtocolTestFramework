@@ -151,6 +151,10 @@ The configuration allows an adapter to be created in various ways:
 
     The managed adapter allows users to use managed code to implement the interface methods.
 
+* Interactive adapter
+
+    The Interactive adapter pops up a console dialog to perform manual operations each time one of its methods is called. The console dialog includes the method name, help text, input parameters and result. Users can confirm the completion of the manual operation by enter [Y]Yes. If users can’t finish the operation for some reason, they can enter [N] No to terminate the test. In this case, the test will be treated as "Failed".
+
 ### PowerShell Adapter
 
 Users can configure a PowerShell Adapter by defining an adapter as "PowerShell" in the PTF configuration files. The PTF will run the corresponding PowerShell script when one of the adapter's methods is called.
@@ -289,6 +293,50 @@ To initiate an SSH connection to the server. You can use the following command i
 
 ```
 ssh -p $PTFProp_SSH_Port $PTFProp_ServerName
+```
+
+### Interactive Adapter
+
+User can configure an interactive adapter by defining an adapter as "interactive" in the PTF configuration files. The PTF will create a pop-up console dialog with the following: help text, input parameters and return value when one of the adapter's methods is called. Interactive adapters are used when the only way to configure a server is to manually go to the server and configure it. The pop-up console dialog will provide the necessary information to configure the server and pass any relevant values back to the test suite. 
+
+__Benefits__
+
+Users don't need to write any extra code to run the test case in an interactive mode. They only need to define interfaces. The interactive adapter of PTF takes care of the UI logic.
+
+__Usage__
+
+The interactive adapter can be defined in the configuration like the following line:
+
+```
+<Adapter xsi:type="interactive" name="IAdapterInterfaceName" />
+```
+
+* The element name must be "Adapter"
+* The interactive "Adapter" element must contain only two attributes:
+    * "xsi:type": The value of this attribute must be "interactive".
+    * "name": The value of this attribute is the name of the adapter interface which will be bound to the interactive adapter proxy.
+
+__Parameters__
+
+The user should override `ToString()` of the custom type to provide detailed information of each object, and interactive adapter would call ToString() automatically to show the string in the pop-up console dialog
+
+If the interactive adapter's method is invoked, a console dialog will be opened as shown in the following figure.
+
+![](images/Demo.PNG "Demo")
+
+* The help text is displayed under Help Message. 
+* The action parameters (input parameters) are displayed under Action Parameters part.
+* The action results is displayed and allow user input the [Y] to continue or [N] to abort the case.
+
+__Help Text__
+
+The help text is used to instruct user to perform corresponding manual actions related to the calling method. The help text is defined using the MethodHelp attribute before the adapter method. 
+
+The following is a method declaration with a help text.
+
+```
+[MethodHelp("Return 0 for successful or non-zero error code.")]
+int Setup(string message);
 ```
 
 ## <a name="4.4"> Extensive Logging Support 
