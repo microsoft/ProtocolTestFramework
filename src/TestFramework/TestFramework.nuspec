@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>Microsoft.Protocols.TestTools</id>
-		<version>2.1.0</version>
+		<version>2.2.0</version>
 		<title>Protocol Test Framework</title>
 		<authors>Microsoft</authors>
 		<owners>Microsoft</owners>
@@ -34,6 +34,7 @@
 		<file src="..\..\LICENSE.txt" target="" />
 		<file src="Microsoft.Protocols.TestTools.dll" target="lib\net5.0" />
 		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net5.0" />
+		<file src="Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net5.0" />
 		<file src="Resources\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json" target="contentFiles\any\any" />
 		<file src="build\Microsoft.Protocols.TestTools.targets" target="build\" />
 	</files>

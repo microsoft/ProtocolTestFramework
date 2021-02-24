@@ -32,6 +32,18 @@ namespace Microsoft.Protocols.TestTools.Logging
             catch { sw = null; }
         }
 
+        public PipeSink(string name, string identity)
+            : base(name)
+        {
+            client = new NamedPipeClientStream(string.IsNullOrEmpty(identity) ? PipeName : identity);
+            try
+            {
+                client.Connect(1000);
+                sw = new StreamWriter(client);
+            }
+            catch { sw = null; }
+        }
+
         protected override void OnWriteEntry(Dictionary<string, object> information)
         {
             WriteAny(

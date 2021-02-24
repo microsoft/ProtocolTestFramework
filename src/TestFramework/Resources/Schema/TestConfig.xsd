@@ -44,15 +44,15 @@
     </xs:complexContent>
   </xs:complexType>
 
-	<!-- Interactive Adapter -->
-	<xs:complexType name="interactive">
-		<xs:complexContent>
-			<xs:extension base="tc:adapterBase" >
-				<xs:attribute name="adaptertype" type="xs:string" use="optional"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
+  <!-- Interactive Adapter -->
+  <xs:complexType name="interactive">
+    <xs:complexContent>
+      <xs:extension base="tc:adapterBase" >
+        <xs:attribute name="adaptertype" type="xs:string" use="optional"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <!-- Shell Script Adapter -->
   <xs:complexType name="shell">
     <xs:complexContent>
@@ -62,7 +62,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <!-- Managed Adapter -->
   <xs:complexType name="managed">
     <xs:complexContent>
@@ -175,6 +175,8 @@
                         <xs:attribute name="id" type="xs:ID" use="required"/>
                         <!-- Name of the sink type -->
                         <xs:attribute name="type" type="xs:string" use="required"/>
+                        <!-- identity of the sink type -->
+                        <xs:attribute name="identity" type="xs:string" use="optional"/>
                         <!-- Attribute "assembly" is deprecated, please DO NOT use this attribute. -->
                         <xs:attribute name="assembly" type="xs:string" use="optional"/>
                       </xs:complexType>

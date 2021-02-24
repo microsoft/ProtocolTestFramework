@@ -221,6 +221,7 @@ namespace Microsoft.Protocols.TestTools
     public class CustomLogSinkConfig : LogSinkConfig
     {
         private string type;
+        private string identity;
 
         /// <summary>
         /// Constructs a customer log sink config instance
@@ -234,6 +235,18 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
+        /// Constructs a customer log sink config instance
+        /// </summary>
+        /// <param name="name">Log sink name</param>
+        /// <param name="type">Log sink implementation class name</param>
+        /// <param name="identity">Log sink identity</param>
+        public CustomLogSinkConfig(string name, string type, string identity)
+            : this(name, type)
+        {
+            this.identity = identity;
+        }
+
+        /// <summary>
         /// Gets or sets the implementation class name of a
         /// customer defined log sink.
         /// </summary>
@@ -241,6 +254,15 @@ namespace Microsoft.Protocols.TestTools
         {
             get { return this.type; }
             set { this.type = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the identity of a customer defined log sink
+        /// </summary>
+        public string Identity
+        {
+            get { return this.identity; }
+            set { this.identity = value; }
         }
     }
 

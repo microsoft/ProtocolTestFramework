@@ -138,7 +138,8 @@ namespace Microsoft.Protocols.TestTools.Logging
                     sinkSupported = true;
                     AddCustomSink(
                             customSink.Name,
-                            customSink.Type);
+                            customSink.Type,
+                            customSink.Identity);
                 }
 
                 FileLogSinkConfig fileSink = sink as FileLogSinkConfig;
@@ -309,12 +310,22 @@ namespace Microsoft.Protocols.TestTools.Logging
 
         private void AddCustomSink(
             string name,
-            string type)
+            string type,
+            string identity)
         {
             // Create instance of custom type sink from a assembly.
             try
             {
-                LogSink sink = (LogSink)TestToolHelpers.CreateInstanceFromTypeName(type, new object[] { name });
+                LogSink sink = null;
+                if (string.IsNullOrEmpty(identity))
+                {
+                    sink = (LogSink)TestToolHelpers.CreateInstanceFromTypeName(type, new object[] { name });
+                }
+                else
+                {
+                    sink = (LogSink)TestToolHelpers.CreateInstanceFromTypeName(type, new object[] { name, identity });
+                }
+                 
                 if (sink == null)
                 {
                     throw new InvalidOperationException(String.Format("Failed to create custom sink: {0}.", type));

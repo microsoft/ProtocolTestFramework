@@ -2,19 +2,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.IO;
-using System.Xml;
-using System.Xml.XPath;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Xml.Schema;
-using System.Text;
-using System.Collections;
-using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Runtime.InteropServices;
+using System.Collections.Specialized;
+using System.IO;
+using System.Reflection;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.XPath;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -293,9 +288,16 @@ namespace Microsoft.Protocols.TestTools
                     switch (sink.Name)
                     {
                         case "Sink":
+                            string identity = string.Empty;
+                            if (sink.Attributes["identity"] != null)
+                            {
+                                identity = sink.Attributes["identity"].Value;
+                            }
+                            
                             logSinks.Add(new CustomLogSinkConfig(
                                 name,
-                                sink.Attributes["type"].Value));
+                                sink.Attributes["type"].Value,
+                                identity));
                             break;
                         case "File":
                             logSinks.Add(new FileLogSinkConfig(

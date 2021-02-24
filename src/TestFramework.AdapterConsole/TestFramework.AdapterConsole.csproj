@@ -5,5 +5,12 @@
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Microsoft.Protocols.TestTools.AdapterConsole</AssemblyName>
     <RootNamespace>Microsoft.Protocols.TestTools.AdapterConsole</RootNamespace>
+    <Description>Interactive console adapter</Description>
+    <ProductName>Microsoft Protocol Test Framework Interactive Console Adapter</ProductName>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
+  </ItemGroup>
 </Project>

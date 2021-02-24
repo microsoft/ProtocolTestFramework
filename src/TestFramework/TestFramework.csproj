@@ -5,19 +5,11 @@
     <PackageId>Microsoft.Protocols.TestTools</PackageId>
     <AssemblyName>Microsoft.Protocols.TestTools</AssemblyName>
     <RootNamespace>Microsoft.Protocols.TestTools</RootNamespace>
-    <Version>2.1.0</Version>
-    <Authors>Microsoft</Authors>
-    <Company>Microsoft</Company>
-    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-    <Description>The Protocol Test Framework (PTF) is designed to support Microsoft Protocol Test Suites for both Windows and Office Protocol Interoperability testing.</Description>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/microsoft/ProtocolTestFramework</PackageProjectUrl>
-    <PackageTags>TestFramework Testing ProtocolTest</PackageTags>
-    <RepositoryUrl>https://github.com/microsoft/ProtocolTestFramework.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageIcon>packageIcon.png</PackageIcon>
+    <ProductName>Microsoft Protocol Test Framework</ProductName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Product />
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +26,9 @@
     <None Remove="build\Microsoft.Protocols.TestTools.targets" />
     <None Remove="Resources\Schema\TestConfig.xsd" />
     <None Remove="Resources\site.ptfconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="build\Microsoft.Protocols.TestTools.targets">
@@ -55,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PTFTestLogger\PTFTestLogger.csproj" />
     <ProjectReference Include="..\TestFramework.AdapterConsole\TestFramework.AdapterConsole.csproj" />
   </ItemGroup>
 

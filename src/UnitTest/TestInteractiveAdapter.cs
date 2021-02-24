@@ -12,8 +12,8 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
     /// </summary>
     public interface IInteractiveAdapter : IAdapter
     {
-        [MethodHelp("Check interactive adapter return value, expected input value is 1.")]
-        int ReturnInt(int number, out string name);
+        [MethodHelp("Check interactive adapter return value, expected input value is [Y].")]
+        int ReturnInt(int number);
     }
 
     /// <summary>
