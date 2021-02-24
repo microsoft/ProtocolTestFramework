@@ -1,9 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
 {
@@ -13,7 +9,10 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
     public interface IInteractiveAdapter : IAdapter
     {
         [MethodHelp("Check interactive adapter return value, expected input value is [Y].")]
-        int ReturnInt(int number);
+        int CheckReturnValueAfterEnterY(int number);
+
+        [MethodHelp("Check interactive adapter return value, expected input value is [N].")]
+        int CheckReturnValueAfterEnterN(int number);
     }
 
     /// <summary>
@@ -49,14 +48,21 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
         #region Test cases
         [TestMethod]
         [TestCategory("TestAdapter")]
-        public void InteractiveAdapterReturnInt()
+        public void InteractiveAdapterCheckReturnValueAfterEnterY()
         {
-            string outStr = string.Empty;
-            int outValue = interactiveAdapter.ReturnInt(0, out outStr);
+            int outValue = interactiveAdapter.CheckReturnValueAfterEnterY(0);
             BaseTestSite.Assert.AreEqual(
                 1,
                 outValue,
                 "Interactive adapter should return 1");
+        }
+
+        [TestMethod]
+        [TestCategory("TestAdapter")]
+        [ExpectedException(typeof(AssertFailedException))]
+        public void InteractiveAdapterCheckReturnValueAfterEnterN()
+        {
+            interactiveAdapter.CheckReturnValueAfterEnterY(0);
         }
 
         #endregion
