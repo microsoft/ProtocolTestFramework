@@ -19,6 +19,10 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
         [MethodHelp("Powershell script will return an integer.")]
         int ReturnInt(int number);
 
+        [MethodHelp("Test Powershell script will timeout to return.")]
+        [InvokeTimeout(1)]
+        int TestTimeout(int number);
+
         [MethodHelp("Powershell script will return a string.")]
         string ReturnString(string str);
 
@@ -79,6 +83,15 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
                 0,
                 powershellAdapter.ReturnInt(0),
                 "Powershell adapter should return 0");
+        }
+
+        [TestMethod]
+        [TestCategory("TestAdapter")]
+        [ExpectedException(typeof(TimeoutException))]
+        public void PowershellAdapterTestTimeout()
+        {
+            powershellAdapter.TestTimeout(0);
+            BaseTestSite.Assert.Fail("Invoke method call should timeout");
         }
 
         [TestMethod]

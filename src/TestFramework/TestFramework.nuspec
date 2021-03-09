@@ -14,10 +14,11 @@
 		<copyright>© Microsoft Corporation. All rights reserved.</copyright>
 		<tags>TestFramework Testing ProtocolTest</tags>
 		<releaseNotes>
-			1. The PTF now supports Interactive Adapter and Shell Adapter.
-			2. Logging is improved.
-			3. The new PTF is migrated from .NET Core 3.1 to .NET 5
-		</releaseNotes>
+          1. Add HTML PTFTestLogger
+          2. Upgrade PowerShell SDK to 7.1.2
+          3. Make NamedPipe as configurable
+          4. Add timeout while invoke adapter method
+        </releaseNotes>
 		<repository type="git" url="https://github.com/microsoft/ProtocolTestFramework" />
 		<dependencies>
 			<group targetFramework="net5.0">

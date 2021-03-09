@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Data;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -113,17 +114,34 @@ namespace Microsoft.Protocols.TestTools
                     }
                     else
                     {
-                        int scriptRet = InvokeScript(path, arguments);
+                        int timeout = AdapterProxyHelpers.GetTimeout(targetMethod, int.Parse(TestSite.Properties["AdapterInvokeTimeout"]));
 
-                        if (scriptRet != 0)
+                        Task<int> invokeTask = Task.Run<int>(() =>
                         {
-                            string exceptionMessage = string.Format("Exception thrown when executing {0}.sh.\nExit code: {1}\nError message: {2}\n", targetMethod.Name, scriptRet, errorMsg);
-                            throw new InvalidOperationException(exceptionMessage);
+                            TestSite.Log.Add(LogEntryKind.Debug, $"Start to invoke shell {targetMethod.Name}.sh, timeout: {timeout}");
+                            int invokeResult = InvokeScript(path, arguments);
+                            TestSite.Log.Add(LogEntryKind.Debug, $"Complete execute shell {targetMethod.Name}.sh");
+
+                            return invokeResult;
+                        });
+
+                        TimeSpan waiter = TimeSpan.FromMinutes(timeout);
+                        if (invokeTask.Wait(waiter))
+                        {
+                            if (invokeTask.Result != 0)
+                            {
+                                string exceptionMessage = string.Format("Exception thrown when executing {0}.sh.\nExit code: {1}\nError message: {2}\n", targetMethod.Name, invokeTask.Result, errorMsg);
+                                throw new InvalidOperationException(exceptionMessage);
+                            }
+
+                            if (builder.HasReturnVal)
+                            {
+                                retVal = AdapterProxyHelpers.ParseResult(builder.RetValType, lastOutput);
+                            }
                         }
-
-                        if (builder.HasReturnVal)
+                        else
                         {
-                            retVal = AdapterProxyHelpers.ParseResult(builder.RetValType, lastOutput);
+                            throw new TimeoutException($"Invoke adapater method timeout after wait {timeout} minutes.");
                         }
                     }
                 }

@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Management.Automation.Runspaces;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -103,27 +104,45 @@ namespace Microsoft.Protocols.TestTools
                     }
                     else
                     {
-                        PSParameterBuilder builder = InvokeScript(path, targetMethod, args, methodhelp);
-                        if (builder != null)
+                        int timeout = AdapterProxyHelpers.GetTimeout(targetMethod, int.Parse(TestSite.Properties["AdapterInvokeTimeout"]));
+                        Task<PSParameterBuilder> invokeTask = Task.Run<PSParameterBuilder>(() =>
                         {
-                            retVal = builder.RetValue;
+                            TestSite.Log.Add(LogEntryKind.Debug, $"Start to invoke Script {targetMethod.Name}.ps1, timeout: {timeout}");
+                            var invokeResult = InvokeScript(path, targetMethod, args, methodhelp);
+                            TestSite.Log.Add(LogEntryKind.Debug, $"Complete execute Script {targetMethod.Name}.ps1");
+                            return invokeResult;
+                        });
 
-                            if (builder.OutArguments != null)
+                        TimeSpan waiter = TimeSpan.FromMinutes(timeout);
+
+                        if (invokeTask.Wait(waiter))
+                        {
+                            PSParameterBuilder resultBuilder = invokeTask.Result;
+                            if (resultBuilder != null)
                             {
-                                int argsIndex = 0;
-                                int outArgsIndex = 0;
-                                foreach (ParameterInfo pi in targetMethod.GetParameters())
-                                {
-                                    if (pi.ParameterType.IsByRef)
-                                    {
-                                        outArgs[argsIndex] = builder.OutArguments[outArgsIndex++];
-                                    }
-                                    argsIndex++;
-                                }
-                            }
+                                retVal = resultBuilder.RetValue;
 
-                            //clear builder
-                            builder = null;
+                                if (resultBuilder.OutArguments != null)
+                                {
+                                    int argsIndex = 0;
+                                    int outArgsIndex = 0;
+                                    foreach (ParameterInfo pi in targetMethod.GetParameters())
+                                    {
+                                        if (pi.ParameterType.IsByRef)
+                                        {
+                                            outArgs[argsIndex] = resultBuilder.OutArguments[outArgsIndex++];
+                                        }
+                                        argsIndex++;
+                                    }
+                                }
+
+                                //clear builder
+                                resultBuilder = null;
+                            }
+                        }
+                        else
+                        {
+                            throw new TimeoutException($"Invoke adapater method timeout after wait {timeout} minutes.");
                         }
                     }
                 }

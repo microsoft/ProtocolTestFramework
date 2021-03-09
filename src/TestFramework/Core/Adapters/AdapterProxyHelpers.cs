@@ -31,6 +31,27 @@ namespace Microsoft.Protocols.TestTools
         }
 
         /// <summary>
+        /// Gets the timeout attribute value for the calling method.
+        /// </summary>
+        /// <param name="targetMethod">The method from the adapter proxy.</param>
+        /// <param name="defaultValue">Default timeout.</param>
+        /// <returns>timeout value.</returns>
+        internal static int GetTimeout(MethodInfo targetMethod, int defaultValue)
+        {
+            if (targetMethod == null)
+            {
+                throw new ArgumentNullException("targetMethod");
+            }
+            // Find the MethodHelp attribute and the corresponding message.
+            object[] attrs = targetMethod.GetCustomAttributes(typeof(InvokeTimeoutAttribute), false);
+            if (attrs.Length > 0)
+            {
+                return ((InvokeTimeoutAttribute)attrs[0]).InvokeTimeoutValue;
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
         /// Parses the result and convert it to the corresponding type.
         /// </summary>
         /// <param name="type">The type of the result which should be converted to.</param>

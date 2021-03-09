@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -320,13 +321,32 @@ namespace Microsoft.Protocols.TestTools
 
                 try
                 {
-                    if (targetMethod.IsStatic)
+                    int timeout = AdapterProxyHelpers.GetTimeout(targetMethod, int.Parse(TestSite.Properties["AdapterInvokeTimeout"]));
+                    Task<object> invokeTask = Task.Run<object>(() =>
                     {
-                        retVal = targetMethod.Invoke(null, args);
+                        TestSite.Log.Add(LogEntryKind.Debug, $"Start to invoke target method {targetMethod.Name}, timeout: {timeout}");
+                        object invokeResult;
+                        if (targetMethod.IsStatic)
+                        {
+                            invokeResult = targetMethod.Invoke(null, args);
+                        }
+                        else
+                        {
+                            invokeResult = targetMethod.Invoke(instance, args);
+                        }
+                        TestSite.Log.Add(LogEntryKind.Debug, $"Complete invoke target method {targetMethod.Name}.");
+                        return invokeResult;
+                    });
+
+                    TimeSpan waiter = TimeSpan.FromMinutes(timeout);
+
+                    if (invokeTask.Wait(waiter))
+                    {
+                        retVal = invokeTask.Result;
                     }
                     else
                     {
-                        retVal = targetMethod.Invoke(instance, args);
+                        throw new TimeoutException($"Invoke adapater method timeout after wait {timeout} minutes.");
                     }
                 }
                 catch (Exception ex)
