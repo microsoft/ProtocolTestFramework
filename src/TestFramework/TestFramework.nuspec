@@ -15,15 +15,15 @@
 		<tags>TestFramework Testing ProtocolTest</tags>
 		<releaseNotes>
           1. Add HTML PTFTestLogger
-          2. Upgrade PowerShell SDK to 7.1.2
-          3. Make NamedPipe as configurable
-          4. Add timeout while invoke adapter method
+          2. Upgrade PowerShell SDK to 7.1.3
+          3. Make NamedPipe name configurable
+          4. Add timeout feature for invoke adapter method
         </releaseNotes>
 		<repository type="git" url="https://github.com/microsoft/ProtocolTestFramework" />
 		<dependencies>
 			<group targetFramework="net5.0">
 				<dependency id="MSTest.TestFramework" version="2.1.0" exclude="Build,Analyzers" />
-				<dependency id="Microsoft.PowerShell.SDK" version="7.0.0" exclude="Build,Analyzers" />
+				<dependency id="Microsoft.PowerShell.SDK" version="7.1.3" exclude="Build,Analyzers" />
 			</group>
 		</dependencies>
 		<contentFiles>

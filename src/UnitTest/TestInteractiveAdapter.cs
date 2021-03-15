@@ -62,7 +62,7 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
         [ExpectedException(typeof(AssertFailedException))]
         public void InteractiveAdapterCheckReturnValueAfterEnterN()
         {
-            interactiveAdapter.CheckReturnValueAfterEnterY(0);
+            interactiveAdapter.CheckReturnValueAfterEnterN(0);
         }
 
         #endregion

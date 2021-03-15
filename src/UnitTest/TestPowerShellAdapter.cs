@@ -69,7 +69,7 @@ namespace Microsoft.Protocols.TestTools.UnitTest.TestAdapter
         #region Test cases
         [TestMethod]
         [TestCategory("TestAdapter")]
-        [PTFExpectedException(typeof(InvalidOperationException))]
+        [PTFExpectedException(typeof(AggregateException))]
         public void PowershellAdapterThrowException()
         {
             powershellAdapter.ThrowException("exception");
