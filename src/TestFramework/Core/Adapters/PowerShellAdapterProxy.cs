@@ -148,8 +148,12 @@ namespace Microsoft.Protocols.TestTools
                 }
                 catch (Exception ex)
                 {
+                    if (ex.InnerException != null)
+                    {
+                        ex = ex.InnerException;
+                    }
                     TestSite.Log.Add(LogEntryKind.Debug, ex.ToString());
-                    throw;
+                    throw ex;
                 }
                 finally
                 {

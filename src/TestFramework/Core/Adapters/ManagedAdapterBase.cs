@@ -351,6 +351,11 @@ namespace Microsoft.Protocols.TestTools
                 }
                 catch (Exception ex)
                 {
+                    if (ex.InnerException != null)
+                    {
+                        ex = ex.InnerException;
+                    }
+                    
                     if (ex is TargetInvocationException)
                     {
                         // thrown by methods invoked through reflection
