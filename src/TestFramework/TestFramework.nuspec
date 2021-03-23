@@ -14,10 +14,10 @@
 		<copyright>© Microsoft Corporation. All rights reserved.</copyright>
 		<tags>TestFramework Testing ProtocolTest</tags>
 		<releaseNotes>
-          1. Add HTML PTFTestLogger
-          2. Upgrade PowerShell SDK to 7.1.3
-          3. Make NamedPipe name configurable
-          4. Add timeout feature for invoke adapter method
+			1. The PTF now supports HTML Test logger.
+			2. The PTF now supports to specify Timeout to invoke Adapter method.
+			3. The PipeSink now supports to specify pipe name.
+			4. The dependent PowerShell Core SDK is upgraded to 7.1.3.
         </releaseNotes>
 		<repository type="git" url="https://github.com/microsoft/ProtocolTestFramework" />
 		<dependencies>

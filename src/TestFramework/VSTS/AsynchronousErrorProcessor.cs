@@ -45,9 +45,6 @@ namespace Microsoft.Protocols.TestTools
 
         private static bool shouldThrowAssertFailException;
 
-        // Private memeber that is for storing the reference to the main thread.
-        private Thread mainThread;
-
         private int assertFailuresBeforeThrowException;
 
         private int maxFailuresToDisplayPerTestCase;
@@ -59,9 +56,6 @@ namespace Microsoft.Protocols.TestTools
         /// <param name="maxFailuresToDisplayPerTestCase">The maxNumber of failure messages displayed.</param>
         public AsynchronousErrorProcessor(int assertFailuresBeforeThrowException, int maxFailuresToDisplayPerTestCase)
         {
-            // The thread in which the AsynchronousErrorProcessor is created
-            // will be set as the main thread by default.
-            mainThread = Thread.CurrentThread;
             this.assertFailuresBeforeThrowException = assertFailuresBeforeThrowException;
             this.maxFailuresToDisplayPerTestCase = maxFailuresToDisplayPerTestCase;
         }
@@ -69,10 +63,7 @@ namespace Microsoft.Protocols.TestTools
         /// <summary>
         /// Sets the current thread as main thread and clean the error list.
         /// </summary>
-        public void Initialize()
-        {
-            mainThread = Thread.CurrentThread;
-
+        public void Initialize() { 
             // Must clean the error list before each test.
             errors.Clear();
             assertFailErrors.Clear();
@@ -140,7 +131,7 @@ namespace Microsoft.Protocols.TestTools
         {
             lock (processLock)
             {
-                if (mainThread == Thread.CurrentThread && errors.Count > 0 && !shouldThrowAssertFailException)
+                if (errors.Count > 0 && !shouldThrowAssertFailException)
                 {
                     // Create an exception object which is of the same type as the exception created by checkers,
                     // and append the stack trace string to the error message.
@@ -183,8 +174,7 @@ namespace Microsoft.Protocols.TestTools
 
                 Process();
 
-                if (errors.Count > 0 &&
-                    Thread.CurrentThread != mainThread)
+                if (errors.Count > 0)
                 {
                     // Create an exception object which is of the same type as the exception created by checkers,
                     // and append the stack trace string to the error message.
