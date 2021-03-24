@@ -9,7 +9,7 @@
 		<icon>packageIcon.png</icon>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<license type="file">LICENSE.txt</license>
-		<projectUrl>https://github.com/microsoft/ProtocolTestFramewor</projectUrl>
+		<projectUrl>https://github.com/microsoft/ProtocolTestFramework</projectUrl>
 		<description>The Protocol Test Framework (PTF) is designed to support Microsoft Protocol Test Suites for both Windows and Office Protocol Interoperability testing.</description>
 		<copyright>© Microsoft Corporation. All rights reserved.</copyright>
 		<tags>TestFramework Testing ProtocolTest</tags>
