@@ -1,4 +1,4 @@
-trigger: none 
+trigger: none
 
 variables:
   - group: Build Variables
@@ -7,7 +7,7 @@ jobs:
 - job:
   displayName: Publish NuGet package
   pool:
-    vmImage: windows-2019
+    vmImage: windows-2022
   workspace:
     clean: false
   timeoutInMinutes: 0

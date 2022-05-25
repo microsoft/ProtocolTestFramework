@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+	<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft</RootNamespace>
     <AssemblyName>Microsoft.Protocols.TestTools.PTFTestLogger</AssemblyName>
@@ -32,8 +32,8 @@
     <Content Include="Resources\index.html" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.7.0" />
+	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="17.2.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>Microsoft.Protocols.TestTools</id>
-		<version>2.2.0</version>
+		<version>2.3.0</version>
 		<title>Protocol Test Framework</title>
 		<authors>Microsoft</authors>
 		<owners>Microsoft</owners>
@@ -14,16 +14,19 @@
 		<copyright>© Microsoft Corporation. All rights reserved.</copyright>
 		<tags>TestFramework Testing ProtocolTest</tags>
 		<releaseNotes>
-			1. The PTF now supports HTML Test logger.
-			2. The PTF now supports to specify Timeout to invoke Adapter method.
-			3. The PipeSink now supports to specify pipe name.
-			4. The dependent PowerShell Core SDK is upgraded to 7.1.3.
+			1. The PTF now supports both .NET 5 and .NET 6.
+            2. The dependent MSTest.TestFramework is upgraded to 2.2.10.
+			3. The dependent PowerShell Core SDK is upgraded to 7.2.4.
         </releaseNotes>
 		<repository type="git" url="https://github.com/microsoft/ProtocolTestFramework" />
 		<dependencies>
 			<group targetFramework="net5.0">
-				<dependency id="MSTest.TestFramework" version="2.1.0" exclude="Build,Analyzers" />
-				<dependency id="Microsoft.PowerShell.SDK" version="7.1.3" exclude="Build,Analyzers" />
+				<dependency id="MSTest.TestFramework" version="2.2.10" exclude="Build,Analyzers" />
+				<dependency id="Microsoft.PowerShell.SDK" version="7.1.7" exclude="Build,Analyzers" />
+			</group>
+			<group targetFramework="net6.0">
+				<dependency id="MSTest.TestFramework" version="2.2.10" exclude="Build,Analyzers" />
+				<dependency id="Microsoft.PowerShell.SDK" version="7.2.4" exclude="Build,Analyzers" />
 			</group>
 		</dependencies>
 		<contentFiles>
@@ -34,8 +37,11 @@
 		<file src="Resources\packageIcon.png" target="" />
 		<file src="..\..\LICENSE.txt" target="" />
 		<file src="Microsoft.Protocols.TestTools.dll" target="lib\net5.0" />
+		<file src="net6\Microsoft.Protocols.TestTools.dll" target="lib\net6.0" />
 		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net5.0" />
+		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net6.0" />
 		<file src="Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net5.0" />
+		<file src="net6\Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net6.0" />
 		<file src="Resources\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json" target="contentFiles\any\any" />
 		<file src="build\Microsoft.Protocols.TestTools.targets" target="build\" />
 	</files>

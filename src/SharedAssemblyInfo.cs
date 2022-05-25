@@ -4,6 +4,6 @@
 using System.Reflection;
 
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyVersion("2.2.0")]
-[assembly: AssemblyFileVersion("2.2.0.0")]
+[assembly: AssemblyVersion("2.3.0")]
+[assembly: AssemblyFileVersion("2.3.0.0")]
 [assembly: AssemblyCopyright("© Microsoft Corporation. All rights reserved.")]

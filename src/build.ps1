@@ -10,7 +10,9 @@ if(Test-Path drop){
 }
 dotnet build .\TestFramework\TestFramework.csproj --configuration Release
 
-dotnet publish .\TestFramework\TestFramework.csproj -o drop
+dotnet publish .\TestFramework\TestFramework.csproj -o drop -f net5.0
+
+dotnet publish .\TestFramework\TestFramework.csproj -o drop/net6 -f net6.0
 
 nuget pack drop\TestFramework.nuspec
 $packageFile = [xml](Get-Content drop\TestFramework.nuspec)
