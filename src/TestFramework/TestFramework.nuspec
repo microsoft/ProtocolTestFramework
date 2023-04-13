@@ -36,11 +36,8 @@
 	<files>
 		<file src="Resources\packageIcon.png" target="" />
 		<file src="..\..\LICENSE.txt" target="" />
-		<file src="Microsoft.Protocols.TestTools.dll" target="lib\net5.0" />
 		<file src="net6\Microsoft.Protocols.TestTools.dll" target="lib\net6.0" />
-		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net5.0" />
 		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net6.0" />
-		<file src="Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net5.0" />
 		<file src="net6\Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net6.0" />
 		<file src="Resources\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json" target="contentFiles\any\any" />
 		<file src="build\Microsoft.Protocols.TestTools.targets" target="build\" />
