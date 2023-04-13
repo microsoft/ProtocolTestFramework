@@ -20,10 +20,6 @@
         </releaseNotes>
 		<repository type="git" url="https://github.com/microsoft/ProtocolTestFramework" />
 		<dependencies>
-			<group targetFramework="net5.0">
-				<dependency id="MSTest.TestFramework" version="2.2.10" exclude="Build,Analyzers" />
-				<dependency id="Microsoft.PowerShell.SDK" version="7.1.7" exclude="Build,Analyzers" />
-			</group>
 			<group targetFramework="net6.0">
 				<dependency id="MSTest.TestFramework" version="2.2.10" exclude="Build,Analyzers" />
 				<dependency id="Microsoft.PowerShell.SDK" version="7.2.4" exclude="Build,Analyzers" />
