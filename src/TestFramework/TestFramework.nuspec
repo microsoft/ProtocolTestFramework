@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>Microsoft.Protocols.TestTools</id>
-		<version>2.3.0</version>
+		<version>2.4.0</version>
 		<title>Protocol Test Framework</title>
 		<authors>Microsoft</authors>
 		<owners>Microsoft</owners>
