@@ -14,19 +14,23 @@
 		<copyright>© Microsoft Corporation. All rights reserved.</copyright>
 		<tags>TestFramework Testing ProtocolTest</tags>
 		<releaseNotes>
-			1. The PTF now supports both .NET 6 and .NET 7.
-			2. The dependent MSTest.TestFramework is upgraded to 3.0.2.
-			3. The dependent PowerShell Core SDK is upgraded to 7.3.3.
+			1. The PTF now supports .NET 6, .NET 7 and .NET 8.
+			2. The dependent MSTest.TestFramework is upgraded to 3.2.2.
+			3. The dependent PowerShell Core SDK is upgraded to 7.4.1.
     </releaseNotes>
 		<repository type="git" url="https://github.com/microsoft/ProtocolTestFramework" />
 		<dependencies>
 			<group targetFramework="net6.0">
-				<dependency id="MSTest.TestFramework" version="2.2.10" exclude="Build,Analyzers" />
-				<dependency id="Microsoft.PowerShell.SDK" version="7.2.4" exclude="Build,Analyzers" />
+				<dependency id="MSTest.TestFramework" version="3.2.2" exclude="Build,Analyzers" />
+				<dependency id="Microsoft.PowerShell.SDK" version="7.2.18" exclude="Build,Analyzers" />
 			</group>
 			<group targetFramework="net7.0">
-				<dependency id="MSTest.TestFramework" version="3.0.2" exclude="Build,Analyzers" />
-				<dependency id="Microsoft.PowerShell.SDK" version="7.3.3" exclude="Build,Analyzers" />
+				<dependency id="MSTest.TestFramework" version="3.2.2" exclude="Build,Analyzers" />
+				<dependency id="Microsoft.PowerShell.SDK" version="7.3.11" exclude="Build,Analyzers" />
+			</group>
+			<group targetFramework="net8.0">
+				<dependency id="MSTest.TestFramework" version="3.2.2" exclude="Build,Analyzers" />
+				<dependency id="Microsoft.PowerShell.SDK" version="7.4.1" exclude="Build,Analyzers" />
 			</group>
 		</dependencies>
 		<contentFiles>
@@ -42,6 +46,9 @@
 		<file src="net7\Microsoft.Protocols.TestTools.dll" target="lib\net7.0" />
 		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net7.0" />
 		<file src="net7\Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net7.0" />
+		<file src="net8\Microsoft.Protocols.TestTools.dll" target="lib\net8.0" />
+		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net8.0" />
+		<file src="net8\Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net8.0" />
 		<file src="Resources\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json" target="contentFiles\any\any" />
 		<file src="build\Microsoft.Protocols.TestTools.targets" target="build\" />
 	</files>

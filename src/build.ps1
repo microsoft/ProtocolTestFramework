@@ -14,6 +14,8 @@ dotnet publish .\TestFramework\TestFramework.csproj -o drop -f net6.0
 
 dotnet publish .\TestFramework\TestFramework.csproj -o drop/net7 -f net7.0
 
+dotnet publish .\TestFramework\TestFramework.csproj -o drop/net8 -f net8.0
+
 nuget pack drop\TestFramework.nuspec
 $packageFile = [xml](Get-Content drop\TestFramework.nuspec)
 $assembly = $packageFile.package.metadata.id
