@@ -80,8 +80,9 @@ extends:
                 inputs:
                     command: 'test'
                     projects: 'src/UnitTest/UnitTest.csproj'
-                    arguments: '--no-build --logger trx'
+                    arguments: '--no-build --logger trx --verbosity normal'
                 continueOnError: true
+                condition: succeededOrFailed()
 
               - task: PowerShell@2
                 displayName: 'Build and Pack PTF'
@@ -102,6 +103,7 @@ extends:
                     command: 'push'
                     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
                     publishVstsFeed: 'WindowsProtocolTestSuites/windowsprotocoltestsuites_PublicPackages'
+                    arguments: '-SkipDuplicate'
                 condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), ne(variables['Build.Reason'], 'PullRequest'))
 
               - task: 1ES.PublishBuildArtifacts@1
