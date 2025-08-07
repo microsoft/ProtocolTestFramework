@@ -104,8 +104,7 @@ extends:
                     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
                     publishVstsFeed: 'WindowsProtocolTestSuites/windowsprotocoltestsuites_PublicPackages'
                     arguments: '-SkipDuplicate'
-                continueOnError: true
-                condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), ne(variables['Build.Reason'], 'PullRequest'))
+                condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), ne(variables['Build.Reason'], 'PullRequest'))
 
               - task: 1ES.PublishBuildArtifacts@1
                 displayName: 'Publish Artifact'
