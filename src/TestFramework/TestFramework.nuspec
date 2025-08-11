@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package >
+<package>
 	<metadata>
 		<id>Microsoft.Protocols.TestTools</id>
-		<version>2.5.0</version>
+		<version>2.6.1</version>
 		<title>Protocol Test Framework</title>
 		<authors>Microsoft</authors>
 		<owners>Microsoft</owners>
@@ -14,23 +14,21 @@
 		<copyright>© Microsoft Corporation. All rights reserved.</copyright>
 		<tags>TestFramework Testing ProtocolTest</tags>
 		<releaseNotes>
-			1. The PTF now supports .NET 6, .NET 7 and .NET 8.
-			2. The dependent MSTest.TestFramework is upgraded to 3.2.2.
-			3. The dependent PowerShell Core SDK is upgraded to 7.4.1.
-    </releaseNotes>
+			1. Updated MSTest.TestFramework and MSTest.TestAdapter to 3.9.1.
+			2. Updated PowerShell Core SDK versions to 7.4.10 (net8.0).
+			3. Added System.Text.Json 9.0.5, System.Formats.Asn1 9.0.5, and System.IO.Packaging 9.0.5 to address security vulnerabilities.
+			4. Added explicit references to System.Security.AccessControl 6.0.1 and System.DirectoryServices.Protocols 8.0.1 to resolve package downgrade warnings.
+		</releaseNotes>
 		<repository type="git" url="https://github.com/microsoft/ProtocolTestFramework" />
 		<dependencies>
-			<group targetFramework="net6.0">
-				<dependency id="MSTest.TestFramework" version="3.2.2" exclude="Build,Analyzers" />
-				<dependency id="Microsoft.PowerShell.SDK" version="7.2.18" exclude="Build,Analyzers" />
-			</group>
-			<group targetFramework="net7.0">
-				<dependency id="MSTest.TestFramework" version="3.2.2" exclude="Build,Analyzers" />
-				<dependency id="Microsoft.PowerShell.SDK" version="7.3.11" exclude="Build,Analyzers" />
-			</group>
 			<group targetFramework="net8.0">
-				<dependency id="MSTest.TestFramework" version="3.2.2" exclude="Build,Analyzers" />
-				<dependency id="Microsoft.PowerShell.SDK" version="7.4.1" exclude="Build,Analyzers" />
+				<dependency id="MSTest.TestFramework" version="3.9.1" exclude="Build,Analyzers" />
+				<dependency id="Microsoft.PowerShell.SDK" version="7.4.10" exclude="Build,Analyzers" />
+				<dependency id="System.Text.Json" version="9.0.5" exclude="Build,Analyzers" />
+				<dependency id="System.Formats.Asn1" version="9.0.5" exclude="Build,Analyzers" />
+				<dependency id="System.IO.Packaging" version="9.0.5" exclude="Build,Analyzers" />
+				<dependency id="System.Security.AccessControl" version="6.0.1" exclude="Build,Analyzers" />
+				<dependency id="System.DirectoryServices.Protocols" version="8.0.1" exclude="Build,Analyzers" />
 			</group>
 		</dependencies>
 		<contentFiles>
@@ -40,15 +38,9 @@
 	<files>
 		<file src="Resources\packageIcon.png" target="" />
 		<file src="..\..\LICENSE.txt" target="" />
-		<file src="Microsoft.Protocols.TestTools.dll" target="lib\net6.0" />
-		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net6.0" />
-		<file src="Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net6.0" />
-		<file src="net7\Microsoft.Protocols.TestTools.dll" target="lib\net7.0" />
-		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net7.0" />
-		<file src="net7\Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net7.0" />
-		<file src="net8\Microsoft.Protocols.TestTools.dll" target="lib\net8.0" />
+		<file src="Microsoft.Protocols.TestTools.dll" target="lib\net8.0" />
 		<file src="Microsoft.Protocols.TestTools.AdapterConsole.dll" target="lib\net8.0" />
-		<file src="net8\Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net8.0" />
+		<file src="Microsoft.Protocols.TestTools.PTFTestLogger.dll" target="lib\net8.0" />
 		<file src="Resources\Microsoft.Protocols.TestTools.AdapterConsole.runtimeconfig.json" target="contentFiles\any\any" />
 		<file src="build\Microsoft.Protocols.TestTools.targets" target="build\" />
 	</files>

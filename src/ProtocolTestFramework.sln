@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36202.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework", "TestFramework\TestFramework.csproj", "{88CEBF69-2B62-4449-8B36-9B766BC5D418}"
 EndProject
@@ -9,6 +9,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.AdapterConsole", "TestFramework.AdapterConsole\TestFramework.AdapterConsole.csproj", "{C8DCFC5E-7F5F-4E9E-B059-F5079EA8B23B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B685E07E-928E-4CFC-8B7D-2556302A135D}"
+	ProjectSection(SolutionItems) = preProject
+		Nuget.config = Nuget.config
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PTFTestLogger", "PTFTestLogger\PTFTestLogger.csproj", "{7953DF59-C900-433D-97A1-F86EC6CCDDCF}"
 EndProject
