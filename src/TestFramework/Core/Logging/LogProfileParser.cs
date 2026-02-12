@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Xml;
 using System.IO;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace Microsoft.Protocols.TestTools.Logging
 {
@@ -19,11 +20,10 @@ namespace Microsoft.Protocols.TestTools.Logging
         private LogProfileParser()
         {
         }
-
+        
         private LogProfile logProfile;
-
         private static string activeProfileName = String.Empty;
-
+        private static readonly System.Threading.AsyncLocal<bool> s_patchEnabled = new();
         /// <summary>
         /// Gets the active profile name of specified in the configuration.
         /// </summary>
@@ -43,6 +43,7 @@ namespace Microsoft.Protocols.TestTools.Logging
                 return null;
             }
 
+            s_patchEnabled.Value = ShouldEnableLogProfileParserPatch(config);
             // Create a temp instance of parser.
             LogProfileParser parser = new LogProfileParser();
 
@@ -62,6 +63,29 @@ namespace Microsoft.Protocols.TestTools.Logging
             return parser.logProfile;
         }
 
+        private static bool ShouldEnableLogProfileParserPatch(IConfigurationData config)
+        {
+            if (config == null || config.Properties == null)
+                {
+                    return false;
+                }
+            var props = (NameValueCollection)config.Properties;
+            string v = props["PTF.LogProfileParserPatch.Enabled"]
+                    ?? props["Common.PTF.LogProfileParserPatch.Enabled"];
+            return IsTrue(v);
+        }
+
+        private static bool IsTrue(string v)
+        {
+            if (string.IsNullOrWhiteSpace(v))
+                {
+                    return false;
+                }
+            return v.Equals("true", StringComparison.OrdinalIgnoreCase)
+                || v.Equals("1", StringComparison.OrdinalIgnoreCase)
+                || v.Equals("yes", StringComparison.OrdinalIgnoreCase);
+        }
+
         private static string CreateUniqueFileName(FileLogSinkConfig fileSink, string testAssemblyName)
         {
             string timeStampFormat = "{0:D4}-{1:D2}-{2:D2} {3:D2}_{4:D2}_{5:D2}_{6:D3}";
@@ -70,6 +94,7 @@ namespace Microsoft.Protocols.TestTools.Logging
             {
                 throw new ArgumentNullException("Test Assembly Name");
             }
+            string guidPart = Guid.NewGuid().ToString("N").Substring(0, 8);
 
             string uniqueName = string.Empty;
             string extension = string.Empty;
@@ -109,11 +134,17 @@ namespace Microsoft.Protocols.TestTools.Logging
             }
             else
             {
-                uniqueName = fileSink.File;
-                if(File.Exists(Path.Combine(fileSink.Directory, uniqueName)))
+                if (s_patchEnabled.Value)
+                {
+                    uniqueName = $"{timeStampInfo}_{testAssemblyName}_{guidPart}_{fileSink.File}";
+                }
+                else
+                {
+                    uniqueName = fileSink.File;
+                }
+                if (File.Exists(Path.Combine(fileSink.Directory, uniqueName)))
                 {
                     uniqueName = "[" + testAssemblyName + "_" + fileSink.Name + "]" + timeStampInfo + " " + fileSink.File;
-
                     if (File.Exists(Path.Combine(fileSink.Directory, uniqueName)))
                     {
                         throw new InvalidOperationException(
@@ -121,7 +152,6 @@ namespace Microsoft.Protocols.TestTools.Logging
                     }
                 }
             }
-
             return uniqueName;
         }
 
@@ -325,7 +355,7 @@ namespace Microsoft.Protocols.TestTools.Logging
                 {
                     sink = (LogSink)TestToolHelpers.CreateInstanceFromTypeName(type, new object[] { name, identity });
                 }
-                 
+
                 if (sink == null)
                 {
                     throw new InvalidOperationException(String.Format("Failed to create custom sink: {0}.", type));
