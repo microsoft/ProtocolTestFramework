@@ -4,6 +4,7 @@
 using Microsoft.Protocols.TestTools.Checking;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 
 namespace Microsoft.Protocols.TestTools
 {
@@ -32,11 +34,9 @@ namespace Microsoft.Protocols.TestTools
         private static DateTime executionStartTime;
         // Holds the end time of the testsuite execution
         private static DateTime executionEndTime;
-        private static Dictionary<Type, string> suiteNameCache = new Dictionary<Type, string>();
+        private static readonly ConcurrentDictionary<Type, string> suiteNameCache = new ConcurrentDictionary<Type, string>();
 
         private static int classCount;
-        private static bool isUseDefaultSuiteName;
-        private static string staticTestSuiteName;
         private static ITestSite baseTestSite;
 
         /// <summary>
@@ -44,13 +44,9 @@ namespace Microsoft.Protocols.TestTools
         /// </summary>
         protected TestClassBase()
         {
-            if (!suiteNameCache.ContainsKey(this.GetType()))
-            {
-                suiteNameCache[this.GetType()] = staticTestSuiteName;
-            }
-
-            //switch test site while test running
-            testSuiteName = suiteNameCache[this.GetType()];
+            // suiteNameCache is populated in ClassInitialize (via Initialize),
+            // which MSTest guarantees runs before any test instance is constructed.
+            suiteNameCache.TryGetValue(this.GetType(), out testSuiteName);
             testSite = ProtocolTestsManager.GetTestSite(testSuiteName);
             ptfTestNotify = ProtocolTestsManager.GetProtocolTestNotify(testSuiteName);
         }
@@ -193,11 +189,12 @@ namespace Microsoft.Protocols.TestTools
         /// <param name="testContext">VSTS test context.</param>
         public static void Initialize(TestContext testContext)
         {
-            Assembly CallingAssembly = Assembly.GetCallingAssembly();
-            if (CallingAssembly.GetType(testContext.FullyQualifiedTestClassName) != null)
+            // Resolve the calling assembly name into a local — never store in a shared static.
+            string resolvedSuiteName = null;
+            Assembly callingAssembly = Assembly.GetCallingAssembly();
+            if (callingAssembly.GetType(testContext.FullyQualifiedTestClassName) != null)
             {
-                staticTestSuiteName = Assembly.GetCallingAssembly().GetName().Name;
-                isUseDefaultSuiteName = true;
+                resolvedSuiteName = callingAssembly.GetName().Name;
             }
             else
             {
@@ -207,13 +204,12 @@ namespace Microsoft.Protocols.TestTools
                 {
                     if (assembly.GetType(testContext.FullyQualifiedTestClassName) != null)
                     {
-                        staticTestSuiteName = assembly.GetName().Name;
-                        isUseDefaultSuiteName = true;
+                        resolvedSuiteName = assembly.GetName().Name;
                         break;
                     }
                 }
             }
-            Initialize(testContext, staticTestSuiteName);
+            Initialize(testContext, resolvedSuiteName, useAssemblyNameAsTestAssemblyName: true);
         }
 
         /// <summary>
@@ -224,37 +220,40 @@ namespace Microsoft.Protocols.TestTools
         /// <param name="testSuiteName">The name of the test suite. The test site uses this name to find configuration files.</param>
         public static void Initialize(TestContext testContext, string testSuiteName)
         {
+            Initialize(testContext, testSuiteName, useAssemblyNameAsTestAssemblyName: false);
+        }
+
+        private static void Initialize(TestContext testContext, string testSuiteName, bool useAssemblyNameAsTestAssemblyName)
+        {
             executionStartTime = DateTime.Now;
             if (testContext == null)
             {
                 throw new InvalidOperationException("TestContext should not be null in UnitTestClassBase.");
             }
-            classCount++;
-            staticTestSuiteName = testSuiteName;
+            Interlocked.Increment(ref classCount);
 
-            if (null == ProtocolTestsManager.GetTestSite(staticTestSuiteName))
+            // Populate suiteNameCache here so the constructor does not need to rely on any shared static.
+            foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Type t = asm.GetType(testContext.FullyQualifiedTestClassName);
+                if (t != null) { suiteNameCache.TryAdd(t, testSuiteName); break; }
+            }
+
+            // Determine testAssemblyName as a local — never via a shared static flag.
+            string testAssemblyName = useAssemblyNameAsTestAssemblyName
+                ? testSuiteName
+                : Assembly.GetCallingAssembly().GetName().Name;
+
+            if (null == ProtocolTestsManager.GetTestSite(testSuiteName))
             {
                 VstsTestContext vstsTestContext = new VstsTestContext(testContext);
                 IConfigurationData config = ConfigurationDataProvider.GetConfigurationData(
                     vstsTestContext.PtfconfigDir, testSuiteName);
 
-                string testAssemblyName;
-
-                if (isUseDefaultSuiteName)
-                {
-                    testAssemblyName = testSuiteName;
-                    isUseDefaultSuiteName = false;
-                }
-                else
-                {
-                    testAssemblyName = Assembly.GetCallingAssembly().GetName().Name;
-                }
-
                 ProtocolTestsManager.Initialize(config, vstsTestContext, testSuiteName, testAssemblyName);
 
-                baseTestSite = ProtocolTestsManager.GetTestSite(testSuiteName);
-
                 ITestSite site = ProtocolTestsManager.GetTestSite(testSuiteName);
+                baseTestSite = site;
 
                 //registry all checkers
                 RegisterChecker(site);
@@ -263,7 +262,6 @@ namespace Microsoft.Protocols.TestTools
             {
                 baseTestSite = ProtocolTestsManager.GetTestSite(testSuiteName);
             }
-
 
             /********************* Display expected runtime of the testsuite **********************
              * Log expected execution time of the test suite in the log file                      *
@@ -277,8 +275,7 @@ namespace Microsoft.Protocols.TestTools
         /// </summary>
         public static void Cleanup()
         {
-            classCount--;
-            if (classCount == 0)
+            if (Interlocked.Decrement(ref classCount) == 0)
             {
                 /********************* Display expected runtime of the testsuite **************************
                  * Calculates the actual time taken for the test suite execution and logs it in log file  *
