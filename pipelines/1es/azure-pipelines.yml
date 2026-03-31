@@ -21,6 +21,8 @@ resources:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
+    settings:
+      networkIsolationPolicy: Permissive,CFSClean,CFSClean2
     pool:
       name: Azure-Pipelines-1ESPT-ExDShared
       image: windows-latest
@@ -41,10 +43,23 @@ extends:
                   packageType: 'sdk'
                   version: '8.x'
 
+              - powershell: |
+                  $content = '<?xml version="1.0" encoding="utf-8"?>
+                  <configuration>
+                    <packageSources>
+                      <add key="nuget.org" value="https://pkgs.dev.azure.com/microsoft/windowsprotocoltestsuites/_packaging/windowsprotocoltestsuites_PublicPackages/nuget/v3/index.json" protocolVersion="3" />
+                    </packageSources>
+                  </configuration>'
+
+                  [System.IO.File]::WriteAllText("SUTNuGet.config", $content)
+                displayName: "Add SUTNuGet.config"
+
               - task: DotNetCoreCLI@2
                 displayName: 'Restore NuGet packages'
                 inputs:
                   command: 'restore'
+                  feedsToUse: config
+                  nugetConfigPath: SUTNuGet.config
                   projects: |
                     src/TestFramework/TestFramework.csproj
                     src/TestFramework.AdapterConsole/TestFramework.AdapterConsole.csproj

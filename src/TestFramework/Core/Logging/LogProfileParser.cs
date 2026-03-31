@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Xml;
 using System.IO;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace Microsoft.Protocols.TestTools.Logging
 {
@@ -19,35 +20,36 @@ namespace Microsoft.Protocols.TestTools.Logging
         private LogProfileParser()
         {
         }
-
+        
         private LogProfile logProfile;
 
-        private static string activeProfileName = String.Empty;
+        // Seam for testing: allows tests to inject a known GUID to force the fallback path
+        internal static Func<string> GuidFactory = () => Guid.NewGuid().ToString("N").Substring(0, 8);
 
         /// <summary>
-        /// Gets the active profile name of specified in the configuration.
+        /// Parses the configuration file and creates an instance of <see cref="LogProfile"/>.
+        /// The active profile name from the configuration is returned via <paramref name="activeProfileName"/>.
         /// </summary>
-        public static string ActiveProfileNameInConfig
+        /// <param name="config">Configuration data.</param>
+        /// <param name="testAssemblyName">Name of the test assembly (used in log file naming).</param>
+        /// <param name="activeProfileName">Receives the default profile name declared in config.</param>
+        /// <returns>An instance of LogProfile, or null if config is null.</returns>
+        public static LogProfile CreateLogProfileFromConfig(IConfigurationData config, string testAssemblyName, out string activeProfileName)
         {
-            get { return activeProfileName; }
-        }
-
-        /// <summary>
-        /// Parses the configuration file and creates an instance of <see cref="LogProfile"/> .
-        /// </summary>
-        /// <returns>An instance of LogProfile.</returns>
-        public static LogProfile CreateLogProfileFromConfig(IConfigurationData config, string testAssemblyName)
-        {
+            activeProfileName = null;
             if (config == null)
             {
                 return null;
             }
 
+            bool patchEnabled = ShouldEnableLogProfileParserPatch(config);
+
             // Create a temp instance of parser.
             LogProfileParser parser = new LogProfileParser();
 
-            // Gets the active log profile name.
-            if ((activeProfileName = config.DefaultProfile) == null)
+            // Gets the active log profile name — stored in a local, never a shared static.
+            activeProfileName = config.DefaultProfile;
+            if (activeProfileName == null)
             {
                 throw new InvalidOperationException("The active profile name is not present.");
             }
@@ -55,14 +57,37 @@ namespace Microsoft.Protocols.TestTools.Logging
             // Create LogProfile instance.
             parser.logProfile = new LogProfile();
 
-            parser.ParseSinks(config.LogSinks, testAssemblyName);
+            parser.ParseSinks(config.LogSinks, testAssemblyName, patchEnabled);
 
             parser.ParseProfiles(config.Profiles);
 
             return parser.logProfile;
         }
 
-        private static string CreateUniqueFileName(FileLogSinkConfig fileSink, string testAssemblyName)
+        private static bool ShouldEnableLogProfileParserPatch(IConfigurationData config)
+        {
+            if (config == null || config.Properties == null)
+                {
+                    return false;
+                }
+            var props = (NameValueCollection)config.Properties;
+            string v = props["PTF.LogProfileParserPatch.Enabled"]
+                    ?? props["Common.PTF.LogProfileParserPatch.Enabled"];
+            return IsTrue(v);
+        }
+
+        private static bool IsTrue(string v)
+        {
+            if (string.IsNullOrWhiteSpace(v))
+                {
+                    return false;
+                }
+            return v.Equals("true", StringComparison.OrdinalIgnoreCase)
+                || v.Equals("1", StringComparison.OrdinalIgnoreCase)
+                || v.Equals("yes", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string CreateUniqueFileName(FileLogSinkConfig fileSink, string testAssemblyName, bool patchEnabled)
         {
             string timeStampFormat = "{0:D4}-{1:D2}-{2:D2} {3:D2}_{4:D2}_{5:D2}_{6:D3}";
 
@@ -70,6 +95,7 @@ namespace Microsoft.Protocols.TestTools.Logging
             {
                 throw new ArgumentNullException("Test Assembly Name");
             }
+            string guidPart = GuidFactory();
 
             string uniqueName = string.Empty;
             string extension = string.Empty;
@@ -109,23 +135,31 @@ namespace Microsoft.Protocols.TestTools.Logging
             }
             else
             {
-                uniqueName = fileSink.File;
-                if(File.Exists(Path.Combine(fileSink.Directory, uniqueName)))
+                if (patchEnabled)
                 {
-                    uniqueName = "[" + testAssemblyName + "_" + fileSink.Name + "]" + timeStampInfo + " " + fileSink.File;
-
+                    uniqueName = $"{timeStampInfo}_{testAssemblyName}_{guidPart}_{fileSink.File}";
                     if (File.Exists(Path.Combine(fileSink.Directory, uniqueName)))
                     {
-                        throw new InvalidOperationException(
-                            "File already exist: " + uniqueName);
+                        // Fallback always keeps the GUID so two concurrent fallback calls cannot collide
+                        uniqueName = "[" + testAssemblyName + "_" + fileSink.Name + "]" + timeStampInfo + "_" + guidPart + " " + fileSink.File;
+                        if (File.Exists(Path.Combine(fileSink.Directory, uniqueName)))
+                        {
+                            throw new InvalidOperationException(
+                                "File already exist: " + uniqueName);
+                        }
                     }
                 }
+                else
+                {
+                    // Patch disabled: use the raw filename. Concurrent opens of the same
+                    // file will naturally produce IOException — that is the documented behavior.
+                    uniqueName = fileSink.File;
+                }
             }
-
             return uniqueName;
         }
 
-        private void ParseSinks(Collection<LogSinkConfig> logSinks, string testAssemblyName)
+        private void ParseSinks(Collection<LogSinkConfig> logSinks, string testAssemblyName, bool patchEnabled)
         {
             // Build sinks and add them into the sinks collection.
             foreach (LogSinkConfig sink in logSinks)
@@ -149,7 +183,7 @@ namespace Microsoft.Protocols.TestTools.Logging
                     AddFileSink(
                             fileSink.Name,
                             fileSink.Directory,
-                            CreateUniqueFileName(fileSink, testAssemblyName),
+                            CreateUniqueFileName(fileSink, testAssemblyName, patchEnabled),
                             fileSink.Format);
                 }
 
@@ -325,7 +359,7 @@ namespace Microsoft.Protocols.TestTools.Logging
                 {
                     sink = (LogSink)TestToolHelpers.CreateInstanceFromTypeName(type, new object[] { name, identity });
                 }
-                 
+
                 if (sink == null)
                 {
                     throw new InvalidOperationException(String.Format("Failed to create custom sink: {0}.", type));

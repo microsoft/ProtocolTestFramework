@@ -122,8 +122,12 @@ namespace Microsoft.Protocols.TestTools.Logging
         public PlainTextSink(string name, string logFilename)
             : base(name)
         {
+            FilePath = logFilename;
             writer = new StreamWriter(logFilename);
         }
+
+        /// <summary>The resolved absolute path of the log file.</summary>
+        internal string FilePath { get; }
 
         /// <summary>
         /// Dispose(bool disposing) executes in two distinct scenarios.
@@ -183,6 +187,7 @@ namespace Microsoft.Protocols.TestTools.Logging
         public XmlTextSink(string name, string logFilename)
             : base(name)
         {
+            FilePath = logFilename;
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = ("    ");
@@ -191,6 +196,9 @@ namespace Microsoft.Protocols.TestTools.Logging
             writer = XmlWriter.Create(logFilename, settings);
             this.logFilename = logFilename;
         }
+
+        /// <summary>The resolved absolute path of the log file.</summary>
+        internal string FilePath { get; }
 
         /// <summary>
         /// Dispose(bool disposing) executes in two distinct scenarios.

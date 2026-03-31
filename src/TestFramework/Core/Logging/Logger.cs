@@ -86,8 +86,8 @@ namespace Microsoft.Protocols.TestTools.Logging
         internal Logger(ITestSite testSite)
         {
             this.testSite = testSite;
-            this.logProfile = LogProfileParser.CreateLogProfileFromConfig(testSite.Config, testSite.TestAssemblyName);
-            this.ActiveLoggingProfile = LogProfileParser.ActiveProfileNameInConfig;
+            this.logProfile = LogProfileParser.CreateLogProfileFromConfig(testSite.Config, testSite.TestAssemblyName, out string resolvedProfileName);
+            this.ActiveLoggingProfile = resolvedProfileName;
             RegisterDefaultLogProviders();
             logRunner = new Thread(Run);
             logRunner.Start();

@@ -81,24 +81,27 @@ namespace Microsoft.Protocols.TestTools
                 throw new ArgumentException("config cannot be null.");
             }
 
-            if (testSites == null)
+            lock (asyncCleanupLock)
             {
-                testSites = new Dictionary<string, DefaultTestSite>();
-            }
+                if (testSites == null)
+                {
+                    testSites = new Dictionary<string, DefaultTestSite>();
+                }
 
-            if (!testSites.ContainsKey(testSuiteName))
-            {
-                DefaultTestSite testSite = new DefaultTestSite(config, testAssemblyPath, ptfconfigPath, testSuiteName, testAssemblyName);
+                if (!testSites.ContainsKey(testSuiteName))
+                {
+                    DefaultTestSite testSite = new DefaultTestSite(config, testAssemblyPath, ptfconfigPath, testSuiteName, testAssemblyName);
 
-                testSites.Add(testSuiteName, testSite);
-            }
-            else
-            {
-                testSites[testSuiteName].DisposeAdapters();
-            }
+                    testSites.Add(testSuiteName, testSite);
+                }
+                else
+                {
+                    testSites[testSuiteName].DisposeAdapters();
+                }
 
-            testSites[testSuiteName].TestProperties[TestPropertyNames.CurrentTestCaseName] = null;
-            testSites[testSuiteName].TestProperties[TestPropertyNames.CurrentTestOutcome] = currentTestOutCome;
+                testSites[testSuiteName].TestProperties[TestPropertyNames.CurrentTestCaseName] = null;
+                testSites[testSuiteName].TestProperties[TestPropertyNames.CurrentTestOutcome] = currentTestOutCome;
+            }
         }
 
         public static ITestSite GetTestSite(string testSuiteName)
