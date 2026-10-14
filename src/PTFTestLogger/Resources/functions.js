@@ -378,30 +378,17 @@ function ShowDetail(caseDetail, logTypes) {
       caseTime.appendChild(pEndTime);
       caseTime.appendChild(pResult);
 
-      var pCapture = document.createElement("u");
-      pCapture.style.color = "#1382CE"; //highlight capture file link
-      pCapture.onclick = function () {
-        if (detailObj['CapturePath'] == null) {
-          alert("Sorry for no capture.");
-        }
-        else {
-          if (navigator.userAgent.indexOf(".NET") > 0) {
-            var activeObj = new ActiveXObject('WScript.shell');
-            try {
-              activeObj.run(detailObj['CapturePath'], 1);
-            }
-            catch (err) {
-              alert("Please install Microsoft Message Analyzer firstly to open this capture.\r\n"
-                + "The capture file can be found at \"" + detailObj['CapturePath'] + "\".");
-            }
-          }
-          else {
-            alert("Incompatibility Problem! \r\nPlease use IE to open this index.html");
-          }
-        }
-      }
-
       if (detailObj['CapturePath'] != null) {
+        var pCapture = document.createElement("a");
+        pCapture.style.color = "#1382CE"; //highlight capture file link
+        pCapture.title = detailObj['CapturePath'];
+        // Convert the Windows file system path to a file:// URL so the browser
+        // asks the OS to open it with the application associated with .etl files
+        // (e.g. Microsoft Message Analyzer / Network Monitor), without executing
+        // any shell command directly.
+        pCapture.href = "file:///" + encodeURI(detailObj['CapturePath'].replace(/\\/g, "/"));
+        pCapture.target = "_blank";
+
         caseTime.appendChild(document.createTextNode("Capture: "));
         caseTime.appendChild(pCapture);
         CreateText(pCapture, title + '.etl');
