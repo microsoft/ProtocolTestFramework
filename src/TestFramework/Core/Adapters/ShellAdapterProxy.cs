@@ -91,7 +91,7 @@ namespace Microsoft.Protocols.TestTools
             errorMsg = new StringBuilder();
 
             object retVal = null;
-            string arguments = BuildScriptArguments();
+            List<string> arguments = BuildScriptArguments();
 
             // Check if this is a method from IAdapter. Any IAdapter methods should be ignored.
             if (!AdapterType.IsAdapterTypeFullName(targetMethod.DeclaringType.FullName)
@@ -183,7 +183,7 @@ namespace Microsoft.Protocols.TestTools
 
                 try
                 {
-                    int scriptRet = InvokeScript(path, "");
+                    int scriptRet = InvokeScript(path, new List<string>());
                     if (scriptRet != 0)
                     {
                         TestSite.Assume.Fail(
@@ -233,22 +233,19 @@ namespace Microsoft.Protocols.TestTools
             }
         }
 
-        private string BuildScriptArguments()
+        private List<string> BuildScriptArguments()
         {
-            StringBuilder arguments = new StringBuilder();
-            arguments.Append(BuildInArguments());
-
-            return arguments.ToString();
+            return BuildInArguments();
         }
 
-        private string BuildInArguments()
+        private List<string> BuildInArguments()
         {
+            List<string> ret = new List<string>();
+
             if (!builder.HasInArg)
             {
-                return "";
+                return ret;
             }
-
-            StringBuilder ret = new StringBuilder();
 
             int i = 0;
             foreach (Type t in builder.InArgTypes)
@@ -256,20 +253,23 @@ namespace Microsoft.Protocols.TestTools
                 var row = builder.InArgDataTable.Rows[i++];
                 string value = (string)row["Value"];
 
-                // put argument inside single quotes to escape special charaters
-                ret.Append(String.Format("\"{0}\"", value));
+                // Pass the raw value as a single, discrete argument. Using ArgumentList
+                // (rather than manual string concatenation/quoting) ensures the value is
+                // never interpreted as additional shell syntax, preventing command/code
+                // injection via unescaped quotes or special characters.
+                ret.Add(value);
             }
 
-            return ret.ToString();
+            return ret;
         }
 
         /// <summary>
         /// Invokde script by given file path and arguments.
         /// </summary>
         /// <param name="path">The file path to the sh script.</param>
-        /// <param name="arguments">The argument to be passed to the script.</param>
+        /// <param name="arguments">The arguments to be passed to the script.</param>
         /// <returns>The return value of script executation.</returns>
-        private int InvokeScript(string path, string arguments)
+        private int InvokeScript(string path, List<string> arguments)
         {
             int exitCode = 0;
             try
@@ -304,7 +304,11 @@ namespace Microsoft.Protocols.TestTools
                     }
 
                     proc.StartInfo.FileName = wslPath;
-                    proc.StartInfo.Arguments = String.Format("{0} {1}", path, arguments);
+                    proc.StartInfo.ArgumentList.Add(path);
+                    foreach (string arg in arguments)
+                    {
+                        proc.StartInfo.ArgumentList.Add(arg);
+                    }
                     proc.StartInfo.UseShellExecute = false;
                     proc.StartInfo.CreateNoWindow = true;
                     proc.StartInfo.RedirectStandardError = true;
